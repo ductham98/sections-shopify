@@ -1,8 +1,9 @@
 export type DeviceMode = "desktop" | "mobile";
+export type PresentationMode = "fit" | "actual";
 
-export type DesktopViewportWidth = 1200 | 1440 | "fit";
+export type DesktopViewportWidth = 1200 | 1440;
 export type MobileViewportWidth = 375 | 390 | 430;
-export type ViewportWidth = DesktopViewportWidth | MobileViewportWidth;
+export type ViewportWidth = DesktopViewportWidth | MobileViewportWidth | "fit";
 
 export interface SchemaSetting {
   type: string;
@@ -59,4 +60,3 @@ export interface PreviewEngineContext {
   device?: DeviceMode;
   overrides?: Record<string, unknown>;
 }
-

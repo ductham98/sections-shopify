@@ -1,54 +1,57 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { SectionItem } from "@/lib/sections";
-import { DeviceMode, ViewportWidth } from "@/lib/preview/preview-types";
-import { compileSectionPreview } from "@/lib/preview/preview-compiler";
+import React, { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import { ActivePreviewState } from "@/lib/preview/use-active-preview";
+import { DeviceMode, PresentationMode } from "@/lib/preview/preview-types";
+import { fetchSectionCode } from "@/lib/section-client";
 import { PreviewHeader } from "./PreviewHeader";
 import { PreviewToolbar } from "./PreviewToolbar";
 import { PreviewCanvas } from "./PreviewCanvas";
 import { PreviewError } from "./PreviewError";
 import { PreviewStatusType } from "./PreviewStatus";
 
-interface SectionPreviewModalProps {
-  section: SectionItem | null;
+export interface SectionPreviewModalProps {
+  isOpen: boolean;
+  state: ActivePreviewState;
   onClose: () => void;
+  onRefresh: () => void;
+  onDeviceChange: (device: DeviceMode) => void;
+  onPresentationModeChange: (mode: PresentationMode) => void;
+  onViewportWidthChange: (width: number) => void;
+  onScaleChange: (scale: number) => void;
   onCopySuccess: (title: string) => void;
 }
 
-interface DialogContentProps {
-  section: SectionItem;
-  onClose: () => void;
-  onCopySuccess: (title: string) => void;
-}
-
-function SectionPreviewDialogContent({
-  section,
+export function SectionPreviewModal({
+  isOpen,
+  state,
   onClose,
+  onRefresh,
+  onDeviceChange,
+  onPresentationModeChange,
+  onViewportWidthChange,
+  onScaleChange,
   onCopySuccess,
-}: DialogContentProps) {
-  const [device, setDevice] = useState<DeviceMode>("desktop");
-  const [viewportWidth, setViewportWidth] = useState<ViewportWidth>("fit");
-  const [scalePercent, setScalePercent] = useState<number>(1);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+}: SectionPreviewModalProps) {
   const [codeCopied, setCodeCopied] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [currentHtml, setCurrentHtml] = useState<string>(section.previewHtml || "");
-  const [status, setStatus] = useState<PreviewStatusType>("ready");
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Lock body scroll while modal is open
   useEffect(() => {
+    if (!isOpen) return;
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, []);
+  }, [isOpen]);
 
   // Keyboard shortcut: ESC closes modal
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
@@ -58,47 +61,32 @@ function SectionPreviewDialogContent({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
-
-  // Recompile / refresh preview
-  const handleRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    setStatus("compiling");
-    setErrorMessage(null);
-
-    try {
-      const res = await compileSectionPreview(section.code, {
-        sectionId: section.filename.replace(/\.liquid$/, ""),
-      });
-
-      if (res.error) {
-        setStatus("error");
-        setErrorMessage(res.error);
-      } else {
-        setCurrentHtml(res.previewHtml);
-        setStatus("ready");
-      }
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      setStatus("error");
-      setErrorMessage(msg);
-    } finally {
-      setRefreshKey((k) => k + 1);
-      setTimeout(() => setIsRefreshing(false), 300);
-    }
-  }, [section]);
+  }, [isOpen, onClose]);
 
   // Copy Liquid source code
   const handleCopyCode = async () => {
+    if (!state.section) return;
     try {
-      await navigator.clipboard.writeText(section.code);
+      const code = state.code || (await fetchSectionCode(state.section.id));
+      await navigator.clipboard.writeText(code);
       setCodeCopied(true);
-      onCopySuccess(section.title);
+      onCopySuccess(state.section.title);
       setTimeout(() => setCodeCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy Liquid code:", err);
     }
   };
+
+  if (!isOpen || !state.section) {
+    return null;
+  }
+
+  const statusType: PreviewStatusType =
+    state.status === "loading"
+      ? "compiling"
+      : state.status === "error"
+      ? "error"
+      : "ready";
 
   return (
     <div
@@ -118,59 +106,55 @@ function SectionPreviewDialogContent({
       <div className="relative z-10 w-full h-full sm:w-[95vw] sm:h-[92vh] lg:w-[92vw] lg:max-w-[1500px] lg:h-[90vh] lg:max-h-[1000px] bg-white sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-neutral-200 animate-in zoom-in-95 duration-200">
         {/* A. Sticky Header */}
         <PreviewHeader
-          section={section}
-          status={status}
+          section={state.section}
+          status={statusType}
           onClose={onClose}
         />
 
         {/* B. Sticky Preview Toolbar */}
         <PreviewToolbar
-          device={device}
-          onDeviceChange={setDevice}
-          viewportWidth={viewportWidth}
-          onViewportWidthChange={setViewportWidth}
-          scalePercent={scalePercent}
-          onRefresh={handleRefresh}
-          isRefreshing={isRefreshing}
+          device={state.device}
+          onDeviceChange={onDeviceChange}
+          presentationMode={state.presentationMode}
+          onPresentationModeChange={onPresentationModeChange}
+          viewportWidth={state.viewportWidth}
+          onViewportWidthChange={onViewportWidthChange}
+          scalePercent={state.scale}
+          onRefresh={onRefresh}
+          isRefreshing={state.isRefreshing || state.status === "loading"}
           onCopyCode={handleCopyCode}
           codeCopied={codeCopied}
         />
 
-        {/* C. Dedicated Scrollable Preview Workspace */}
-        {errorMessage ? (
+        {/* C. Dedicated Scrollable Preview Workspace (SINGLE Active Preview Canvas) */}
+        {state.status === "loading" && !state.compiledHtml ? (
+          <div className="flex-1 bg-[#F1F2F4] flex flex-col items-center justify-center p-8 gap-3">
+            <Loader2 className="w-8 h-8 text-neutral-600 animate-spin" />
+            <p className="text-sm font-medium text-neutral-600">
+              Compiling Shopify Liquid section...
+            </p>
+            <span className="text-xs text-neutral-400 font-mono">
+              {state.section.filename}
+            </span>
+          </div>
+        ) : state.status === "error" && !state.compiledHtml ? (
           <div className="flex-1 bg-[#F1F2F4] p-6 overflow-y-auto">
             <PreviewError
-              message={errorMessage}
-              onRetry={handleRefresh}
+              message={state.error || "Failed to render Shopify section preview"}
+              onRetry={onRefresh}
             />
           </div>
-        ) : (
+        ) : state.compiledHtml ? (
           <PreviewCanvas
-            html={currentHtml}
-            device={device}
-            viewportWidth={viewportWidth}
-            onScaleChange={setScalePercent}
-            refreshKey={refreshKey}
+            html={state.compiledHtml}
+            device={state.device}
+            presentationMode={state.presentationMode}
+            viewportWidth={state.viewportWidth}
+            onScaleChange={onScaleChange}
+            refreshKey={0}
           />
-        )}
+        ) : null}
       </div>
     </div>
-  );
-}
-
-export function SectionPreviewModal({
-  section,
-  onClose,
-  onCopySuccess,
-}: SectionPreviewModalProps) {
-  if (!section) return null;
-
-  return (
-    <SectionPreviewDialogContent
-      key={section.id}
-      section={section}
-      onClose={onClose}
-      onCopySuccess={onCopySuccess}
-    />
   );
 }

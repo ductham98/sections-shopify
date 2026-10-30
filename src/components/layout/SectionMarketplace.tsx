@@ -9,6 +9,7 @@ import { MobileFilterDrawer } from "./MobileFilterDrawer";
 import { SectionGrid } from "../sections/SectionGrid";
 import { SectionPreviewModal } from "../preview/SectionPreviewModal";
 import { Toast } from "../ui/Toast";
+import { useActivePreview } from "@/lib/preview/use-active-preview";
 
 interface SectionMarketplaceProps {
   initialSections: SectionItem[];
@@ -17,9 +18,11 @@ interface SectionMarketplaceProps {
 export function SectionMarketplace({ initialSections }: SectionMarketplaceProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
-  const [previewSection, setPreviewSection] = useState<SectionItem | null>(null);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Centralized Single Active Preview controller
+  const activePreview = useActivePreview();
 
   // Compute dynamic category counts from actual metadata
   const categoryCounts = useMemo(() => {
@@ -58,18 +61,14 @@ export function SectionMarketplace({ initialSections }: SectionMarketplaceProps)
       if (searchQuery.trim() !== "") {
         const q = searchQuery.toLowerCase().trim();
         const matchesTitle = item.title.toLowerCase().includes(q);
-        const matchesTitleVi = item.titleVi.toLowerCase().includes(q);
-        const matchesDesc = item.description.toLowerCase().includes(q);
-        const matchesDescVi = item.descriptionVi.toLowerCase().includes(q);
+        const matchesDesc = item.description ? item.description.toLowerCase().includes(q) : false;
         const matchesPreset = item.presetName.toLowerCase().includes(q);
         const matchesFilename = item.filename.toLowerCase().includes(q);
         const matchesTags = item.tags.some((t) => t.toLowerCase().includes(q));
 
         return (
           matchesTitle ||
-          matchesTitleVi ||
           matchesDesc ||
-          matchesDescVi ||
           matchesPreset ||
           matchesFilename ||
           matchesTags
@@ -113,7 +112,7 @@ export function SectionMarketplace({ initialSections }: SectionMarketplaceProps)
           <SectionGrid
             sections={filteredSections}
             totalFilteredCount={filteredSections.length}
-            onPreview={setPreviewSection}
+            onPreview={activePreview.openPreview}
             onCopySuccess={handleCopySuccess}
             onClearFilters={handleClearAll}
             isFilterActive={isFilterActive}
@@ -134,10 +133,16 @@ export function SectionMarketplace({ initialSections }: SectionMarketplaceProps)
         isFilterActive={isFilterActive}
       />
 
-      {/* Large Live Section Preview Modal */}
+      {/* SINGLE ACTIVE PREVIEW MODAL */}
       <SectionPreviewModal
-        section={previewSection}
-        onClose={() => setPreviewSection(null)}
+        isOpen={activePreview.state.section !== null}
+        state={activePreview.state}
+        onClose={activePreview.closePreview}
+        onRefresh={activePreview.refreshPreview}
+        onDeviceChange={activePreview.setDevice}
+        onPresentationModeChange={activePreview.setPresentationMode}
+        onViewportWidthChange={activePreview.setViewportWidth}
+        onScaleChange={activePreview.setScale}
         onCopySuccess={handleCopySuccess}
       />
 

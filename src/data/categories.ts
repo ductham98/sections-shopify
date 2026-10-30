@@ -55,5 +55,12 @@ export const CATEGORIES: Category[] = [
     nameVi: "Announcement & Header",
     description: "Infinite marquee announcement bars, promo tickers, and top banners",
     icon: "Megaphone"
+  },
+  {
+    id: "uncategorized",
+    name: "Uncategorized",
+    nameVi: "Uncategorized",
+    description: "Custom sections without a specific category assignment",
+    icon: "FolderArchive"
   }
 ];

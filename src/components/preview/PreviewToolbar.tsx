@@ -2,13 +2,15 @@
 
 import React from "react";
 import { Monitor, Smartphone, RotateCw, Copy, Check } from "lucide-react";
-import { DeviceMode, DesktopViewportWidth, MobileViewportWidth, ViewportWidth } from "@/lib/preview/preview-types";
+import { DeviceMode, PresentationMode } from "@/lib/preview/preview-types";
 
 interface PreviewToolbarProps {
   device: DeviceMode;
   onDeviceChange: (device: DeviceMode) => void;
-  viewportWidth: ViewportWidth;
-  onViewportWidthChange: (width: ViewportWidth) => void;
+  presentationMode: PresentationMode;
+  onPresentationModeChange: (mode: PresentationMode) => void;
+  viewportWidth: number;
+  onViewportWidthChange: (width: number) => void;
   scalePercent: number;
   onRefresh: () => void;
   isRefreshing: boolean;
@@ -16,21 +18,11 @@ interface PreviewToolbarProps {
   codeCopied: boolean;
 }
 
-const DESKTOP_PRESETS: Array<{ value: DesktopViewportWidth; label: string }> = [
-  { value: "fit", label: "Fit" },
-  { value: 1200, label: "1200px" },
-  { value: 1440, label: "1440px" },
-];
-
-const MOBILE_PRESETS: Array<{ value: MobileViewportWidth; label: string }> = [
-  { value: 375, label: "375px (SE)" },
-  { value: 390, label: "390px (Pro)" },
-  { value: 430, label: "430px (Max)" },
-];
-
 export function PreviewToolbar({
   device,
   onDeviceChange,
+  presentationMode,
+  onPresentationModeChange,
   viewportWidth,
   onViewportWidthChange,
   scalePercent,
@@ -44,10 +36,7 @@ export function PreviewToolbar({
       {/* Left: Device Mode Toggles */}
       <div className="flex items-center gap-1 bg-neutral-100 p-1 rounded-lg border border-neutral-200/80">
         <button
-          onClick={() => {
-            onDeviceChange("desktop");
-            onViewportWidthChange("fit");
-          }}
+          onClick={() => onDeviceChange("desktop")}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition ${
             device === "desktop"
               ? "bg-white text-neutral-900 shadow-2xs font-semibold"
@@ -60,10 +49,7 @@ export function PreviewToolbar({
         </button>
 
         <button
-          onClick={() => {
-            onDeviceChange("mobile");
-            onViewportWidthChange(390);
-          }}
+          onClick={() => onDeviceChange("mobile")}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition ${
             device === "mobile"
               ? "bg-white text-neutral-900 shadow-2xs font-semibold"
@@ -76,37 +62,113 @@ export function PreviewToolbar({
         </button>
       </div>
 
-      {/* Center: Viewport Presets & Zoom Info */}
-      <div className="flex items-center gap-2">
-        <span className="text-neutral-400 text-[11px] hidden md:inline">Viewport:</span>
+      {/* Center: Showcase Viewport Presets & Fit Mode */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-neutral-400 text-[11px] hidden md:inline">View:</span>
         <div className="flex items-center gap-1 bg-neutral-100/80 p-0.5 rounded-lg border border-neutral-200/60">
-          {device === "desktop"
-            ? DESKTOP_PRESETS.map((p) => (
-                <button
-                  key={String(p.value)}
-                  onClick={() => onViewportWidthChange(p.value)}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
-                    viewportWidth === p.value
-                      ? "bg-white text-neutral-900 shadow-2xs font-semibold"
-                      : "text-neutral-500 hover:text-neutral-800"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))
-            : MOBILE_PRESETS.map((p) => (
-                <button
-                  key={String(p.value)}
-                  onClick={() => onViewportWidthChange(p.value)}
-                  className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
-                    viewportWidth === p.value
-                      ? "bg-white text-neutral-900 shadow-2xs font-semibold"
-                      : "text-neutral-500 hover:text-neutral-800"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
+          {/* Fit Preview Button (Default) */}
+          <button
+            onClick={() => onPresentationModeChange("fit")}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition ${
+              presentationMode === "fit"
+                ? "bg-white text-neutral-900 shadow-2xs font-semibold"
+                : "text-neutral-500 hover:text-neutral-800"
+            }`}
+            title="Auto-scale section to fit comfortably in workspace"
+          >
+            Fit
+          </button>
+
+          {device === "desktop" ? (
+            <>
+              <button
+                onClick={() => {
+                  onViewportWidthChange(1200);
+                  if (presentationMode === "actual") onPresentationModeChange("fit");
+                }}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
+                  viewportWidth === 1200 && presentationMode !== "actual"
+                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                    : "text-neutral-500 hover:text-neutral-800"
+                }`}
+                title="1200px Desktop Viewport"
+              >
+                1200px
+              </button>
+              <button
+                onClick={() => {
+                  onViewportWidthChange(1440);
+                  if (presentationMode === "actual") onPresentationModeChange("fit");
+                }}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
+                  viewportWidth === 1440 && presentationMode !== "actual"
+                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                    : "text-neutral-500 hover:text-neutral-800"
+                }`}
+                title="1440px Wide Desktop Viewport"
+              >
+                1440px
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  onViewportWidthChange(375);
+                  if (presentationMode === "actual") onPresentationModeChange("fit");
+                }}
+                className={`px-2 py-1 rounded-md text-[11px] font-mono transition ${
+                  viewportWidth === 375 && presentationMode !== "actual"
+                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                    : "text-neutral-500 hover:text-neutral-800"
+                }`}
+                title="375px Compact Mobile"
+              >
+                375px
+              </button>
+              <button
+                onClick={() => {
+                  onViewportWidthChange(390);
+                  if (presentationMode === "actual") onPresentationModeChange("fit");
+                }}
+                className={`px-2 py-1 rounded-md text-[11px] font-mono transition ${
+                  viewportWidth === 390 && presentationMode !== "actual"
+                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                    : "text-neutral-500 hover:text-neutral-800"
+                }`}
+                title="390px Standard Mobile"
+              >
+                390px
+              </button>
+              <button
+                onClick={() => {
+                  onViewportWidthChange(430);
+                  if (presentationMode === "actual") onPresentationModeChange("fit");
+                }}
+                className={`px-2 py-1 rounded-md text-[11px] font-mono transition ${
+                  viewportWidth === 430 && presentationMode !== "actual"
+                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                    : "text-neutral-500 hover:text-neutral-800"
+                }`}
+                title="430px Large Mobile"
+              >
+                430px
+              </button>
+            </>
+          )}
+
+          {/* 100% / Actual View Button */}
+          <button
+            onClick={() => onPresentationModeChange("actual")}
+            className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
+              presentationMode === "actual"
+                ? "bg-white text-neutral-900 shadow-2xs font-semibold"
+                : "text-neutral-500 hover:text-neutral-800"
+            }`}
+            title="Display section at 100% actual scale"
+          >
+            100%
+          </button>
         </div>
 
         {/* Zoom / Scale badge */}

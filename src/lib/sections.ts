@@ -1,62 +1,32 @@
-import fs from "fs";
-import path from "path";
-import { SECTIONS_METADATA, SectionMeta } from "@/data/sections-meta";
-import { renderLiquidToHtml } from "./liquid-preview";
+import type { DiscoveredSectionMeta } from "./section-discovery";
+import { DISCOVERED_SECTIONS, getGeneratedSectionSource } from "@/generated/sections-meta.generated";
 
-export interface SectionItem extends SectionMeta {
-  code: string;
-  lineCount: number;
-  fileSizeBytes: number;
-  fileSizeFormatted: string;
-  previewHtml: string;
-}
+export type SectionItem = DiscoveredSectionMeta;
 
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
-}
-
+/**
+ * Returns all discovered sections.
+ * In development mode, performs dynamic hot discovery on every request.
+ * In production mode, uses the fast pre-generated metadata bundle.
+ */
 export async function getAllSections(): Promise<SectionItem[]> {
-  const sectionsDir = path.join(process.cwd(), "sections");
-
-  const results = await Promise.all(
-    SECTIONS_METADATA.map(async (meta) => {
-      const filePath = path.join(sectionsDir, meta.filename);
-      let code = "";
-      let lineCount = 0;
-      let fileSizeBytes = 0;
-      let previewHtml = "";
-
-      try {
-        if (fs.existsSync(filePath)) {
-          code = fs.readFileSync(filePath, "utf-8");
-          lineCount = code.split("\n").length;
-          fileSizeBytes = Buffer.byteLength(code, "utf-8");
-          previewHtml = await renderLiquidToHtml(code, meta.filename);
-        } else {
-          code = `<!-- File ${meta.filename} not found in sections/ -->`;
-          previewHtml = `<div style="padding:20px;color:#999;">Section ${meta.filename} not found.</div>`;
-        }
-      } catch (err) {
-        console.error(`Error reading ${meta.filename}:`, err);
-        code = `<!-- Error reading ${meta.filename} -->`;
-        previewHtml = `<div style="padding:20px;color:#ef4444;">Error reading section.</div>`;
+  if (process.env.NODE_ENV !== "production") {
+    try {
+      const { discoverAllSections } = await import("./section-discovery");
+      const { sections } = discoverAllSections();
+      if (sections && sections.length > 0) {
+        return sections;
       }
+    } catch (err) {
+      console.warn("[sections] Hot discovery fallback:", err);
+    }
+  }
 
-      return {
-        ...meta,
-        plan: meta.plan || "free",
-        code,
-        lineCount,
-        fileSizeBytes,
-        fileSizeFormatted: formatBytes(fileSizeBytes),
-        previewHtml,
-      };
-    })
-  );
+  return DISCOVERED_SECTIONS;
+}
 
-  return results;
+/**
+ * Retrieves the raw Liquid source code for a section by its ID.
+ */
+export async function getSectionSource(id: string): Promise<string | null> {
+  return getGeneratedSectionSource(id);
 }

@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "sections:generate": "tsx scripts/generate-sections-meta.ts",
+    "predev": "npm run sections:generate",
+    "prebuild": "npm run sections:generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -24,6 +27,7 @@
     "eslint-config-next": "16.4.3",
     "puppeteer-core": "^25.16.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }
