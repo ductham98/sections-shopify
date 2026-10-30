@@ -99,9 +99,8 @@ src/
 │   │   ├── SectionSidebar.tsx            # Sidebar bộ lọc (Search, Newest, Plan, Categories)
 │   │   ├── MobileFilterDrawer.tsx        # Drawer trượt cho thiết bị di động/tablet
 │   │   └── SectionMarketplace.tsx        # Container chính quản lý tương tác và state
-│   ├── sections/
-│   │   ├── PlanBadge.tsx                 # Huy hiệu Plan (Free: xanh da trời / Gold: vàng)
-│   │   ├── SectionCard.tsx               # Card hiển thị: Badge, Live Preview, Title, 2 nút
+│   ├── sections/ 
+│   │   ├── SectionCard.tsx               # Card hiển thị: Live Preview, Title, 2 nút
 │   │   ├── SectionGrid.tsx               # Header danh sách và Grid 3 cột
 │   │   └── SectionPreviewModal.tsx       # Modal xem trước lớn (Chuyển Desktop / Mobile 375px)
 │   └── ui/

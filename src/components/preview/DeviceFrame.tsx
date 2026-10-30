@@ -14,9 +14,9 @@ export function DeviceFrame({ children, width }: DeviceFrameProps) {
       style={{ width: `${width}px` }}
     >
       {/* Sleek Minimalist Mobile Chassis (Clean bezel without obstructing content) */}
-      <div className="relative rounded-[32px] p-2 bg-neutral-900 shadow-2xl ring-1 ring-neutral-800">
+      <div className="relative rounded-[4px] bg-neutral-900 shadow-2xl ">
         {/* Screen Container */}
-        <div className="relative rounded-[24px] overflow-hidden bg-white w-full border border-neutral-800/20">
+        <div className="relative rounded-[4px] overflow-hidden bg-white w-full">
           {children}
         </div>
       </div>

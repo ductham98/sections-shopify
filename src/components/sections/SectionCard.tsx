@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Eye, Copy, Check, LayoutGrid, Sparkles, Layers, ShoppingBag, Star, HelpCircle, Megaphone, FolderArchive } from "lucide-react";
 import { SectionItem } from "@/lib/sections";
-import { PlanBadge } from "./PlanBadge";
 import { fetchSectionCode } from "@/lib/section-client";
 
 interface SectionCardProps {
@@ -54,11 +53,6 @@ export function SectionCard({
   return (
     <div className="group flex flex-col rounded-xl border border-[#E5E5E5] bg-white overflow-hidden shadow-2xs hover:shadow-md hover:border-zinc-300 transition-all duration-200">
       <div className="relative border-b border-[#F0F0F0]">
-        {/* Top-Left Plan Badge */}
-        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
-          <PlanBadge plan={section.plan} />
-        </div>
-
         {/* Thumbnail Preview Area (Lightweight, NO iframe) */}
         <div
           onClick={() => onPreview(section)}
@@ -135,11 +129,10 @@ export function SectionCard({
           <button
             onClick={handleCopy}
             disabled={copying}
-            className={`w-full flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition shadow-2xs active:scale-[0.98] ${
-              copied
+            className={`w-full flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition shadow-2xs active:scale-[0.98] ${copied
                 ? "bg-emerald-600 text-white border border-emerald-600"
                 : "bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-900"
-            }`}
+              }`}
           >
             {copied ? (
               <>
