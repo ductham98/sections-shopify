@@ -1,36 +1,38 @@
 # 📚 TÀI LIỆU KỸ THUẬT DỰ ÁN (PROJECT DOCUMENTATION)
 ## SHOPIFY CUSTOM SECTIONS LIBRARY (ONLINE STORE 2.0)
 
-> **Phiên bản:** 1.0.0  
-> **Cập nhật lần cuối:** 30/10/2026  
+> **Phiên bản:** 2.0.0 (Marketplace Redesign)  
 > **Framework:** Next.js 16 (App Router) • React 19 • Tailwind CSS v4 • TypeScript  
-> **Hỗ trợ nền tảng:** Shopify Online Store 2.0 • Vercel Edge Network  
+> **Rendering Engine:** LiquidJS (Liquid Server-Side Sandbox Pre-renderer)  
+> **Nền tảng mục tiêu:** Shopify Online Store 2.0 • Vercel Edge Network  
 
 ---
 
 ## MỤC LỤC
-1. [Giới Thiệu Tổng Quan](#1-giới-thiệu-tổng-quan)
+1. [Giới Thiệu Tổng Quan & Triết Lý Thiết Kế](#1-giới-thiệu-tổng-quan--triết-lý-thiết-kế)
 2. [Kiến Trúc Kỹ Thuật (Architecture)](#2-kiến-trúc-kỹ-thuật-architecture)
-3. [Cấu Trúc Thư Mục Chi Tiết](#3-cấu-trúc-thư-mục-chi-tiết)
-4. [Danh Mục & Danh Sách Section Hiện Có](#4-danh-mục--danh-sách-section-hiện-có)
-5. [Cơ Chế Đọc Mã Tĩnh (Static Ingestion Pipeline)](#5-cơ-chế-đọc-mã-tĩnh-static-ingestion-pipeline)
-6. [Hướng Dẫn Cài Đặt & Phát Triển Local](#6-hướng-dẫn-cài-đặt--phát-triển-local)
-7. [Quy Trình Thêm Section Mới](#7-quy-trình-thêm-section-mới)
-8. [Hướng Dẫn Triển Khai (Deploy) Lên Vercel](#8-hướng-dẫn-triển-khai-deploy-lên-vercel)
-9. [Hướng Dẫn Cài Đặt Section Vào Theme Shopify](#9-hướng-dẫn-cài-đặt-section-vào-theme-shopify)
-10. [Tiêu Chuẩn Lập Trình Shopify Section (Best Practices)](#10-tiêu-chuẩn-lập-trình-shopify-section-best-practices)
+3. [Kiến Trúc Live Section Preview (Liquid Rendering Engine)](#3-kiến-trúc-live-section-preview-liquid-rendering-engine)
+4. [Cấu Trúc Thư Mục Component Mới](#4-cấu-trúc-thư-mục-component-mới)
+5. [Hệ Thống Lọc & Điều Hướng (Filters & Sidebar)](#5-hệ-thống-lọc--điều-hướng-filters--sidebar)
+6. [Hành Động Trên Card (Card Actions: Preview & Copy Code)](#6-hành-động-trên-card-card-actions-preview--copy-code)
+7. [Modal Xem Trước Đa Viewport (Desktop & Mobile Simulation)](#7-modal-xem-trước-đa-viewport-desktop--mobile-simulation)
+8. [Danh Mục & Danh Sách 11 Section Hiện Có](#8-danh-mục--danh-sách-11-section-hiện-có)
+9. [Các Bộ Lọc (Filters) & Thẻ (Tags) Shopify Được Hỗ Trợ](#9-các-bộ-lọc-filters--thẻ-tags-shopify-được-hỗ-trợ)
+10. [Giới Hạn & Phạm Vi Hoạt Động (Limitations)](#10-giới-hạn--phạm-vi-hoạt-động-limitations)
+11. [Hướng Dẫn Cài Đặt & Phát Triển Local](#11-hướng-dẫn-cài-đặt--phát-triển-local)
+12. [Quy Trình Thêm Section Mới](#12-quy-trình-thêm-section-mới)
+13. [Hướng Dẫn Triển Khai (Deploy) Lên Vercel](#13-hướng-dẫn-triển-khai-deploy-lên-vercel)
 
 ---
 
-## 1. GIỚI THIỆU TỔNG QUAN
+## 1. GIỚI THIỆU TỔNG QUAN & TRIẾT LÝ THIẾT KẾ
 
-**Shopify Custom Sections Library** là một nền tảng Web App hiện đại cho phép các lập trình viên và nhà bán hàng (Merchants) trên Shopify:
-- **Khám phá và xem trước (Preview)** các Section Shopify tùy biến được thiết kế chuyên nghiệp.
-- **Xem giả lập đa thiết bị (Desktop & Mobile)** trước khi cài đặt vào store thực tế.
-- **Sao chép mã nguồn nhanh (1-Click Copy Code)** hoặc tải trực tiếp file `.liquid` để dán vào Theme Shopify chuẩn Online Store 2.0.
-- **Tra cứu và tìm kiếm thông minh** theo danh mục, tính năng, preset name, từ khóa tag.
-
-Dự án được tối ưu để lưu trữ mã nguồn mở, cho phép cộng đồng dễ dàng mở rộng và triển khai miễn phí trên nền tảng **Vercel**.
+**Shopify Custom Sections Library** đã được tái thiết kế hoàn toàn theo phong cách **Shopify Section Marketplace**:
+- **Trực quan & Tinh gọn:** Nền xám nhạt (`#F5F5F5`), thẻ card trắng viền mỏng (`#E5E5E5`), bo góc 12px, không dùng banner khổng lồ hay gradient rườm rà.
+- **Trọng tâm sản phẩm:** Toàn bộ sự chú ý hướng về 3 thao tác cốt lõi: **Duyệt (Browse) → Xem trước sống động (Preview) → Sao chép mã (Copy Code)**.
+- **Hai cột cân đối:**
+  - Cột trái: Sidebar điều hướng cố định (Sticky) 280–300px chứa Tìm kiếm tức thì, Sắp xếp Newest, Bộ lọc Plan (Free/Gold) và Danh mục radio button kèm đếm số lượng động.
+  - Cột phải: Lưới hiển thị section (3 cột trên desktop 1440px, 2 cột trên tablet, 1 cột trên mobile).
 
 ---
 
@@ -39,309 +41,221 @@ Dự án được tối ưu để lưu trữ mã nguồn mở, cho phép cộng 
 ```
 ┌────────────────────────────────────────────────────────┐
 │                   SECTIONS REPOSITORY                  │
-│  sections/*.liquid (Mã nguồn Liquid thực tế)           │
+│  sections/*.liquid (11 file Liquid OS 2.0 thực tế)     │
 └──────────────────────────┬─────────────────────────────┘
-                           │ Đọc tại Build Time (Node.js FS)
+                           │ Đọc file & Parse Schema tại Build Time
                            ▼
 ┌────────────────────────────────────────────────────────┐
-│              NEXT.JS 16 APPSERVER BUILD (SSG)          │
-│  • src/data/sections-meta.ts (Metadata & Tags)         │
-│  • src/lib/sections.ts (Bundler & Line Calculator)     │
-│  • Static Prerendering (HTML + JSON CDN Cache)         │
+│             LIQUID PREVIEW INGESTION PIPELINE          │
+│  src/lib/liquid-preview.ts & src/lib/preview-context.ts│
+│  • LiquidJS engine biên dịch mã Liquid thành HTML thực │
+│  • Bơm dữ liệu mẫu Shopify: section, product, form...  │
+│  • Tách riêng {% schema %} ra khỏi nội dung trang      │
+│  • Đóng gói thành Standalone HTML Document             │
 └──────────────────────────┬─────────────────────────────┘
-                           │ Bundle thành trang tĩnh tối ưu
+                           │ Build tĩnh Next.js 16 (0.4s)
                            ▼
 ┌────────────────────────────────────────────────────────┐
-│                 CLIENT INTERACTION LAYER               │
-│  • Category Filter Pills (Lọc danh mục đa năng)        │
-│  • Instant Keyword Search (Tìm kiếm tức thì)           │
-│  • SectionCard (Card xem trước + nút Copy nhanh)       │
-│  • SectionModal (Preview Desktop/Mobile + Full Code)   │
-│  • InstallGuideModal (Hướng dẫn thao tác trong Admin)  │
+│                 CLIENT MARKETPLACE UI                  │
+│  • SectionSidebar: Search, Sort, Plan, Category Radios │
+│  • SectionGrid: Lưới 3 cột với thẻ SectionCard         │
+│  • Isolated Iframe Preview (Không xung đột CSS)        │
+│  • Exactly 2 Actions: Preview Modal & 1-Click Copy Code│
+│  • Toast Notification: "Liquid code copied!"           │
 └────────────────────────────────────────────────────────┘
 ```
 
-### Công nghệ sử dụng:
-- **Core Framework:** Next.js 16.4.3 (App Router).
-- **Ngôn ngữ:** TypeScript 5.x.
-- **Thư viện UI:** React 19.3.0.
-- **Styling:** Tailwind CSS v4 (cấu hình qua `@import "tailwindcss";`).
-- **Icons:** `lucide-react` (kèm SVG custom inline cho brand).
-- **Static Generation:** Toàn bộ dữ liệu `.liquid` được đóng gói tĩnh tại build time (0ms cold start, 100% SEO friendly).
+---
+
+## 3. KIẾN TRÚC LIVE SECTION PREVIEW (LIQUID RENDERING ENGINE)
+
+Thay vì dùng ảnh tĩnh hay placeholder SVG, ứng dụng sử dụng cơ chế **Live Section Preview** biên dịch từ chính mã nguồn Liquid của từng file:
+
+1. **Phân tách Schema:** Engine tự động bóc tách khối `{% schema %}...{% endschema %}`, phân tích cú pháp JSON để lấy danh sách block mặc định từ `presets` và các giá trị cài đặt mặc định trong `settings`.
+2. **Khởi tạo Ngữ cảnh Giả lập (Mock Shopify Context):** Cung cấp các đối tượng Shopify tiêu chuẩn:
+   - `section.id`: ID duy nhất cho scope CSS.
+   - `section.settings`: Các biến màu sắc, padding, typography, tỷ lệ ảnh.
+   - `section.blocks`: Mảng block theo cấu trúc preset của schema.
+   - `product` & `collection`: Dữ liệu mẫu sản phẩm thực tế (ảnh Unsplash chất lượng cao, giá tiền, biến thể, tình trạng còn hàng).
+   - `cart`, `shop`, `form`: Đối tượng môi trường Shopify.
+3. **Cách ly Iframe (Sandboxing):**
+   - Kết quả biên dịch được bọc trong một tài liệu HTML hoàn chỉnh và hiển thị qua thẻ `<iframe>` với `srcDoc`.
+   - **Lợi ích:** Cách ly 100% CSS và JavaScript của section, không bao giờ gây ảnh hưởng hay xung đột với giao diện Tailwind CSS của ứng dụng.
+   - **Tỉ lệ xem trên Card:** Preview được co tỉ lệ chuẩn xác `300% width * scale(0.3333)` để hiển thị trọn vẹn bố cục desktop trong khung xem trước mà không bị méo hình hay hở viền.
 
 ---
 
-## 3. CẤU TRÚC THƯ MỤC CHI TIẾT
+## 4. CẤU TRÚC THƯ MỤC COMPONENT MỚI
 
 ```text
-sections-shopify/
-├── sections/                         # [QUAN TRỌNG] Thư mục chứa các file mã nguồn .liquid gốc
-│   ├── custom-hero.liquid            # Velroxa Hero Banner (Dual image desktop/mobile)
-│   ├── custom-featured-products.liquid# Lưới sản phẩm nổi bật
-│   ├── feature-categories.liquid     # Thẻ danh mục sản phẩm hình ảnh
-│   ├── trust-bar.liquid              # Thanh cam kết chất lượng & dịch vụ
-│   ├── interactive-faq-accordion.liquid # FAQ Accordion có ô tìm kiếm trực tiếp
-│   ├── faq-contact.liquid            # Cặp đôi FAQ + Form gửi yêu cầu liên hệ
-│   ├── testimonials-carousel.liquid  # Lưới review đánh giá khách hàng xác thực
-│   ├── product-features-grid.liquid  # Bento Grid giới thiệu tính năng
-│   ├── announcement-bar-ticker.liquid# Thanh thông báo chạy chữ Marquee vô tận
-│   ├── sticky-add-to-cart.liquid     # Thanh mua nhanh nổi cố định
-│   └── logo-cloud-marquee.liquid     # Dải logo đối tác & báo chí chạy liên tục
-├── public/
-│   └── previews/                     # Thư mục chứa ảnh preview SVG độ phân giải cao
-│       ├── custom-hero.svg
-│       ├── custom-featured-products.svg
-│       ├── feature-categories.svg
-│       ├── trust-bar.svg
-│       ├── interactive-faq-accordion.svg
-│       ├── faq-contact.svg
-│       ├── testimonials-carousel.svg
-│       ├── product-features-grid.svg
-│       ├── announcement-bar-ticker.svg
-│       ├── sticky-add-to-cart.svg
-│       └── logo-cloud-marquee.svg
-├── src/
-│   ├── app/                          # Next.js App Router
-│   │   ├── globals.css               # Import Tailwind CSS v4 & custom root styling
-│   │   ├── layout.tsx                # Root layout, fonts Geist, thẻ Meta SEO
-│   │   └── page.tsx                  # Server Component đọc sections & render view chính
-│   ├── components/                   # Các component giao diện React
-│   │   ├── Navbar.tsx                # Header điều hướng, badge đếm section, link GitHub
-│   │   ├── HeroHeader.tsx            # Tiêu đề giới thiệu & ô tìm kiếm live search
-│   │   ├── CategoryFilter.tsx        # Thanh tab lọc theo từng danh mục
-│   │   ├── SectionCard.tsx           # Card hiển thị section, ảnh preview & nút Copy
-│   │   ├── SectionModal.tsx          # Modal đa năng (Xem preview, Full Code, Hướng dẫn)
-│   │   ├── InstallGuideModal.tsx     # Popup hướng dẫn thao tác trong Shopify Admin
-│   │   └── Footer.tsx                # Footer website & hướng dẫn đóng góp section
-│   ├── data/
-│   │   ├── categories.ts             # Định nghĩa danh sách các danh mục, màu sắc, icon
-│   │   └── sections-meta.ts          # Metadata chi tiết từng section (Preset, Tag, Mô tả)
-│   └── lib/
-│       └── sections.ts               # Bộ đọc file fs.readFileSync & tính dung lượng file
-├── package.json                      # Danh sách dependencies & scripts
-├── tsconfig.json                     # Cấu hình TypeScript
-├── eslint.config.mjs                 # Cấu hình kiểm tra chuẩn code ESLint
-└── README.md                         # Hướng dẫn nhanh cho repository
+src/
+├── app/
+│   ├── globals.css                       # Tailwind CSS v4 styling
+│   ├── layout.tsx                        # Layout gốc, nền #F5F5F5, font chữ
+│   └── page.tsx                          # Async Server Component gọi getAllSections()
+├── components/
+│   ├── layout/
+│   │   ├── AppHeader.tsx                 # Header gọn gàng: logo, số section, link GitHub
+│   │   ├── SectionSidebar.tsx            # Sidebar bộ lọc (Search, Newest, Plan, Categories)
+│   │   ├── MobileFilterDrawer.tsx        # Drawer trượt cho thiết bị di động/tablet
+│   │   └── SectionMarketplace.tsx        # Container chính quản lý tương tác và state
+│   ├── sections/
+│   │   ├── PlanBadge.tsx                 # Huy hiệu Plan (Free: xanh da trời / Gold: vàng)
+│   │   ├── SectionCard.tsx               # Card hiển thị: Badge, Live Preview, Title, 2 nút
+│   │   ├── SectionGrid.tsx               # Header danh sách và Grid 3 cột
+│   │   └── SectionPreviewModal.tsx       # Modal xem trước lớn (Chuyển Desktop / Mobile 375px)
+│   └── ui/
+│       └── Toast.tsx                     # Thông báo nhẹ nhàng "Liquid code copied!"
+├── data/
+│   ├── categories.ts                     # Danh sách 7 danh mục
+│   └── sections-meta.ts                  # Metadata 11 sections (plan: "free", tags, preset)
+└── lib/
+    ├── liquid-preview.ts                 # Bộ máy render LiquidJS và bộ lọc Shopify
+    ├── preview-context.ts                # Dữ liệu ngữ cảnh mẫu Shopify
+    └── sections.ts                       # Pipeline đọc file tĩnh tại Build time
 ```
 
 ---
 
-## 4. DANH MỤC & DANH SÁCH SECTION HIỆN CÓ
+## 5. HỆ THỐNG LỌC & ĐIỀU HƯỚNG (FILTERS & SIDEBAR)
 
-Hệ thống được chia thành 6 nhóm danh mục chuẩn E-commerce:
+Sidebar bên trái có chiều rộng 280–300px, cố định trên desktop:
 
-| ID Danh mục | Tên tiếng Việt | Màu sắc | Mục đích sử dụng |
-|---|---|---|---|
-| `all` | **Tất cả Section** | Indigo | Xem toàn bộ thư viện |
-| `hero` | **Hero & Banner** | Purple | Thu hút sự chú ý tại đầu trang, truyền tải thông điệp chính |
-| `features` | **Tính năng & Bento Grid** | Blue | Giới thiệu công nghệ, chất liệu, ưu điểm vượt trội |
-| `product` | **Sản phẩm & Chốt đơn** | Emerald | Thúc đẩy thêm hàng vào giỏ, tăng tỷ lệ chuyển đổi |
-| `social-proof` | **Đánh giá & Testimonials** | Amber | Tạo dựng niềm tin từ đánh giá người dùng thực tế & báo chí |
-| `faq` | **Hỏi đáp & Hỗ trợ** | Cyan | Giải đáp khúc mắc khách hàng, giảm áp lực cho bộ phận CSKH |
-| `header` | **Thông báo & Header** | Rose | Nhấn mạnh khuyến mãi, miễn phí vận chuyển, flash sale |
-
-### Bảng thống kê 11 Sections tích hợp sẵn:
-
-| Tên Section | File name | Danh mục | Preset Name | Đặc điểm chính |
-|---|---|---|---|---|
-| **Velroxa Responsive Hero** | `custom-hero.liquid` | `hero` | `Custom Hero` | Hỗ trợ ảnh riêng cho Desktop & Mobile, chỉnh overlay, font size, button |
-| **Velroxa Featured Products** | `custom-featured-products.liquid` | `product` | `Custom Featured Products` | Lưới sản phẩm từ Collection, nhãn Sale, số cột tùy biến |
-| **Velroxa Category Cards** | `feature-categories.liquid` | `features` | `Custom Categories` | Thẻ ảnh danh mục sản phẩm, hiệu ứng hover zoom, tỷ lệ ảnh linh hoạt |
-| **Velroxa Trust Bar** | `trust-bar.liquid` | `social-proof` | `Custom Trust Bar` | Thanh cam kết dịch vụ (Giao hàng, Hoàn tiền, Bảo hành, CSKH) |
-| **Instant Search FAQ** | `interactive-faq-accordion.liquid` | `faq` | `FAQ Accordion with Search` | Accordion mượt mà, tích hợp ô tìm kiếm lọc câu hỏi theo thời gian thực |
-| **Dual FAQ + Contact Form** | `faq-contact.liquid` | `faq` | `Custom FAQ` | Chia 2 cột: bên trái là câu hỏi thường gặp, bên phải là form liên hệ |
-| **Verified Reviews Grid** | `testimonials-carousel.liquid` | `social-proof` | `Testimonials Grid` | Đánh giá 5 sao, avatar, huy hiệu Đã mua hàng xác thực (Verified Buyer) |
-| **Features Bento Grid** | `product-features-grid.liquid` | `features` | `Features Bento Grid` | Phong cách Apple Bento Grid, số liệu thống kê (10x, 99%), huy hiệu NEW |
-| **Marquee Announcement** | `announcement-bar-ticker.liquid` | `header` | `Announcement Ticker` | Chạy chữ ngang vô tận, tự dừng khi hover chuột, icon khuyến mãi |
-| **Sticky Add To Cart** | `sticky-add-to-cart.liquid` | `product` | `Sticky Add to Cart Bar` | Thanh mua nhanh nổi ở đáy trang khi cuộn quá 400px, chọn biến thể |
-| **Logo Cloud Marquee** | `logo-cloud-marquee.liquid` | `social-proof` | `Logo Cloud Marquee` | Dải logo đối tác/báo chí trượt liên tục, mờ 2 bên mép chuyên nghiệp |
+1. **Ô Tìm kiếm (Search):**
+   - Tìm kiếm tức thì theo: Tiêu đề section, Tiêu đề tiếng Việt, Tên file `.liquid`, Tên Preset, Mô tả và Thẻ Tag.
+   - Có nút xóa tìm kiếm (X) khi có nội dung.
+2. **Sắp xếp (Sorting):**
+   - Checkbox **Newest**: Sắp xếp các section theo ngày cập nhật mới nhất (`updatedAt` giảm dần).
+3. **Gói dịch vụ (Plan):**
+   - Checkbox **Free** (11) và **Gold** (0).
+   - Tôn trọng dữ liệu thực tế: toàn bộ 11 section hiện tại đều miễn phí 100% (`plan: "free"`).
+4. **Danh mục (Categories):**
+   - Chọn kiểu Radio (mỗi thời điểm chỉ chọn 1 danh mục).
+   - Hiển thị số lượng động tính từ dữ liệu thực tế:
+     - All Sections (11)
+     - Hero & Banner (1)
+     - Features & Bento Grid (2)
+     - Product & Conversion (2)
+     - Social Proof & Reviews (3)
+     - FAQ & Support (2)
+     - Announcement & Header (1)
+5. **Giao diện Di động (Mobile Drawer):**
+   - Khi ở màn hình nhỏ, xuất hiện nút **Filters** kèm huy hiệu số bộ lọc đang chọn.
+   - Bấm vào sẽ mở thanh Drawer trượt từ bên trái với đầy đủ chức năng và nút **Clear All**.
 
 ---
 
-## 5. CƠ CHẾ ĐỌC MÃ TĨNH (STATIC INGESTION PIPELINE)
+## 6. HÀNH ĐỘNG TRÊN CARD (CARD ACTIONS)
 
-Để đảm bảo hiệu năng tối đa và **không phát sinh lỗi đọc file khi chạy trên môi trường Serverless của Vercel**, dự án sử dụng kiến trúc Static Prerendering:
+Mỗi thẻ section card chỉ có duy nhất **2 hành động chính**:
 
-1. **Nguồn dữ liệu:** Các file Liquid được lưu trực tiếp dưới dạng `.liquid` nguyên bản tại thư mục `sections/`. Bạn không cần phải escape string thủ công thành JSON.
-2. **Hàm xử lý ([`src/lib/sections.ts`](file:///Users/nguyenductham/Working/sections-shopify/src/lib/sections.ts)):**
-   ```typescript
-   export function getAllSections(): SectionItem[] {
-     const sectionsDir = path.join(process.cwd(), "sections");
-     return SECTIONS_METADATA.map((meta) => {
-       const filePath = path.join(sectionsDir, meta.filename);
-       const code = fs.readFileSync(filePath, "utf-8");
-       const lineCount = code.split("\n").length;
-       const fileSizeBytes = Buffer.byteLength(code, "utf-8");
-       // Trả về đối tượng hoàn chỉnh
-     });
-   }
-   ```
-3. **Build time:** Khi chạy lệnh `npm run build`, Next.js Server Component gọi `getAllSections()` và nướng (bake) toàn bộ nội dung code Liquid vào file HTML tĩnh.
-4. **Kết quả:** Khi người dùng truy cập, website tải gần như ngay lập tức (dưới 100ms) qua CDN, chức năng 1-Click Copy hoạt động offline ngay trong trình duyệt.
+1. **`Preview` (Xem trước):**
+   - Mở cửa sổ Modal xem trước kích thước lớn.
+2. **`Copy Code` (Sao chép mã):**
+   - Sao chép toàn bộ mã nguồn Liquid nguyên bản vào Clipboard.
+   - Hiển thị thông báo Toast góc dưới: *"Liquid code copied!"*.
+
+*(Các nút dư thừa như View Details, View Code, Download đã được loại bỏ hoàn toàn theo đúng yêu cầu thiết kế).*
 
 ---
 
-## 6. HƯỚNG DẪN CÀI ĐẶT & PHÁT TRIỂN LOCAL
+## 7. MODAL XEM TRƯỚC ĐA VIEWPORT (DESKTOP & MOBILE SIMULATION)
 
-### 1. Yêu cầu môi trường
-- **Node.js:** Phiên bản `>= 18.17.0` (Khuyên dùng `20.x` hoặc `24.x`).
-- **Trình quản lý gói:** `npm`, `pnpm` hoặc `yarn`.
+Modal cho phép kiểm tra chi tiết giao diện section:
 
-### 2. Các bước cài đặt
-Clone repository và cài đặt thư viện:
+- **Thanh tiêu đề (Header):** Tên Section, Tên file, Tên Preset, Số dòng code và nút Đóng (X).
+- **Thanh công cụ (Toolbar):**
+  - Nút chuyển chế độ **Desktop** (mô phỏng màn hình máy tính).
+  - Nút chuyển chế độ **Mobile (375px)** (mô phỏng khung điện thoại iPhone 375px).
+  - Nút **Copy Code** phụ trợ.
+- **Khu vực hiển thị:**
+  - Iframe độc lập căn giữa màn hình, cuộn mượt mà khi nội dung dài.
+  - Phím `ESC` hoặc bấm ra ngoài nền đen để đóng modal, tự động khóa cuộn trang nền (`scroll lock`).
+
+---
+
+## 8. DANH MỤC & DANH SÁCH 11 SECTION HIỆN CÓ
+
+| # | Tên Section | File name | Danh mục | Plan | Preset Name | Dòng |
+|---|---|---|---|---|---|---|
+| 1 | **Velroxa Responsive Hero** | `custom-hero.liquid` | Hero & Banner | Free | `Custom Hero` | 1,130 |
+| 2 | **Velroxa Featured Products** | `custom-featured-products.liquid` | Product & Conversion | Free | `Custom Featured Products` | 1,826 |
+| 3 | **Velroxa Category Cards** | `feature-categories.liquid` | Features & Bento Grid | Free | `Custom Categories` | 1,350 |
+| 4 | **Velroxa Trust Bar** | `trust-bar.liquid` | Social Proof & Reviews | Free | `Custom Trust Bar` | 484 |
+| 5 | **Instant Search FAQ** | `interactive-faq-accordion.liquid` | FAQ & Support | Free | `FAQ Accordion with Search` | 346 |
+| 6 | **Dual FAQ & Contact Form** | `faq-contact.liquid` | FAQ & Support | Free | `Custom FAQ` | 628 |
+| 7 | **Verified Customer Reviews** | `testimonials-carousel.liquid` | Social Proof & Reviews | Free | `Testimonials Grid` | 316 |
+| 8 | **Features Bento Grid** | `product-features-grid.liquid` | Features & Bento Grid | Free | `Features Bento Grid` | 329 |
+| 9 | **Marquee Announcement Bar** | `announcement-bar-ticker.liquid` | Announcement & Header | Free | `Announcement Ticker` | 185 |
+| 10 | **Sticky Add to Cart Bar** | `sticky-add-to-cart.liquid` | Product & Conversion | Free | `Sticky Add to Cart Bar` | 184 |
+| 11 | **Logo Cloud Marquee** | `logo-cloud-marquee.liquid` | Social Proof & Reviews | Free | `Logo Cloud Marquee` | 190 |
+
+---
+
+## 9. CÁC BỘ LỌC (FILTERS) & THẺ (TAGS) SHOPIFY ĐƯỢC HỖ TRỢ
+
+Bộ máy LiquidJS được tích hợp các adapter dành riêng cho Shopify:
+
+- **Bộ lọc hình ảnh:**
+  - `image_url`: Chuyển đổi đối tượng ảnh hoặc URL, hỗ trợ kích thước `width`, `height`.
+  - `image_tag`: Tạo thẻ `<img>` tối ưu với `alt`, `class`, `loading="lazy"`.
+  - `placeholder_svg_tag`: Tạo khung placeholder đồ họa chuẩn Shopify.
+- **Bộ lọc tiền tệ:**
+  - `money`: Định dạng giá trị cent hoặc dollar thành `$149.00`.
+- **Bộ lọc văn bản & toán học:**
+  - `default`, `escape`, `newline_to_br`, `slice`, `append`, `t` (translation).
+  - `minus`, `times`, `divided_by`, `round`.
+- **Thẻ cấu trúc (Tags):**
+  - `{% liquid ... %}`: Cú pháp viết nhiều lệnh trong 1 block.
+  - `{% form 'contact', ... %} ... {% endform %}`: Thẻ form liên hệ của Shopify.
+  - `if`, `else`, `elsif`, `unless`, `case/when`, `for` loop, `assign`, `comment`.
+
+---
+
+## 10. GIỚI HẠN & PHẠM VI HOẠT ĐỘNG (LIMITATIONS)
+
+1. **Môi trường Client không kết nối Shopify Admin trực tiếp:**
+   - Các hành động như bấm "Submit Contact Form" hay "Add to Cart" trong phần preview được cấu hình `event.preventDefault()` để tránh submit trang ngoài ý muốn trong môi trường xem trước.
+2. **Shopify App Extensions:**
+   - Các section không yêu cầu App bên thứ 3 nào. Toàn bộ tính năng (Live search FAQ, Marquee ticker, Bento grid, Sticky buy bar) đều chạy bằng **Vanilla JavaScript và Scoped CSS** độc lập.
+
+---
+
+## 11. HƯỚNG DẪN CÀI ĐẶT & PHÁT TRIỂN LOCAL
+
 ```bash
-git clone https://github.com/ductham98/sections-shopify.git
-cd sections-shopify
+# 1. Cài đặt dependencies
 npm install
-```
 
-### 3. Khởi chạy máy chủ phát triển (Development Server)
-```bash
+# 2. Chạy môi trường phát triển
 npm run dev
-```
-Mở trình duyệt truy cập: `http://localhost:3000`
 
-### 4. Kiểm tra chuẩn code (Linting)
-```bash
+# 3. Kiểm tra chuẩn code (ESLint 0 errors)
 npm run lint
-```
-*Lưu ý: Dự án tuân thủ nghiêm ngặt quy chuẩn ESLint của Next.js (không có warning hoặc error).*
 
-### 5. Kiểm tra đóng gói (Production Build)
-```bash
+# 4. Kiểm tra đóng gói (Static Build)
 npm run build
 npm run start
 ```
 
 ---
 
-## 7. QUY TRÌNH THÊM SECTION MỚI
+## 12. QUY TRÌNH THÊM SECTION MỚI
 
-Khi bạn có một file Liquid mới muốn đưa lên trang web, thực hiện đúng 3 bước sau:
+Chỉ cần 3 bước đơn giản:
 
-### Bước 1: Lưu file code vào thư mục `sections/`
-Copy file `.liquid` của bạn vào thư mục `sections/`:
-```text
-sections/my-new-section.liquid
-```
-
-### Bước 2: Khai báo thông tin vào `src/data/sections-meta.ts`
-Mở file [`src/data/sections-meta.ts`](file:///Users/nguyenductham/Working/sections-shopify/src/data/sections-meta.ts) và thêm vào mảng `SECTIONS_METADATA`:
-```typescript
-{
-  id: "my-new-section",
-  filename: "my-new-section.liquid",
-  title: "Tiêu đề tiếng Anh của Section",
-  titleVi: "Tiêu đề tiếng Việt hiển thị",
-  category: "hero", // Một trong các mục: hero, features, product, social-proof, faq, header
-  description: "Mô tả ngắn tiếng Anh về tính năng",
-  descriptionVi: "Mô tả chi tiết bằng tiếng Việt",
-  previewImage: "/previews/my-new-section.svg", // Đường dẫn ảnh preview
-  presetName: "Tên Preset trong schema của file Liquid",
-  tags: ["Responsive", "Conversion", "Minimal"],
-  features: [
-    "Tính năng nổi bật 1",
-    "Tính năng nổi bật 2",
-    "Tính năng nổi bật 3"
-  ],
-  difficulty: "Beginner",
-  shopifyVersion: "Online Store 2.0",
-  updatedAt: "2026-10-30"
-}
-```
-
-### Bước 3: Tạo ảnh Preview
-Tạo 1 file ảnh minh họa (khuyên dùng định dạng `.svg` để nhẹ và sắc nét trên mọi màn hình, hoặc `.png`, `.webp`) và lưu vào:
-```text
-public/previews/my-new-section.svg
-```
-
-Sau khi hoàn tất, hệ thống sẽ tự động cập nhật đếm số lượng, render thẻ card, hỗ trợ tìm kiếm và tính năng copy code tự động!
+1. Thả file `.liquid` vào thư mục [`sections/`](file:///Users/nguyenductham/Working/sections-shopify/sections/).
+2. Khai báo thông tin vào [`src/data/sections-meta.ts`](file:///Users/nguyenductham/Working/sections-shopify/src/data/sections-meta.ts) với `plan: "free"`.
+3. Chạy `npm run build` hoặc push lên GitHub. Bộ máy LiquidJS sẽ tự động biên dịch live preview HTML và đưa section lên website ngay lập tức!
 
 ---
 
-## 8. HƯỚNG DẪN TRIỂN KHAI (DEPLOY) LÊN VERCEL
+## 13. HƯỚNG DẪN TRIỂN KHAI LÊN VERCEL
 
-### Cách 1: Tự động qua GitHub (Khuyên dùng)
-1. Đẩy mã nguồn lên repository GitHub của bạn:
-   ```bash
-   git add .
-   git commit -m "feat: add new section"
-   git push origin main
-   ```
-2. Mở trình duyệt vào [Vercel Dashboard](https://vercel.com).
-3. Nhấn nút **Add New...** > Chọn **Project**.
-4. Chọn repository `sections-shopify`.
-5. Giữ nguyên các thiết lập mặc định (Framework Preset: **Next.js**).
-6. Nhấn nút **Deploy**.
-   - Vercel sẽ tự động build trang tĩnh và phát hành URL có định dạng `https://sections-shopify.vercel.app`.
-   - Mỗi lần bạn `git push` một section mới, Vercel sẽ tự động build lại trong ~30 giây.
-
-### Cách 2: Deploy qua dòng lệnh Vercel CLI
+Dự án được tối ưu 100% cho Vercel:
 ```bash
-# Cài đặt Vercel CLI nếu chưa có
-npm install -g vercel
-
-# Đăng nhập và deploy
-vercel --prod
+git add .
+git commit -m "feat: complete modern Shopify sections marketplace redesign"
+git push origin main
 ```
-
----
-
-## 9. HƯỚNG DẪN CÀI ĐẶT SECTION VÀO THEME SHOPIFY
-
-Dành cho Merchant hoặc lập trình viên khi sử dụng section từ thư viện này:
-
-### Bước 1: Mở trình soạn thảo Theme
-1. Truy cập trang quản trị **Shopify Admin** (`your-store.myshopify.com/admin`).
-2. Vào mục **Online Store** > **Themes**.
-3. Tại theme đang hoạt động (ví dụ: Dawn), bấm vào nút dấu ba chấm **"..."** > Chọn **Edit code**.
-
-### Bước 2: Tạo Section mới
-1. Ở danh mục cây thư mục bên trái, cuộn xuống tìm thư mục **Sections**.
-2. Nhấn vào liên kết **Add a new section**.
-3. Đặt tên file chính xác theo tên hiển thị trên web (ví dụ: `custom-hero.liquid`).
-4. Bấm **Done** để tạo file.
-
-### Bước 3: Dán mã nguồn Liquid
-1. Mở trang web thư viện, tìm đến section cần dùng và bấm **Copy Code** (hoặc mở modal chọn **Sao Chép Tất Cả**).
-2. Xóa toàn bộ đoạn code mẫu có sẵn trong file mới tạo ở Shopify.
-3. Dán toàn bộ mã nguồn vừa copy vào.
-4. Bấm nút **Save** ở góc trên bên phải.
-
-### Bước 4: Thêm vào trang qua Theme Customizer
-1. Quay lại trang **Online Store** > **Themes** > Bấm nút **Customize** (Tùy biến).
-2. Tại trang chủ hoặc trang sản phẩm bất kỳ, ở cột bên trái nhấn **Add section** (Thêm phần).
-3. Gõ tìm tên **Preset Name** của section (được ghi rõ trong phần chi tiết trên trang web, ví dụ: *"Custom Hero"*).
-4. Section sẽ xuất hiện tức thì trên giao diện kéo thả, cho phép bạn thay đổi hình ảnh, văn bản, màu sắc tùy ý.
-
----
-
-## 10. TIÊU CHUẨN LẬP TRÌNH SHOPIFY SECTION (BEST PRACTICES)
-
-Tất cả các section trong thư viện đều tuân thủ các quy tắc chuẩn của Shopify Online Store 2.0:
-
-1. **Cách ly vùng ảnh hưởng CSS (Scoped CSS):**
-   - Luôn sử dụng tiền tố hoặc ID động gắn liền với `{{ section.id }}`:
-     ```html
-     <section id="custom-hero-{{ section.id }}" class="custom-hero"> ... </section>
-     <style>
-       #custom-hero-{{ section.id }} {
-         --hero-bg: {{ section.settings.background_color }};
-       }
-     </style>
-     ```
-2. **Khai báo biến CSS (CSS Variables) từ Setting:**
-   - Truyền trực tiếp màu sắc, kích thước, padding qua CSS custom properties trên thẻ section gốc để code CSS gọn gàng và dễ bảo trì.
-3. **Tối ưu hình ảnh (Performance & Core Web Vitals):**
-   - Sử dụng filter `image_url` kết hợp thẻ `image_tag` với các tham số `widths`, `sizes`, `loading: 'lazy'` (hoặc `loading: 'eager'` nếu là Banner Hero đầu trang).
-   - Sử dụng thẻ `<picture>` có `<source media="(max-width: 749px)">` khi hỗ trợ ảnh riêng cho Mobile.
-4. **Không phụ thuộc thư viện nặng ngoài (Zero External Dependencies):**
-   - Hạn chế sử dụng jQuery hay các plugin slider nặng. Ưu tiên sử dụng Pure CSS (`animation`, `scroll-snap`) hoặc Vanilla JavaScript nhẹ nhàng tự hủy theo vòng đời block.
-5. **Đầy đủ Schema & Presets:**
-   - Mỗi file đều phải có thẻ `{% schema %}` hoàn chỉnh với ít nhất 1 mục trong `"presets"` để hiển thị trong bảng tìm kiếm của Theme Customizer.
-
----
-
-*Tài liệu này được biên soạn độc quyền cho dự án **sections-shopify**.*
-
+Vercel sẽ tự động kích hoạt pipeline build tĩnh (`next build`), tạo bản phân phối toàn cầu qua Edge CDN chỉ trong ~30 giây.

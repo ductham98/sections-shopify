@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Shopify Custom Sections Library | 1-Click Copy & Paste",
-  description: "Kho lưu trữ Section Shopify tùy biến chuẩn OS 2.0 có ảnh preview, phân loại danh mục và nút copy mã nhanh.",
+  title: "Shopify Sections Library | Clean Copy-Paste OS 2.0",
+  description: "Explore and customize Shopify Online Store 2.0 sections. Preview live rendered Liquid sections and copy complete code in 1-click.",
 };
 
 export default function RootLayout({
@@ -24,10 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="vi"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 dark:bg-zinc-950 font-sans">
+      <body className="min-h-full flex flex-col bg-[#F5F5F5] text-[#222222] font-sans">
         {children}
       </body>
     </html>

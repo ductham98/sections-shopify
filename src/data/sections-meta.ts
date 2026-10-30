@@ -4,6 +4,7 @@ export interface SectionMeta {
   title: string;
   titleVi: string;
   category: "hero" | "features" | "social-proof" | "product" | "faq" | "header";
+  plan: "free" | "gold";
   description: string;
   descriptionVi: string;
   previewImage: string;
@@ -20,9 +21,10 @@ export const SECTIONS_METADATA: SectionMeta[] = [
   {
     id: "custom-hero",
     filename: "custom-hero.liquid",
-    title: "Velroxa Responsive Hero Banner",
+    title: "Velroxa Responsive Hero",
     titleVi: "Velroxa Hero Banner Tùy Biến Đa Kích Thước",
     category: "hero",
+    plan: "free",
     description: "High-impact hero banner with separate desktop and mobile image support, customizable content alignments, overlays, fluid typography, and CTA buttons.",
     descriptionVi: "Banner Hero cao cấp hỗ trợ ảnh riêng cho Desktop & Mobile, chỉnh sửa màu sắc, padding, nút CTA và hiệu ứng overlay hoàn toàn qua Theme Editor.",
     previewImage: "/previews/custom-hero.svg",
@@ -42,9 +44,10 @@ export const SECTIONS_METADATA: SectionMeta[] = [
   {
     id: "custom-featured-products",
     filename: "custom-featured-products.liquid",
-    title: "Velroxa Featured Products Grid",
+    title: "Velroxa Featured Products",
     titleVi: "Lưới Sản Phẩm Nổi Bật Tùy Biến (Featured Products)",
     category: "product",
+    plan: "free",
     description: "Dynamic product showcase grid with sale badges, customizable column counts, responsive spacing, and direct add to cart integration.",
     descriptionVi: "Hiển thị sản phẩm nổi bật từ bộ sưu tập với nhãn Sale, giá so sánh, số cột tùy biến và nút thêm giỏ hàng tiện lợi.",
     previewImage: "/previews/custom-featured-products.svg",
@@ -58,14 +61,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Intermediate",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-29"
   },
   {
     id: "feature-categories",
     filename: "feature-categories.liquid",
-    title: "Velroxa Category Image Cards",
+    title: "Velroxa Category Cards",
     titleVi: "Thẻ Danh Mục Sản Phẩm Hình Ảnh (Category Cards)",
     category: "features",
+    plan: "free",
     description: "Visual category collection showcase with image cards, eyebrow badges, hover zoom animations, and customizable overlay contrasts.",
     descriptionVi: "Khung trưng bày danh mục sản phẩm trực quan dạng thẻ ảnh kèm text mô tả, hiệu ứng hover mượt mà và nút điều hướng chuyên nghiệp.",
     previewImage: "/previews/feature-categories.svg",
@@ -79,14 +83,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Beginner",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-28"
   },
   {
     id: "trust-bar",
     filename: "trust-bar.liquid",
-    title: "Velroxa Trust & Benefits Bar",
+    title: "Velroxa Trust Bar",
     titleVi: "Thanh Cam Kết Uy Tín & Quyền Lợi Khách Hàng",
     category: "social-proof",
+    plan: "free",
     description: "Clean horizontal credibility bar highlighting shipping promises, warranties, 30-day money-back guarantees, and 24/7 support with custom icons.",
     descriptionVi: "Thanh cam kết chất lượng dịch vụ với icon giao hàng miễn phí, bảo hành chính hãng, hoàn tiền 30 ngày và hỗ trợ khách hàng.",
     previewImage: "/previews/trust-bar.svg",
@@ -100,14 +105,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Beginner",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-27"
   },
   {
     id: "interactive-faq-accordion",
     filename: "interactive-faq-accordion.liquid",
-    title: "Instant Search FAQ Accordion",
+    title: "Instant Search FAQ",
     titleVi: "Hỏi Đáp FAQ Tích Hợp Tìm Kiếm Trực Tiếp",
     category: "faq",
+    plan: "free",
     description: "Clean animated FAQ accordion featuring an instant client-side keyword search bar, custom border-radius, and smooth SVG chevron animations.",
     descriptionVi: "Khung câu hỏi thường gặp dạng đóng mở mượt mà, có thanh tìm kiếm trực tiếp tức thì không cần reload trang.",
     previewImage: "/previews/interactive-faq-accordion.svg",
@@ -121,14 +127,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Beginner",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-26"
   },
   {
     id: "faq-contact",
     filename: "faq-contact.liquid",
-    title: "Dual FAQ Accordion + Contact Form",
+    title: "Dual FAQ & Contact Form",
     titleVi: "Bộ Đôi Hỏi Đáp FAQ Kết Hợp Form Liên Hệ",
     category: "faq",
+    plan: "free",
     description: "High-converting 2-column layout combining expandable FAQ questions on the left with a direct Shopify contact submission form on the right.",
     descriptionVi: "Giao diện chia đôi màn hình: bên trái là danh sách câu hỏi thường gặp, bên phải là form gửi yêu cầu hỗ trợ trực tiếp vào Shopify Admin.",
     previewImage: "/previews/faq-contact.svg",
@@ -142,14 +149,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Intermediate",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-25"
   },
   {
     id: "testimonials-carousel",
     filename: "testimonials-carousel.liquid",
-    title: "Verified Customer Reviews Grid",
+    title: "Verified Customer Reviews",
     titleVi: "Lưới Đánh Giá & Review Khách Hàng Xác Thực",
     category: "social-proof",
+    plan: "free",
     description: "Modern social proof section with star ratings, customer avatars, verified buyer badge, and overall store rating summary.",
     descriptionVi: "Hiển thị đánh giá khách hàng với xếp hạng 5 sao, avatar, huy hiệu Đã Mua Hàng xác thực và điểm tổng kết uy tín.",
     previewImage: "/previews/testimonials-carousel.svg",
@@ -163,14 +171,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Beginner",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-24"
   },
   {
     id: "product-features-grid",
     filename: "product-features-grid.liquid",
-    title: "Bento-Style Feature Highlights",
+    title: "Features Bento Grid",
     titleVi: "Bento Grid Giới Thiệu Tính Năng Đột Phá",
     category: "features",
+    plan: "free",
     description: "Apple-style Bento grid highlighting product features, tech specs, key metrics (10x, 99.8%), and badge tags.",
     descriptionVi: "Giao diện Bento Grid phong cách Apple giới thiệu các ưu điểm vượt trội, thông số kỹ thuật và số liệu ấn tượng.",
     previewImage: "/previews/product-features-grid.svg",
@@ -184,14 +193,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Intermediate",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-23"
   },
   {
     id: "announcement-bar-ticker",
     filename: "announcement-bar-ticker.liquid",
-    title: "Infinite Marquee Announcement Bar",
+    title: "Marquee Announcement Bar",
     titleVi: "Thanh Thông Báo Chạy Chữ Marquee Vô Tận",
     category: "header",
+    plan: "free",
     description: "Continuous smooth scrolling announcement ribbon with discount tags, free shipping notices, and pause-on-hover interaction.",
     descriptionVi: "Thanh thông báo chạy ngang mượt mà, hỗ trợ nhiều icon thông báo, link khuyến mãi và tự động dừng khi rê chuột.",
     previewImage: "/previews/announcement-bar-ticker.svg",
@@ -205,14 +215,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Beginner",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-22"
   },
   {
     id: "sticky-add-to-cart",
     filename: "sticky-add-to-cart.liquid",
-    title: "Floating Sticky Add To Cart Bar",
+    title: "Sticky Add to Cart Bar",
     titleVi: "Thanh Mua Nhanh Nổi Cố Định (Sticky Add-To-Cart)",
     category: "product",
+    plan: "free",
     description: "Conversion-boosting sticky product bar that smoothly slides in on scroll, with variant dropdown selector and 1-click cart action.",
     descriptionVi: "Thanh mua hàng nổi ở cạnh dưới khi người dùng cuộn trang, cho phép chọn biến thể và bấm Thêm Vào Giỏ Hàng ngay lập tức.",
     previewImage: "/previews/sticky-add-to-cart.svg",
@@ -226,14 +237,15 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Intermediate",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-21"
   },
   {
     id: "logo-cloud-marquee",
     filename: "logo-cloud-marquee.liquid",
-    title: "Infinite Press & Partner Logo Cloud",
+    title: "Logo Cloud Marquee",
     titleVi: "Dải Logo Báo Chí & Đối Tác Chạy Vô Tận",
     category: "social-proof",
+    plan: "free",
     description: "Sleek infinite scrolling logo cloud with gradient edge fade, grayscale filter, and full Shopify block customization.",
     descriptionVi: "Dải logo các thương hiệu đối tác, báo chí uy tín với hiệu ứng làm mờ 2 bên mép và hiệu ứng hover đổi màu sắc nét.",
     previewImage: "/previews/logo-cloud-marquee.svg",
@@ -247,6 +259,6 @@ export const SECTIONS_METADATA: SectionMeta[] = [
     ],
     difficulty: "Beginner",
     shopifyVersion: "Online Store 2.0",
-    updatedAt: "2026-10-30"
+    updatedAt: "2026-10-20"
   }
 ];

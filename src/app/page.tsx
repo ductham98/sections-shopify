@@ -1,19 +1,19 @@
 import { getAllSections } from "@/lib/sections";
-import { SectionLibrary } from "@/components/SectionLibrary";
+import { SectionMarketplace } from "@/components/layout/SectionMarketplace";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shopify Custom Sections Library | 1-Click Copy & Paste OS 2.0",
-  description: "Thư viện các section Shopify tùy biến chuẩn Online Store 2.0: có ảnh preview trực quan, code Liquid hoàn chỉnh, tối ưu Responsive và copy nhanh 1-click.",
+  title: "Shopify Sections Library | Clean Copy-Paste OS 2.0",
+  description: "Explore and customize Shopify Online Store 2.0 sections. Preview live rendered Liquid sections and copy complete code in 1-click.",
   openGraph: {
-    title: "Shopify Custom Sections Library | Free Liquid Sections",
-    description: "Bộ sưu tập section Shopify tùy biến có ảnh preview và copy nhanh code Liquid.",
+    title: "Shopify Sections Library | Clean Copy-Paste OS 2.0",
+    description: "Explore and customize Shopify Online Store 2.0 sections. Live previews and 1-click code copying.",
     type: "website",
   },
 };
 
-export default function Home() {
-  const sections = getAllSections();
+export default async function Home() {
+  const sections = await getAllSections();
 
-  return <SectionLibrary initialSections={sections} />;
+  return <SectionMarketplace initialSections={sections} />;
 }

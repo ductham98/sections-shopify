@@ -4,65 +4,56 @@ export interface Category {
   nameVi: string;
   description: string;
   icon: string;
-  color: string;
 }
 
 export const CATEGORIES: Category[] = [
   {
     id: "all",
     name: "All Sections",
-    nameVi: "Tất cả Section",
+    nameVi: "All Sections",
     description: "Browse the full collection of copy-paste Shopify Liquid sections",
-    icon: "LayoutGrid",
-    color: "indigo"
+    icon: "LayoutGrid"
   },
   {
     id: "hero",
     name: "Hero & Banner",
     nameVi: "Hero & Banner",
     description: "High-impact hero banners with responsive images, buttons & overlays",
-    icon: "Sparkles",
-    color: "purple"
+    icon: "Sparkles"
   },
   {
     id: "features",
-    name: "Features & Bento",
-    nameVi: "Tính năng & Bento Grid",
+    name: "Features & Bento Grid",
+    nameVi: "Features & Bento Grid",
     description: "Showcase product capabilities, stats, and benefits with modern layouts",
-    icon: "Layers",
-    color: "blue"
-  },
-  {
-    id: "social-proof",
-    name: "Social Proof & Reviews",
-    nameVi: "Đánh giá & Testimonials",
-    description: "Build buyer trust with verified reviews, star ratings, and logo marquees",
-    icon: "Star",
-    color: "amber"
+    icon: "Layers"
   },
   {
     id: "product",
     name: "Product & Conversion",
-    nameVi: "Sản phẩm & Chốt đơn",
+    nameVi: "Product & Conversion",
     description: "Sticky add-to-cart bars, quick buy triggers, and checkout accelerators",
-    icon: "ShoppingBag",
-    color: "emerald"
+    icon: "ShoppingBag"
+  },
+  {
+    id: "social-proof",
+    name: "Social Proof & Reviews",
+    nameVi: "Social Proof & Reviews",
+    description: "Build buyer trust with verified reviews, star ratings, and logo marquees",
+    icon: "Star"
   },
   {
     id: "faq",
-    name: "FAQ & Help",
-    nameVi: "Hỏi đáp & Hỗ trợ",
+    name: "FAQ & Support",
+    nameVi: "FAQ & Support",
     description: "Interactive accordion FAQs with instant live keyword search",
-    icon: "HelpCircle",
-    color: "cyan"
+    icon: "HelpCircle"
   },
   {
     id: "header",
     name: "Announcement & Header",
-    nameVi: "Thông báo & Header",
+    nameVi: "Announcement & Header",
     description: "Infinite marquee announcement bars, promo tickers, and top banners",
-    icon: "Megaphone",
-    color: "rose"
+    icon: "Megaphone"
   }
 ];
-
