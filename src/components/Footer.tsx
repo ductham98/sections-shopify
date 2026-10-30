@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Layers, Heart, PlusCircle, ChevronDown, ChevronUp, Terminal } from "lucide-react";
+import { Layers, PlusCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 function GithubIcon({ className }: { className?: string }) {
   return (

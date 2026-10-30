@@ -47,7 +47,7 @@ export function HeroHeader({ searchQuery, onSearchChange, totalSections }: HeroH
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs font-medium text-zinc-600 dark:text-zinc-400">
           <div className="flex items-center gap-1.5 rounded-md bg-white/70 px-2.5 py-1 shadow-xs dark:bg-zinc-900/70">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span>Copy 1-Click Có Ngay Code</span>
+            <span>{totalSections} Section Có Sẵn</span>
           </div>
           <div className="flex items-center gap-1.5 rounded-md bg-white/70 px-2.5 py-1 shadow-xs dark:bg-zinc-900/70">
             <Smartphone className="h-3.5 w-3.5 text-emerald-500" />

@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import { Copy, Check, Eye, Code, FileCode2, ExternalLink } from "lucide-react";
+import { Copy, Check, Eye, Code, FileCode2 } from "lucide-react";
 import { SectionItem } from "@/lib/sections";
 
 interface SectionCardProps {
@@ -31,6 +30,7 @@ export function SectionCard({ section, onOpenModal }: SectionCardProps) {
     >
       {/* Thumbnail Preview Image Container */}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800 border-b border-zinc-100 dark:border-zinc-800">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={section.previewImage}
           alt={section.title}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { X, BookOpen, Layers, CheckCircle, ArrowRight, ShieldCheck, HelpCircle } from "lucide-react";
+import { X, BookOpen, ShieldCheck } from "lucide-react";
 
 interface InstallGuideModalProps {
   isOpen: boolean;
@@ -60,7 +60,7 @@ export function InstallGuideModal({ isOpen, onClose }: InstallGuideModalProps) {
               </h4>
               <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                 Đăng nhập vào Shopify Admin &gt; Chọn <strong>Online Store</strong> &gt;{" "}
-                <strong>Themes</strong>. Bấm nút dấu ba chấm <strong>"..."</strong> ở theme đang dùng và chọn <strong>Edit code</strong>.
+                <strong>Themes</strong>. Bấm nút dấu ba chấm <strong>&ldquo;...&rdquo;</strong> ở theme đang dùng và chọn <strong>Edit code</strong>.
               </p>
             </div>
           </div>

@@ -10,7 +10,7 @@ import { InstallGuideModal } from "./InstallGuideModal";
 import { Footer } from "./Footer";
 import { SectionItem } from "@/lib/sections";
 import { CATEGORIES } from "@/data/categories";
-import { SlidersHorizontal, SearchX, Sparkles } from "lucide-react";
+import { SearchX } from "lucide-react";
 
 interface SectionLibraryProps {
   initialSections: SectionItem[];
@@ -131,7 +131,7 @@ export function SectionLibrary({ initialSections }: SectionLibraryProps) {
             <span>section {activeCategory !== "all" && `trong danh mục này`}</span>
             {searchQuery && (
               <span className="rounded-md bg-zinc-200/70 px-2 py-0.5 text-xs text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                Từ khóa: "{searchQuery}"
+                Từ khóa: &ldquo;{searchQuery}&rdquo;
               </span>
             )}
           </div>
@@ -140,7 +140,7 @@ export function SectionLibrary({ initialSections }: SectionLibraryProps) {
             <span className="text-xs text-zinc-500">Sắp xếp:</span>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as "default" | "lines" | "name")}
               className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-xs font-medium text-zinc-700 shadow-xs outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200"
             >
               <option value="default">Mặc định</option>
@@ -171,7 +171,7 @@ export function SectionLibrary({ initialSections }: SectionLibraryProps) {
               Không tìm thấy section nào
             </h3>
             <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-              Không có kết quả khớp với từ khóa "{searchQuery}". Hãy thử tìm kiếm bằng từ khóa khác hoặc xóa bộ lọc.
+              Không có kết quả khớp với từ khóa &ldquo;{searchQuery}&rdquo;. Hãy thử tìm kiếm bằng từ khóa khác hoặc xóa bộ lọc.
             </p>
             <button
               onClick={() => {
@@ -188,6 +188,7 @@ export function SectionLibrary({ initialSections }: SectionLibraryProps) {
 
       {/* Section Detail & Code Modal */}
       <SectionModal
+        key={selectedSection ? `${selectedSection.id}-${modalTab}` : "modal-closed"}
         section={selectedSection}
         onClose={handleCloseModal}
         initialTab={modalTab}

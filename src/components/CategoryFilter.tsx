@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CATEGORIES, Category } from "@/data/categories";
+import { CATEGORIES } from "@/data/categories";
 import {
   LayoutGrid,
   Sparkles,

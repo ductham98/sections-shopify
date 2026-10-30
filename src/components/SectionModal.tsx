@@ -12,9 +12,7 @@ import {
   Monitor,
   Smartphone,
   Sparkles,
-  ExternalLink,
   Layers,
-  Search,
   CheckCircle2
 } from "lucide-react";
 import { SectionItem } from "@/lib/sections";
@@ -29,11 +27,6 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
   const [activeTab, setActiveTab] = useState<"preview" | "code" | "guide">(initialTab);
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
-  const [codeFilter, setCodeFilter] = useState("");
-
-  useEffect(() => {
-    setActiveTab(initialTab);
-  }, [initialTab]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -91,7 +84,7 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
                 </span>
               </div>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                Preset Name trong Theme Customizer: <strong className="text-zinc-700 dark:text-zinc-200">"{section.presetName}"</strong>
+                Preset Name trong Theme Customizer: <strong className="text-zinc-700 dark:text-zinc-200">&ldquo;{section.presetName}&rdquo;</strong>
               </p>
             </div>
           </div>
@@ -228,6 +221,7 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
 
                     {/* Preview Image */}
                     <div className="relative aspect-[16/9] w-full bg-zinc-950">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={section.previewImage}
                         alt={section.title}
@@ -382,7 +376,7 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
             <div className="mx-auto max-w-3xl p-6 sm:p-8">
               <div className="rounded-2xl border border-emerald-500/20 bg-emerald-50/50 p-5 dark:border-emerald-500/30 dark:bg-emerald-950/20">
                 <h3 className="text-base font-bold text-emerald-900 dark:text-emerald-300">
-                  Cách thêm section "{section.title}" vào theme Shopify của bạn:
+                  Cách thêm section &ldquo;{section.title}&rdquo; vào theme Shopify của bạn:
                 </h3>
                 <p className="mt-1 text-xs text-emerald-800/80 dark:text-emerald-400">
                   Hoàn toàn không cần cài đặt thêm App trả phí. Hoạt động 100% với Shopify Dawn và mọi theme OS 2.0.
@@ -404,7 +398,7 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
                       <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
                         Online Store &gt; Themes
                       </code>
-                      . Nhấn vào biểu tượng <strong>"..."</strong> bên cạnh theme hiện tại và chọn{" "}
+                      . Nhấn vào biểu tượng <strong>&ldquo;...&rdquo;</strong> bên cạnh theme hiện tại và chọn{" "}
                       <strong>Edit code</strong>.
                     </p>
                   </div>
@@ -421,7 +415,7 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
                     <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                       Ở menu cột bên trái, tìm thư mục <strong>Sections</strong> và nhấn{" "}
                       <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                        "Add a new section"
+                        &ldquo;Add a new section&rdquo;
                       </span>
                       .
                     </p>
@@ -464,10 +458,10 @@ export function SectionModal({ section, onClose, initialTab = "preview" }: Secti
                       Thêm Section vào trang trong Theme Customizer
                     </h4>
                     <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                      Quay lại <strong>Online Store &gt; Themes &gt; Customize</strong>. Tại trang chủ hoặc bất kỳ trang nào bạn muốn, nhấn <strong>"Add section"</strong>, sau đó gõ tìm:
+                      Quay lại <strong>Online Store &gt; Themes &gt; Customize</strong>. Tại trang chủ hoặc bất kỳ trang nào bạn muốn, nhấn <strong>&ldquo;Add section&rdquo;</strong>, sau đó gõ tìm:
                     </p>
                     <div className="mt-2 inline-block rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-bold text-zinc-900 dark:bg-zinc-800 dark:text-white">
-                      "{section.presetName}"
+                      &ldquo;{section.presetName}&rdquo;
                     </div>
                     <p className="mt-2 text-xs text-zinc-500">
                       Bạn có thể tùy biến ảnh, text, màu sắc, khoảng cách trực tiếp trên thanh công cụ của Shopify!
