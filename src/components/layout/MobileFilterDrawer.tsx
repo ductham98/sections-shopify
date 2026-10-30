@@ -9,10 +9,6 @@ interface MobileFilterDrawerProps {
   onClose: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  isNewestSorted: boolean;
-  onToggleNewest: (val: boolean) => void;
-  selectedPlans: string[];
-  onTogglePlan: (plan: string) => void;
   activeCategory: string;
   onSelectCategory: (id: string) => void;
   categoryCounts: Record<string, number>;
@@ -25,10 +21,6 @@ export function MobileFilterDrawer({
   onClose,
   searchQuery,
   onSearchChange,
-  isNewestSorted,
-  onToggleNewest,
-  selectedPlans,
-  onTogglePlan,
   activeCategory,
   onSelectCategory,
   categoryCounts,
@@ -60,7 +52,7 @@ export function MobileFilterDrawer({
       <div className="fixed inset-y-0 left-0 w-full max-w-xs bg-white shadow-2xl flex flex-col z-50 animate-in slide-in-from-left duration-200">
         {/* Drawer header */}
         <div className="flex h-14 items-center justify-between border-b border-[#E5E5E5] px-4">
-          <span className="font-bold text-sm text-zinc-900">Filters &amp; Search</span>
+          <span className="font-bold text-sm text-zinc-900">Filters &amp; Categories</span>
           <button
             onClick={onClose}
             className="rounded-lg p-1.5 text-zinc-400 hover:text-zinc-600 transition"
@@ -75,10 +67,6 @@ export function MobileFilterDrawer({
           <SectionSidebar
             searchQuery={searchQuery}
             onSearchChange={onSearchChange}
-            isNewestSorted={isNewestSorted}
-            onToggleNewest={onToggleNewest}
-            selectedPlans={selectedPlans}
-            onTogglePlan={onTogglePlan}
             activeCategory={activeCategory}
             onSelectCategory={(id) => {
               onSelectCategory(id);

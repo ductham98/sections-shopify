@@ -7,10 +7,6 @@ import { CATEGORIES } from "@/data/categories";
 interface SectionSidebarProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
-  isNewestSorted: boolean;
-  onToggleNewest: (val: boolean) => void;
-  selectedPlans: string[];
-  onTogglePlan: (plan: string) => void;
   activeCategory: string;
   onSelectCategory: (id: string) => void;
   categoryCounts: Record<string, number>;
@@ -21,10 +17,6 @@ interface SectionSidebarProps {
 export function SectionSidebar({
   searchQuery,
   onSearchChange,
-  isNewestSorted,
-  onToggleNewest,
-  selectedPlans,
-  onTogglePlan,
   activeCategory,
   onSelectCategory,
   categoryCounts,
@@ -32,7 +24,7 @@ export function SectionSidebar({
   isFilterActive,
 }: SectionSidebarProps) {
   return (
-    <aside className="w-full flex flex-col gap-6 p-4 sm:p-5 text-sm">
+    <aside className="w-full flex flex-col gap-5 p-4 sm:p-5 text-sm">
       {/* Top row: Title + Clear all */}
       <div className="flex items-center justify-between">
         <span className="font-bold text-xs uppercase tracking-wider text-zinc-400">
@@ -77,59 +69,7 @@ export function SectionSidebar({
 
       <hr className="border-[#E5E5E5]" />
 
-      {/* 2. Sorting */}
-      <div className="flex flex-col gap-2.5">
-        <span className="font-semibold text-xs text-zinc-700">Sorting</span>
-        <label className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 hover:text-zinc-950 transition select-none">
-          <input
-            type="checkbox"
-            checked={isNewestSorted}
-            onChange={(e) => onToggleNewest(e.target.checked)}
-            className="h-4 w-4 rounded border-[#D4D4D8] text-zinc-900 accent-zinc-900 focus:ring-0 cursor-pointer"
-          />
-          <span>Newest</span>
-        </label>
-      </div>
-
-      <hr className="border-[#E5E5E5]" />
-
-      {/* 3. Plan */}
-      <div className="flex flex-col gap-2.5">
-        <span className="font-semibold text-xs text-zinc-700">Plan</span>
-        <div className="flex flex-col gap-2">
-          {/* Free Checkbox */}
-          <label className="flex items-center justify-between cursor-pointer text-xs text-zinc-700 hover:text-zinc-950 transition select-none">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedPlans.includes("free")}
-                onChange={() => onTogglePlan("free")}
-                className="h-4 w-4 rounded border-[#D4D4D8] text-zinc-900 accent-zinc-900 focus:ring-0 cursor-pointer"
-              />
-              <span>Free</span>
-            </div>
-            <span className="text-[11px] text-zinc-400 font-mono">11</span>
-          </label>
-
-          {/* Gold Checkbox */}
-          <label className="flex items-center justify-between cursor-pointer text-xs text-zinc-700 hover:text-zinc-950 transition select-none">
-            <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedPlans.includes("gold")}
-                onChange={() => onTogglePlan("gold")}
-                className="h-4 w-4 rounded border-[#D4D4D8] text-zinc-900 accent-zinc-900 focus:ring-0 cursor-pointer"
-              />
-              <span>Gold</span>
-            </div>
-            <span className="text-[11px] text-zinc-400 font-mono">0</span>
-          </label>
-        </div>
-      </div>
-
-      <hr className="border-[#E5E5E5]" />
-
-      {/* 4. Categories (Radio style) */}
+      {/* 2. Categories (Radio style) */}
       <div className="flex flex-col gap-2.5">
         <span className="font-semibold text-xs text-zinc-700">Categories</span>
         <div className="flex flex-col gap-1">
@@ -141,7 +81,7 @@ export function SectionSidebar({
               <button
                 key={cat.id}
                 onClick={() => onSelectCategory(cat.id)}
-                className={`group flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs text-left transition select-none ${
+                className={`group flex items-center justify-between rounded-lg px-2.5 py-2 text-xs text-left transition select-none ${
                   isSelected
                     ? "bg-zinc-100 font-semibold text-zinc-950"
                     : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 font-normal"

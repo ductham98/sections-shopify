@@ -16,8 +16,6 @@ interface SectionMarketplaceProps {
 
 export function SectionMarketplace({ initialSections }: SectionMarketplaceProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isNewestSorted, setIsNewestSorted] = useState(false);
-  const [selectedPlans, setSelectedPlans] = useState<string[]>(["free"]);
   const [activeCategory, setActiveCategory] = useState("all");
   const [previewSection, setPreviewSection] = useState<SectionItem | null>(null);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -38,80 +36,49 @@ export function SectionMarketplace({ initialSections }: SectionMarketplaceProps)
     return counts;
   }, [initialSections]);
 
-  const handleTogglePlan = (plan: string) => {
-    setSelectedPlans((prev) =>
-      prev.includes(plan) ? prev.filter((p) => p !== plan) : [...prev, plan]
-    );
-  };
-
   const handleClearAll = () => {
     setSearchQuery("");
-    setIsNewestSorted(false);
-    setSelectedPlans(["free"]);
     setActiveCategory("all");
   };
 
-  const isFilterActive =
-    searchQuery.trim() !== "" ||
-    isNewestSorted ||
-    activeCategory !== "all" ||
-    !selectedPlans.includes("free") ||
-    selectedPlans.includes("gold");
+  const isFilterActive = searchQuery.trim() !== "" || activeCategory !== "all";
 
   const activeFilterCount =
-    (searchQuery.trim() ? 1 : 0) +
-    (isNewestSorted ? 1 : 0) +
-    (activeCategory !== "all" ? 1 : 0) +
-    (selectedPlans.length !== 1 || !selectedPlans.includes("free") ? 1 : 0);
+    (searchQuery.trim() ? 1 : 0) + (activeCategory !== "all" ? 1 : 0);
 
-  // Filter and sort sections
+  // Filter sections by category and search query
   const filteredSections = useMemo(() => {
-    return initialSections
-      .filter((item) => {
-        // 1. Category filter
-        if (activeCategory !== "all" && item.category !== activeCategory) {
-          return false;
-        }
+    return initialSections.filter((item) => {
+      // 1. Category filter
+      if (activeCategory !== "all" && item.category !== activeCategory) {
+        return false;
+      }
 
-        // 2. Plan filter
-        if (selectedPlans.length > 0 && !selectedPlans.includes(item.plan)) {
-          return false;
-        }
-        if (selectedPlans.length === 0) {
-          return false;
-        }
+      // 2. Search query filter
+      if (searchQuery.trim() !== "") {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesTitle = item.title.toLowerCase().includes(q);
+        const matchesTitleVi = item.titleVi.toLowerCase().includes(q);
+        const matchesDesc = item.description.toLowerCase().includes(q);
+        const matchesDescVi = item.descriptionVi.toLowerCase().includes(q);
+        const matchesPreset = item.presetName.toLowerCase().includes(q);
+        const matchesFilename = item.filename.toLowerCase().includes(q);
+        const matchesTags = item.tags.some((t) => t.toLowerCase().includes(q));
 
-        // 3. Search query filter
-        if (searchQuery.trim() !== "") {
-          const q = searchQuery.toLowerCase().trim();
-          const matchesTitle = item.title.toLowerCase().includes(q);
-          const matchesTitleVi = item.titleVi.toLowerCase().includes(q);
-          const matchesDesc = item.description.toLowerCase().includes(q);
-          const matchesDescVi = item.descriptionVi.toLowerCase().includes(q);
-          const matchesPreset = item.presetName.toLowerCase().includes(q);
-          const matchesFilename = item.filename.toLowerCase().includes(q);
-          const matchesTags = item.tags.some((t) => t.toLowerCase().includes(q));
+        return (
+          matchesTitle ||
+          matchesTitleVi ||
+          matchesDesc ||
+          matchesDescVi ||
+          matchesPreset ||
+          matchesFilename ||
+          matchesTags
+        );
+      }
 
-          return (
-            matchesTitle ||
-            matchesTitleVi ||
-            matchesDesc ||
-            matchesDescVi ||
-            matchesPreset ||
-            matchesFilename ||
-            matchesTags
-          );
-        }
-
-        return true;
-      })
-      .sort((a, b) => {
-        if (isNewestSorted) {
-          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-        }
-        return 0;
-      });
-  }, [initialSections, activeCategory, selectedPlans, searchQuery, isNewestSorted]);
+      return true;
+    });
+  }, [initialSections, activeCategory, searchQuery]);
 
   const handleCopySuccess = (sectionTitle: string) => {
     setToastMessage(`Liquid code copied! (${sectionTitle})`);
@@ -133,10 +100,6 @@ export function SectionMarketplace({ initialSections }: SectionMarketplaceProps)
           <SectionSidebar
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            isNewestSorted={isNewestSorted}
-            onToggleNewest={setIsNewestSorted}
-            selectedPlans={selectedPlans}
-            onTogglePlan={handleTogglePlan}
             activeCategory={activeCategory}
             onSelectCategory={setActiveCategory}
             categoryCounts={categoryCounts}
@@ -164,10 +127,6 @@ export function SectionMarketplace({ initialSections }: SectionMarketplaceProps)
         onClose={() => setIsMobileFiltersOpen(false)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        isNewestSorted={isNewestSorted}
-        onToggleNewest={setIsNewestSorted}
-        selectedPlans={selectedPlans}
-        onTogglePlan={handleTogglePlan}
         activeCategory={activeCategory}
         onSelectCategory={setActiveCategory}
         categoryCounts={categoryCounts}
