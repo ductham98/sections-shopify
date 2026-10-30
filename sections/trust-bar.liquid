@@ -1,0 +1,483 @@
+{% comment %}
+  Velroxa Trust Bar
+  Features:
+  - Customizable trust items and icons
+  - Responsive layout
+  - Typography and color controls
+  - Content max width
+  - Optional top and bottom section borders
+{% endcomment %}
+
+<section
+  id="velroxa-trust-{{ section.id }}"
+  class="velroxa-trust"
+  style="
+    --trust-bg: {{ section.settings.background_color }};
+    --trust-text: {{ section.settings.text_color }};
+    --trust-muted: {{ section.settings.description_color }};
+    --trust-icon: {{ section.settings.icon_color }};
+    --trust-divider: {{ section.settings.divider_color }};
+    --trust-section-border: {{ section.settings.section_border_color }};
+    --trust-section-border-width: {{ section.settings.section_border_width }}px;
+  "
+>
+  <div class="velroxa-trust__inner">
+    {% for block in section.blocks %}
+      <div
+        class="velroxa-trust__item"
+        {{ block.shopify_attributes }}
+      >
+        <div class="velroxa-trust__icon" aria-hidden="true">
+          {% case block.settings.icon %}
+            {% when 'shipping' %}
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h11v11H3zM14 10h4l3 3v4h-7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <circle cx="7.5" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="17.5" cy="18" r="2" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+
+            {% when 'warranty' %}
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3 19 6v5c0 4.5-2.8 7.8-7 10-4.2-2.2-7-5.5-7-10V6l7-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+
+            {% when 'support' %}
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 13v-2a8 8 0 0 1 16 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <rect x="3" y="12" width="4" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <rect x="17" y="12" width="4" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M17 19a5 5 0 0 1-5 2h-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+
+            {% when 'secure' %}
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="10" width="16" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M12 14v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+
+            {% when 'returns' %}
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 7v5h5M4.8 12A7.5 7.5 0 1 1 6 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="m4 12 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+          {% endcase %}
+        </div>
+
+        <div class="velroxa-trust__content">
+          {% if block.settings.title != blank %}
+            <h3 class="velroxa-trust__title">
+              {{ block.settings.title | escape }}
+            </h3>
+          {% endif %}
+
+          {% if block.settings.description != blank %}
+            <p class="velroxa-trust__description">
+              {{ block.settings.description | escape }}
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  #velroxa-trust-{{ section.id }} {
+    width: 100%;
+    background: var(--trust-bg);
+    color: var(--trust-text);
+    padding: {{ section.settings.padding_y }}px 24px;
+    box-sizing: border-box;
+
+    {% if section.settings.show_border_top %}
+      border-top: var(--trust-section-border-width) solid var(--trust-section-border);
+    {% else %}
+      border-top: none;
+    {% endif %}
+
+    {% if section.settings.show_border_bottom %}
+      border-bottom: var(--trust-section-border-width) solid var(--trust-section-border);
+    {% else %}
+      border-bottom: none;
+    {% endif %}
+  }
+
+  #velroxa-trust-{{ section.id }} *,
+  #velroxa-trust-{{ section.id }} *::before,
+  #velroxa-trust-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__inner {
+    width: 100%;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 8px 24px;
+    text-align: left;
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__item + .velroxa-trust__item {
+    border-left: 1px solid var(--trust-divider);
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__icon {
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    flex: 0 0 {{ section.settings.icon_size }}px;
+    color: var(--trust-icon);
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__title {
+    margin: 0 0 5px;
+    color: var(--trust-text);
+    font-family: {{ section.settings.heading_font }};
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.35;
+  }
+
+  #velroxa-trust-{{ section.id }} .velroxa-trust__description {
+    margin: 0;
+    color: var(--trust-muted);
+    font-family: {{ section.settings.body_font }};
+    font-size: {{ section.settings.description_size }}px;
+    font-weight: {{ section.settings.body_weight }};
+    line-height: 1.6;
+  }
+
+  @media screen and (max-width: 989px) and (min-width: 750px) {
+    #velroxa-trust-{{ section.id }} .velroxa-trust__item {
+      gap: 10px;
+      padding: 8px 12px;
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__title {
+      font-size: {{ section.settings.mobile_title_size }}px;
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__description {
+      font-size: {{ section.settings.mobile_description_size }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #velroxa-trust-{{ section.id }} {
+      padding: {{ section.settings.mobile_padding_y }}px 16px;
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__inner {
+      grid-template-columns: 1fr;
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__item {
+      justify-content: flex-start;
+      padding: 16px 4px;
+      gap: 12px;
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__item + .velroxa-trust__item {
+      border-left: 0;
+      border-top: 1px solid var(--trust-divider);
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__title {
+      font-size: {{ section.settings.mobile_title_size }}px;
+    }
+
+    #velroxa-trust-{{ section.id }} .velroxa-trust__description {
+      font-size: {{ section.settings.mobile_description_size }}px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Trust Bar",
+  "tag": "section",
+  "class": "section-velroxa-trust-bar",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 900,
+      "max": 1600,
+      "step": 50,
+      "default": 1300,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Desktop vertical padding",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_y",
+      "label": "Mobile vertical padding",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Section Borders"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border_top",
+      "label": "Show top border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border_bottom",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "section_border_color",
+      "label": "Section border color",
+      "default": "#E2E2E2"
+    },
+    {
+      "type": "range",
+      "id": "section_border_width",
+      "label": "Section border thickness",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "default": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_font",
+      "label": "Title font family",
+      "options": [
+        { "value": "inherit", "label": "Theme default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Georgia, serif", "label": "Georgia" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "body_font",
+      "label": "Description font family",
+      "options": [
+        { "value": "inherit", "label": "Theme default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Georgia, serif", "label": "Georgia" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Desktop title size",
+      "min": 11,
+      "max": 22,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "label": "Mobile title size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Desktop description size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_size",
+      "label": "Mobile description size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "body_weight",
+      "label": "Description font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Title color",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#686868"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Item divider color",
+      "default": "#E2E2E2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "warranty", "label": "Warranty" },
+            { "value": "support", "label": "Customer support" },
+            { "value": "secure", "label": "Secure payment" },
+            { "value": "returns", "label": "Returns" }
+          ],
+          "default": "shipping"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free Shipping"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Complimentary shipping on eligible orders."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Custom Trust Bar",
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shipping",
+            "title": "Free Shipping",
+            "description": "Available on eligible orders."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "warranty",
+            "title": "1-Year Warranty",
+            "description": "Extra peace of mind on eligible products."
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "support",
+            "title": "Customer Support",
+            "description": "We're here to help with your order."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

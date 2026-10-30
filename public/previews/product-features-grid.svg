@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <!-- Background -->
+  <rect width="800" height="450" fill="#f8fafc" />
+
+  <!-- Header -->
+  <g transform="translate(0, 45)" text-anchor="middle">
+    <text x="400" y="16" fill="#2563eb" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="700" letter-spacing="1">WHY CHOOSE US</text>
+    <text x="400" y="52" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800">Crafted with Obsessive Detail</text>
+    <text x="400" y="75" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13">Bento-grid feature highlights with performance metrics</text>
+  </g>
+
+  <!-- Bento Grid -->
+  <g transform="translate(60, 140)">
+    <!-- Card 1 (Span 2/3) -->
+    <rect width="420" height="130" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+    <rect x="20" y="20" width="40" height="40" rx="10" fill="#eff6ff" />
+    <text x="32" y="46" font-size="20">⚡</text>
+    <rect x="300" y="20" width="100" height="22" rx="11" fill="#dbeafe" />
+    <text x="315" y="35" fill="#1d4ed8" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">PATENTED TECH</text>
+    <text x="75" y="38" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700">Aerospace-Grade Alloy</text>
+    <text x="75" y="56" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Ultra durable materials crafted to resist wear &amp; scratches.</text>
+    <text x="24" y="105" fill="#2563eb" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="800">10x</text>
+    <text x="70" y="102" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Longer product lifespan</text>
+
+    <!-- Card 2 (Span 1/3) -->
+    <g transform="translate(436, 0)">
+      <rect width="244" height="130" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+      <rect x="20" y="20" width="40" height="40" rx="10" fill="#f0fdf4" />
+      <text x="31" y="46" font-size="20">🌿</text>
+      <text x="75" y="38" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="700">100% Recyclable</text>
+      <text x="75" y="56" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Zero plastic packaging.</text>
+      <text x="24" y="105" fill="#16a34a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="800">0g</text>
+      <text x="60" y="102" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Plastic waste</text>
+    </g>
+
+    <!-- Card 3 (Span 1/3) -->
+    <g transform="translate(0, 145)">
+      <rect width="244" height="130" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+      <rect x="20" y="20" width="40" height="40" rx="10" fill="#eff6ff" />
+      <text x="31" y="46" font-size="20">🛡️</text>
+      <text x="75" y="38" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="15" font-weight="700">Lifetime Cover</text>
+      <text x="75" y="56" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Free replacement policy.</text>
+      <text x="24" y="105" fill="#2563eb" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="800">100%</text>
+      <text x="90" y="102" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Guaranteed</text>
+    </g>
+
+    <!-- Card 4 (Span 2/3) -->
+    <g transform="translate(260, 145)">
+      <rect width="420" height="130" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+      <rect x="20" y="20" width="40" height="40" rx="10" fill="#fdf2f8" />
+      <text x="31" y="46" font-size="20">✨</text>
+      <rect x="300" y="20" width="100" height="22" rx="11" fill="#fce7f3" />
+      <text x="315" y="35" fill="#be185d" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">ERGONOMICS</text>
+      <text x="75" y="38" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="700">Human-First Architecture</text>
+      <text x="75" y="56" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Designed through 200+ user interviews for comfortable daily feel.</text>
+      <text x="24" y="105" fill="#ec4899" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="800">4.98★</text>
+      <text x="100" y="102" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12">Ergonomic satisfaction score</text>
+    </g>
+  </g>
+</svg>

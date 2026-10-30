@@ -1,0 +1,325 @@
+{%- liquid
+  assign bg_color = section.settings.bg_color | default: '#fafafa'
+  assign text_color = section.settings.text_color | default: '#18181b'
+  assign card_bg = section.settings.card_bg | default: '#ffffff'
+  assign star_color = section.settings.star_color | default: '#f59e0b'
+-%}
+
+<section
+  id="shopify-section-testimonials-{{ section.id }}"
+  class="testimonials-section"
+  style="
+    --t-bg: {{ bg_color }};
+    --t-text: {{ text_color }};
+    --t-card-bg: {{ card_bg }};
+    --t-star: {{ star_color }};
+    --t-padding-y: {{ section.settings.padding_y }}px;
+  "
+>
+  <div class="testimonials-container">
+    <div class="testimonials-header">
+      <div class="testimonials-stars-badge">
+        <span class="stars-icon">★★★★★</span>
+        <span class="rating-text">{{ section.settings.rating_score | default: '4.9/5 from 1,200+ customers' }}</span>
+      </div>
+      <h2 class="testimonials-title">{{ section.settings.title | default: 'Loved by Customers Worldwide' }}</h2>
+      {%- if section.settings.subtitle != blank -%}
+        <p class="testimonials-subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="testimonials-grid">
+      {%- for block in section.blocks -%}
+        <div class="testimonial-card" {{ block.shopify_attributes }}>
+          <div class="testimonial-stars">
+            {%- assign rating = block.settings.rating | default: 5 -%}
+            {%- for i in (1..rating) -%}
+              <span class="star-filled">★</span>
+            {%- endfor -%}
+          </div>
+          <blockquote class="testimonial-text">
+            “{{ block.settings.content | default: 'Absolutely thrilled with the quality and quick delivery! Exceeded all my expectations.' }}”
+          </blockquote>
+          <div class="testimonial-author">
+            {%- if block.settings.avatar != blank -%}
+              {{ block.settings.avatar | image_url: width: 96 | image_tag: class: 'author-avatar', loading: 'lazy' }}
+            {%- else -%}
+              <div class="author-avatar-fallback">{{ block.settings.name | slice: 0, 1 | default: 'U' }}</div>
+            {%- endif -%}
+            <div class="author-info">
+              <span class="author-name">{{ block.settings.name | default: 'Sarah Mitchell' }}</span>
+              <span class="author-role">{{ block.settings.role | default: 'Verified Buyer' }}</span>
+            </div>
+            {%- if block.settings.is_verified -%}
+              <span class="verified-badge" title="Verified Customer">
+                <svg viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-testimonials-{{ section.id }} {
+    background-color: var(--t-bg);
+    color: var(--t-text);
+    padding: var(--t-padding-y) 1.5rem;
+  }
+  .testimonials-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .testimonials-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+  .testimonials-stars-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .stars-icon {
+    color: var(--t-star);
+    letter-spacing: 2px;
+  }
+  .testimonials-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 0.75rem;
+  }
+  .testimonials-subtitle {
+    font-size: 1.1rem;
+    color: #52525b;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.75rem;
+  }
+  .testimonial-card {
+    background-color: var(--t-card-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.08);
+  }
+  .testimonial-stars {
+    color: var(--t-star);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .testimonial-text {
+    font-size: 1.025rem;
+    line-height: 1.65;
+    color: #27272a;
+    font-style: italic;
+    margin: 0 0 1.5rem;
+    flex-grow: 1;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f4f4f5;
+  }
+  .author-avatar, .author-avatar-fallback {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .author-avatar-fallback {
+    background: #e4e4e7;
+    color: #3f3f46;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .author-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .author-role {
+    font-size: 0.8rem;
+    color: #71717a;
+  }
+  .verified-badge {
+    margin-left: auto;
+    width: 20px;
+    height: 20px;
+    color: #10b981;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "rating_score",
+      "label": "Rating Badge Text",
+      "default": "4.9/5 from 1,200+ happy customers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Loved by Customers Worldwide"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Real reviews from genuine customers who tested and trusted our products."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 32,
+      "max": 140,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FAFAFA"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#18181B"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#F59E0B"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Customer Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Review Text",
+          "default": "Best purchase I've made this year. High quality, super fast shipping, and customer support answered in minutes!"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "Jessica Vance"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Customer Title / Location",
+          "default": "Verified Buyer - New York"
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Customer Photo"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_verified",
+          "label": "Show Verified Customer Badge",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials Grid",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "name": "Jessica Vance",
+            "role": "Verified Buyer - New York",
+            "rating": 5,
+            "content": "The attention to detail is remarkable. The product arrived safely packaged and worked perfectly out of the box."
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "David Miller",
+            "role": "Verified Buyer - London",
+            "rating": 5,
+            "content": "I was skeptical at first, but after 2 weeks of use, I cannot imagine going back. Worth every single penny!"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Elena Rostova",
+            "role": "Verified Buyer - Sydney",
+            "rating": 5,
+            "content": "Flawless shopping experience, elegant design, and superb customer care. Highly recommend to everyone."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

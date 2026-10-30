@@ -1,0 +1,206 @@
+{%- liquid
+  assign bg_color = section.settings.bg_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#111827'
+  assign btn_bg = section.settings.btn_bg | default: '#111827'
+  assign btn_text = section.settings.btn_text | default: '#ffffff'
+-%}
+
+{%- if product != blank -%}
+  <div
+    id="shopify-sticky-atc-{{ section.id }}"
+    class="sticky-atc-bar"
+    style="
+      --satc-bg: {{ bg_color }};
+      --satc-text: {{ text_color }};
+      --satc-btn-bg: {{ btn_bg }};
+      --satc-btn-text: {{ btn_text }};
+    "
+  >
+    <div class="sticky-atc-container">
+      <div class="sticky-atc-product">
+        {%- if product.featured_image != blank -%}
+          {{ product.featured_image | image_url: width: 96 | image_tag: class: 'sticky-atc-thumb', loading: 'lazy' }}
+        {%- endif -%}
+        <div class="sticky-atc-meta">
+          <span class="sticky-atc-title">{{ product.title }}</span>
+          <span class="sticky-atc-price">{{ product.price | money }}</span>
+        </div>
+      </div>
+
+      <div class="sticky-atc-actions">
+        {%- if product.has_only_default_variant == false -%}
+          <select id="sticky-atc-variant-{{ section.id }}" class="sticky-atc-select">
+            {%- for variant in product.variants -%}
+              <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>
+                {{ variant.title }} - {{ variant.price | money }} {% unless variant.available %}(Sold Out){% endunless %}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- endif -%}
+
+        <button
+          type="button"
+          id="sticky-atc-btn-{{ section.id }}"
+          class="sticky-atc-btn"
+          {% unless product.available %}disabled{% endunless %}
+        >
+          {%- if product.available -%}
+            {{ section.settings.button_text | default: 'Add to Cart' }}
+          {%- else -%}
+            Sold Out
+          {%- endif -%}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .sticky-atc-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      background: var(--satc-bg);
+      color: var(--satc-text);
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+      border-top: 1px solid #e5e7eb;
+      padding: 0.75rem 1rem;
+      transform: translateY(110%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sticky-atc-bar.is-visible {
+      transform: translateY(0);
+    }
+    .sticky-atc-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .sticky-atc-product {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      overflow: hidden;
+    }
+    .sticky-atc-thumb {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      flex-shrink: 0;
+    }
+    .sticky-atc-meta {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sticky-atc-title {
+      font-weight: 700;
+      font-size: 0.925rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sticky-atc-price {
+      font-size: 0.875rem;
+      color: #4b5563;
+      font-weight: 600;
+    }
+    .sticky-atc-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .sticky-atc-select {
+      padding: 0.6rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      background: #ffffff;
+      outline: none;
+    }
+    .sticky-atc-btn {
+      padding: 0.65rem 1.5rem;
+      background: var(--satc-btn-bg);
+      color: var(--satc-btn-text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .sticky-atc-btn:hover {
+      opacity: 0.9;
+    }
+    .sticky-atc-btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+  </style>
+
+  <script>
+    (function() {
+      const bar = document.getElementById('shopify-sticky-atc-{{ section.id }}');
+      if (!bar) return;
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 400) {
+          bar.classList.add('is-visible');
+        } else {
+          bar.classList.remove('is-visible');
+        }
+      }, { passive: true });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sticky Add to Cart Bar",
+  "tag": "section",
+  "class": "section-sticky-atc",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Label",
+      "default": "Add to Cart"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Bar Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button Text Color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky Add to Cart Bar"
+    }
+  ]
+}
+{% endschema %}

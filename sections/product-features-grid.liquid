@@ -1,0 +1,356 @@
+{%- liquid
+  assign bg_color = section.settings.bg_color | default: '#ffffff'
+  assign text_color = section.settings.text_color | default: '#111827'
+  assign accent_color = section.settings.accent_color | default: '#2563eb'
+-%}
+
+<section
+  id="shopify-section-features-{{ section.id }}"
+  class="features-grid-section"
+  style="
+    --fg-bg: {{ bg_color }};
+    --fg-text: {{ text_color }};
+    --fg-accent: {{ accent_color }};
+    --fg-padding-y: {{ section.settings.padding_y }}px;
+  "
+>
+  <div class="features-container">
+    <div class="features-header">
+      {%- if section.settings.tagline != blank -%}
+        <span class="features-tagline">{{ section.settings.tagline }}</span>
+      {%- endif -%}
+      <h2 class="features-title">{{ section.settings.title | default: 'Engineered for Performance' }}</h2>
+      {%- if section.settings.subtitle != blank -%}
+        <p class="features-subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="features-bento-grid">
+      {%- for block in section.blocks -%}
+        <div class="feature-card feature-card--{{ block.settings.card_span }}" {{ block.shopify_attributes }}>
+          <div class="feature-icon-box">
+            {%- case block.settings.icon_name -%}
+              {%- when 'lightning' -%}⚡
+              {%- when 'shield' -%}🛡️
+              {%- when 'leaf' -%}🌿
+              {%- when 'sparkles' -%}✨
+              {%- when 'heart' -%}❤️
+              {%- else -%}💎
+            {%- endcase -%}
+          </div>
+          {%- if block.settings.badge != blank -%}
+            <span class="feature-card-badge">{{ block.settings.badge }}</span>
+          {%- endif -%}
+          <h3 class="feature-card-title">{{ block.settings.title }}</h3>
+          <p class="feature-card-desc">{{ block.settings.description }}</p>
+          {%- if block.settings.stat_value != blank -%}
+            <div class="feature-card-stat">
+              <span class="stat-number">{{ block.settings.stat_value }}</span>
+              <span class="stat-label">{{ block.settings.stat_label }}</span>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-features-{{ section.id }} {
+    background-color: var(--fg-bg);
+    color: var(--fg-text);
+    padding: var(--fg-padding-y) 1.5rem;
+  }
+  .features-container {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+  .features-header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 3.5rem;
+  }
+  .features-tagline {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-accent);
+    margin-bottom: 0.75rem;
+  }
+  .features-title {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 1rem;
+  }
+  .features-subtitle {
+    font-size: 1.1rem;
+    color: #4b5563;
+    line-height: 1.6;
+  }
+  .features-bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+  .feature-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 2.25rem 2rem;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.07);
+  }
+  .feature-card--small {
+    grid-column: span 4;
+  }
+  .feature-card--medium {
+    grid-column: span 6;
+  }
+  .feature-card--large {
+    grid-column: span 8;
+  }
+  .feature-card--full {
+    grid-column: span 12;
+  }
+  @media (max-width: 900px) {
+    .feature-card--small,
+    .feature-card--medium,
+    .feature-card--large {
+      grid-column: span 6;
+    }
+  }
+  @media (max-width: 640px) {
+    .feature-card--small,
+    .feature-card--medium,
+    .feature-card--large,
+    .feature-card--full {
+      grid-column: span 12;
+    }
+  }
+  .feature-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .feature-card-badge {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0369a1;
+    background: #e0f2fe;
+    border-radius: 9999px;
+  }
+  .feature-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+  }
+  .feature-card-desc {
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .feature-card-stat {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .stat-number {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--fg-accent);
+  }
+  .stat-label {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Features Bento Grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Small Tagline",
+      "default": "Why Choose Us"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Crafted with Obsessive Detail"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "We combine premium materials, ergonomic craft, and sustainable manufacturing."
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 32,
+      "max": 140,
+      "step": 8,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#2563EB"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "card_span",
+          "label": "Card Size (Grid Span)",
+          "options": [
+            { "value": "small", "label": "1/3 Width (Span 4)" },
+            { "value": "medium", "label": "1/2 Width (Span 6)" },
+            { "value": "large", "label": "2/3 Width (Span 8)" }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "select",
+          "id": "icon_name",
+          "label": "Card Icon",
+          "options": [
+            { "value": "lightning", "label": "Lightning" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "leaf", "label": "Eco Leaf" },
+            { "value": "sparkles", "label": "Sparkles" },
+            { "value": "diamond", "label": "Diamond" }
+          ],
+          "default": "lightning"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge (Optional)",
+          "default": "NEW"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Ultra Fast Performance"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Feature Description",
+          "default": "Optimized to deliver instant results without compromising durability or energy."
+        },
+        {
+          "type": "text",
+          "id": "stat_value",
+          "label": "Highlight Metric / Number",
+          "default": "99.8%"
+        },
+        {
+          "type": "text",
+          "id": "stat_label",
+          "label": "Metric Label",
+          "default": "Customer satisfaction score"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Features Bento Grid",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "card_span": "large",
+            "icon_name": "lightning",
+            "badge": "PATENTED TECH",
+            "title": "Aerospace-Grade Materials",
+            "description": "Constructed with custom alloy engineered to withstand daily wear and tear for decades.",
+            "stat_value": "10x",
+            "stat_label": "Longer lifespan than industry standard"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "card_span": "small",
+            "icon_name": "leaf",
+            "badge": "ECO CERTIFIED",
+            "title": "100% Recyclable",
+            "description": "Zero single-use plastics and carbon-neutral packaging from warehouse to doorstep.",
+            "stat_value": "0g",
+            "stat_label": "Plastic footprint"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "card_span": "small",
+            "icon_name": "shield",
+            "badge": "LIFETIME",
+            "title": "Guaranteed Protection",
+            "description": "Comprehensive warranty coverage for replacements, repairs, and complete peace of mind.",
+            "stat_value": "100%",
+            "stat_label": "Hassle-free coverage"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "card_span": "medium",
+            "icon_name": "sparkles",
+            "badge": "AWARD WINNING",
+            "title": "Refined Ergonomics",
+            "description": "Sculpted through hundreds of iterations to provide effortless comfort for every hand size.",
+            "stat_value": "5★",
+            "stat_label": "Design excellence rating"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

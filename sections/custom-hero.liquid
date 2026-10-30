@@ -1,0 +1,1130 @@
+{% liquid
+  assign hero_image = section.settings.image
+  assign hero_mobile_image = section.settings.mobile_image
+%}
+
+<section
+  id="velroxa-hero-{{ section.id }}"
+  class="velroxa-hero"
+  style="
+    --vh-bg: {{ section.settings.background_color }};
+    --vh-text: {{ section.settings.text_color }};
+    --vh-button-bg: {{ section.settings.button_background }};
+    --vh-button-text: {{ section.settings.button_text_color }};
+    --vh-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --vh-heading-size: {{ section.settings.heading_size }}px;
+    --vh-subheading-size: {{ section.settings.subheading_size }}px;
+    --vh-content-width: {{ section.settings.content_width }}px;
+    --vh-height: {{ section.settings.desktop_height }}px;
+    --vh-mobile-height: {{ section.settings.mobile_height }}px;
+    --vh-radius: {{ section.settings.corner_radius }}px;
+    --vh-padding-x: {{ section.settings.horizontal_padding }}px;
+  "
+>
+  <div class="velroxa-hero__media">
+    {% if hero_image != blank %}
+      <picture>
+        {% if hero_mobile_image != blank %}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ hero_mobile_image | image_url: width: 1000 }}"
+          >
+        {% endif %}
+        {{
+          hero_image
+          | image_url: width: 2400
+          | image_tag:
+            class: 'velroxa-hero__image',
+            widths: '750, 1100, 1500, 2000, 2400',
+            sizes: '100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            alt: hero_image.alt
+        }}
+      </picture>
+    {% else %}
+      <div class="velroxa-hero__placeholder">
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'velroxa-hero__placeholder-svg' }}
+        <span>Add a hero image in the section settings</span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_overlay %}
+    <div class="velroxa-hero__overlay"></div>
+  {% endif %}
+
+  <div class="velroxa-hero__container velroxa-hero__container--{{ section.settings.content_position }}">
+    <div class="velroxa-hero__content velroxa-hero__content--{{ section.settings.text_alignment }}">
+      {% if section.settings.eyebrow != blank %}
+        <p class="velroxa-hero__eyebrow">
+          {% if section.settings.show_eyebrow_line %}
+            <span class="velroxa-hero__eyebrow-line"></span>
+          {% endif %}
+          {{ section.settings.eyebrow | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 class="velroxa-hero__heading">
+          {{ section.settings.heading | escape | newline_to_br }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="velroxa-hero__description">
+          {{ section.settings.description | escape | newline_to_br }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank or section.settings.secondary_button_label != blank %}
+        <div class="velroxa-hero__actions">
+          {% if section.settings.button_label != blank %}
+            <a
+              class="velroxa-hero__button velroxa-hero__button--primary"
+              {% if section.settings.button_link != blank %}
+                href="{{ section.settings.button_link }}"
+              {% else %}
+                role="link"
+                aria-disabled="true"
+              {% endif %}
+            >
+              <span>{{ section.settings.button_label | escape }}</span>
+              {% if section.settings.show_button_arrow %}
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M3.5 10h12m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              {% endif %}
+            </a>
+          {% endif %}
+
+          {% if section.settings.secondary_button_label != blank %}
+            <a
+              class="velroxa-hero__button velroxa-hero__button--secondary"
+              {% if section.settings.secondary_button_link != blank %}
+                href="{{ section.settings.secondary_button_link }}"
+              {% else %}
+                role="link"
+                aria-disabled="true"
+              {% endif %}
+            >
+              <span>{{ section.settings.secondary_button_label | escape }}</span>
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.show_slide_indicator %}
+    <div class="velroxa-hero__indicator" aria-hidden="true">
+      <span class="velroxa-hero__indicator-line"></span>
+      <span class="velroxa-hero__indicator-number">01</span>
+      <span class="velroxa-hero__indicator-number velroxa-hero__indicator-number--muted">02</span>
+      <span class="velroxa-hero__indicator-number velroxa-hero__indicator-number--muted">03</span>
+      <span class="velroxa-hero__indicator-line"></span>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  #velroxa-hero-{{ section.id }} {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 100%;
+    min-height: var(--vh-height);
+    background: var(--vh-bg);
+    color: var(--vh-text);
+    border-radius: var(--vh-radius);
+  }
+
+  #velroxa-hero-{{ section.id }} *,
+  #velroxa-hero-{{ section.id }} *::before,
+  #velroxa-hero-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__media,
+  #velroxa-hero-{{ section.id }} .velroxa-hero__media picture,
+  #velroxa-hero-{{ section.id }} .velroxa-hero__image,
+  #velroxa-hero-{{ section.id }} .velroxa-hero__overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__media {
+    z-index: -2;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__image {
+    display: block;
+    object-fit: {{ section.settings.image_fit }};
+    object-position: {{ section.settings.image_position }};
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__placeholder {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    background: #efefec;
+    color: #555;
+    text-align: center;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__placeholder-svg {
+    width: min(70%, 400px);
+    height: auto;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__overlay {
+    z-index: -1;
+    background: {{ section.settings.overlay_color }};
+    opacity: var(--vh-overlay);
+    pointer-events: none;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__container {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: var(--vh-height);
+    padding: 64px var(--vh-padding-x);
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__container--center-left {
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__container--center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__container--top-left {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__container--bottom-left {
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content {
+    width: 100%;
+    max-width: var(--vh-content-width);
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--left {
+    text-align: left;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--right {
+    margin-left: auto;
+    text-align: right;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    color: inherit;
+    font-size: {{ section.settings.eyebrow_size }}px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: {{ section.settings.eyebrow_letter_spacing }}em;
+    text-transform: uppercase;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--center .velroxa-hero__eyebrow {
+    justify-content: center;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--right .velroxa-hero__eyebrow {
+    justify-content: flex-end;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__eyebrow-line {
+    display: inline-block;
+    flex: 0 0 24px;
+    width: 24px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__heading {
+    max-width: 100%;
+    margin: 0;
+    color: inherit;
+    font-family: var(--font-heading-family, inherit);
+    font-size: var(--vh-heading-size);
+    font-weight: {{ section.settings.heading_weight }};
+    line-height: {{ section.settings.heading_line_height | divided_by: 100.0 }};
+    letter-spacing: {{ section.settings.heading_letter_spacing }}em;
+    overflow-wrap: anywhere;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__description {
+    max-width: {{ section.settings.description_width }}px;
+    margin-top: 22px;
+    color: inherit;
+    font-size: var(--vh-subheading-size);
+    font-weight: 400;
+    line-height: 1.65;
+    opacity: 0.92;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--center .velroxa-hero__description {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--right .velroxa-hero__description {
+    margin-left: auto;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--center .velroxa-hero__actions {
+    justify-content: center;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__content--right .velroxa-hero__actions {
+    justify-content: flex-end;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    min-height: {{ section.settings.button_height }}px;
+    padding: 14px 24px;
+    border: 1px solid transparent;
+    border-radius: {{ section.settings.button_radius }}px;
+    font-family: inherit;
+    font-size: {{ section.settings.button_font_size }}px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    text-transform: {{ section.settings.button_text_transform }};
+    transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__button--primary {
+    color: var(--vh-button-text);
+    background: var(--vh-button-bg);
+    border-color: var(--vh-button-bg);
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__button--primary:hover {
+    filter: brightness(0.9);
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__button--secondary {
+    color: var(--vh-text);
+    background: transparent;
+    border-color: currentColor;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__button--secondary:hover {
+    color: var(--vh-button-text);
+    background: var(--vh-button-bg);
+    border-color: var(--vh-button-bg);
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__button svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__indicator {
+    display: flex;
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: 18px;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: var(--vh-text);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__indicator-number--muted {
+    opacity: 0.45;
+  }
+
+  #velroxa-hero-{{ section.id }} .velroxa-hero__indicator-line {
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+
+  @media screen and (max-width: 749px) {
+    #velroxa-hero-{{ section.id }} {
+      min-height: var(--vh-mobile-height);
+      border-radius: {{ section.settings.mobile_corner_radius }}px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__container {
+      min-height: var(--vh-mobile-height);
+      align-items: {{ section.settings.mobile_vertical_alignment }};
+      padding: {{ section.settings.mobile_padding_y }}px {{ section.settings.mobile_padding_x }}px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__image {
+      object-position: {{ section.settings.mobile_image_position }};
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__content {
+      max-width: 100%;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__heading {
+      font-size: {{ section.settings.mobile_heading_size }}px;
+      line-height: 1.08;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__eyebrow {
+      margin-bottom: 12px;
+      font-size: {{ section.settings.mobile_eyebrow_size }}px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__description {
+      max-width: 100%;
+      margin-top: 14px;
+      font-size: {{ section.settings.mobile_description_size }}px;
+      line-height: 1.55;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__actions {
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__button {
+      min-height: {{ section.settings.mobile_button_height }}px;
+      padding: 12px 18px;
+      font-size: {{ section.settings.mobile_button_font_size }}px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__indicator {
+      bottom: 12px;
+      gap: 10px;
+      font-size: 9px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__indicator-line {
+      width: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #velroxa-hero-{{ section.id }} .velroxa-hero__button {
+      transition: none;
+    }
+  }
+
+    /* Velroxa Hero - layout and typography fix */
+    #velroxa-hero-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__container {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: clamp(24px, 6vw, 100px);
+    padding-right: clamp(24px, 6vw, 100px);
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__content {
+    display: block;
+    flex: 0 1 650px;
+    width: 100%;
+    min-width: 0;
+    max-width: 650px;
+    margin: 0;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__eyebrow {
+    display: block !important;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 20px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: 0.12em !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    white-space: normal;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__heading {
+    display: block;
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: clamp(40px, 4.2vw, 64px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.025em !important;
+    word-break: normal !important;
+    overflow-wrap: normal;
+    white-space: normal;
+    transform: none;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__description {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    margin-top: 24px;
+    font-size: 17px;
+    line-height: 1.65;
+    letter-spacing: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    max-width: 100%;
+    white-space: normal;
+    }
+
+    @media screen and (max-width: 749px) {
+    #velroxa-hero-{{ section.id }} .velroxa-hero__container {
+        padding: 40px 24px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__content {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__heading {
+        font-size: clamp(34px, 9vw, 46px);
+        line-height: 1.08;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__description {
+        margin-top: 16px;
+        font-size: 15px;
+    }
+
+    #velroxa-hero-{{ section.id }} .velroxa-hero__actions {
+        margin-top: 22px;
+    }
+    }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Hero",
+  "tag": "section",
+  "class": "section-velroxa-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Smart Living, Modern Life"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_eyebrow_line",
+      "label": "Show line beside eyebrow",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Better Products for a More Comfortable Home."
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Discover home appliances and smart technology designed to make everyday life easier, healthier, and more enjoyable."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Primary button label",
+      "default": "Shop All Products"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button_arrow",
+      "label": "Show arrow on primary button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary button label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Desktop hero image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile hero image"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "default": "cover",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Cover"
+        },
+        {
+          "value": "contain",
+          "label": "Contain"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Desktop image position",
+      "default": "center center",
+      "options": [
+        {
+          "value": "center center",
+          "label": "Center"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile image position",
+      "default": "center center",
+      "options": [
+        {
+          "value": "center center",
+          "label": "Center"
+        },
+        {
+          "value": "center top",
+          "label": "Top"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom"
+        },
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Enable image overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "label": "Desktop height",
+      "min": 350,
+      "max": 850,
+      "step": 25,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "label": "Mobile height",
+      "min": 400,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content max width",
+      "min": 300,
+      "max": 850,
+      "step": 25,
+      "unit": "px",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "description_width",
+      "label": "Description max width",
+      "min": 250,
+      "max": 700,
+      "step": 25,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "horizontal_padding",
+      "label": "Desktop horizontal padding",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 65
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content vertical and horizontal position",
+      "default": "center-left",
+      "options": [
+        {
+          "value": "center-left",
+          "label": "Center left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "top-left",
+          "label": "Top left"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Desktop corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Desktop heading size",
+      "min": 32,
+      "max": 88,
+      "step": 2,
+      "unit": "px",
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading size",
+      "min": 26,
+      "max": 52,
+      "step": 2,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading font weight",
+      "default": "700",
+      "options": [
+        {
+          "value": "400",
+          "label": "Regular"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        },
+        {
+          "value": "800",
+          "label": "Extra bold"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "heading_line_height",
+      "label": "Heading line height",
+      "min": 90,
+      "max": 130,
+      "step": 5,
+      "unit": "%",
+      "default": 105
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Heading letter spacing",
+      "min": -5,
+      "max": 5,
+      "step": 1,
+      "default": -2
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Desktop description size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_size",
+      "label": "Mobile description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Desktop eyebrow size",
+      "min": 9,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "mobile_eyebrow_size",
+      "label": "Mobile eyebrow size",
+      "min": 9,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_letter_spacing",
+      "label": "Eyebrow letter spacing",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "range",
+      "id": "button_height",
+      "label": "Desktop button height",
+      "min": 40,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_height",
+      "label": "Mobile button height",
+      "min": 40,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Desktop button font size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_font_size",
+      "label": "Mobile button font size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "button_text_transform",
+      "label": "Button text style",
+      "default": "uppercase",
+      "options": [
+        {
+          "value": "none",
+          "label": "Normal"
+        },
+        {
+          "value": "uppercase",
+          "label": "Uppercase"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Mobile spacing"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_x",
+      "label": "Mobile horizontal padding",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_y",
+      "label": "Mobile vertical padding",
+      "min": 20,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "mobile_vertical_alignment",
+      "label": "Mobile content vertical alignment",
+      "default": "center",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "mobile_corner_radius",
+      "label": "Mobile corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F3F1EC"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#17191D"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Primary button background",
+      "default": "#17191D"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Primary button text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_slide_indicator",
+      "label": "Show decorative slide indicator",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Hero"
+    }
+  ]
+}
+{% endschema %}

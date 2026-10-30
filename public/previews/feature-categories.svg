@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#f8fafc" />
+
+  <g transform="translate(0, 50)" text-anchor="middle">
+    <text x="400" y="20" fill="#7c3aed" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="700" letter-spacing="1">COLLECTIONS</text>
+    <text x="400" y="55" fill="#0f172a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800">Featured Categories</text>
+    <text x="400" y="78" fill="#64748b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13">Explore curated collections designed for your modern lifestyle</text>
+  </g>
+
+  <!-- 3 Big Category Image Cards -->
+  <g transform="translate(50, 150)">
+    <!-- Category Card 1 -->
+    <g transform="translate(0, 0)">
+      <rect width="220" height="240" rx="16" fill="#1e1b4b" />
+      <circle cx="110" cy="90" r="45" fill="#312e81" />
+      <!-- Overlay text -->
+      <text x="24" y="150" fill="#a5b4fc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">FOR YOUR WORKSPACE</text>
+      <text x="24" y="176" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="800">Desk Setup</text>
+      <text x="24" y="196" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Ergonomic mats, risers &amp; trays</text>
+      <rect x="24" y="208" width="85" height="20" rx="4" fill="#ffffff" fill-opacity="0.2" />
+      <text x="32" y="222" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Explore →</text>
+    </g>
+
+    <!-- Category Card 2 -->
+    <g transform="translate(240, 0)">
+      <rect width="220" height="240" rx="16" fill="#064e3b" />
+      <circle cx="110" cy="90" r="45" fill="#065f46" />
+      <text x="24" y="150" fill="#6ee7b7" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">EVERYDAY CARRY</text>
+      <text x="24" y="176" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="800">Travel &amp; Bags</text>
+      <text x="24" y="196" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Durable waterproof backpacks</text>
+      <rect x="24" y="208" width="85" height="20" rx="4" fill="#ffffff" fill-opacity="0.2" />
+      <text x="32" y="222" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Explore →</text>
+    </g>
+
+    <!-- Category Card 3 -->
+    <g transform="translate(480, 0)">
+      <rect width="220" height="240" rx="16" fill="#701a75" />
+      <circle cx="110" cy="90" r="45" fill="#86198f" />
+      <text x="24" y="150" fill="#f0abfc" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">MINIMAL TECH</text>
+      <text x="24" y="176" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" font-weight="800">Power &amp; Audio</text>
+      <text x="24" y="196" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Fast wireless MagSafe gear</text>
+      <rect x="24" y="208" width="85" height="20" rx="4" fill="#ffffff" fill-opacity="0.2" />
+      <text x="32" y="222" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Explore →</text>
+    </g>
+  </g>
+</svg>

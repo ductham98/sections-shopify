@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#312e81" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="btnGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ec4899" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#heroGrad)" />
+
+  <!-- Decorative glow circles -->
+  <circle cx="650" cy="180" r="160" fill="#a855f7" opacity="0.25" filter="blur(40px)" />
+  <circle cx="150" cy="350" r="140" fill="#3b82f6" opacity="0.2" filter="blur(50px)" />
+
+  <!-- Grid subtle background -->
+  <g opacity="0.06" stroke="#fff" stroke-width="1">
+    <line x1="0" y1="90" x2="800" y2="90" />
+    <line x1="0" y1="180" x2="800" y2="180" />
+    <line x1="0" y1="270" x2="800" y2="270" />
+    <line x1="0" y1="360" x2="800" y2="360" />
+    <line x1="160" y1="0" x2="160" y2="450" />
+    <line x1="320" y1="0" x2="320" y2="450" />
+    <line x1="480" y1="0" x2="480" y2="450" />
+    <line x1="640" y1="0" x2="640" y2="450" />
+  </g>
+
+  <!-- Hero Content Left -->
+  <g transform="translate(60, 95)">
+    <!-- Eyebrow Pill -->
+    <rect width="180" height="28" rx="14" fill="#a855f7" opacity="0.25" />
+    <rect width="180" height="28" rx="14" fill="none" stroke="#c084fc" stroke-width="1" opacity="0.6" />
+    <text x="14" y="18" fill="#e9d5ff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="700" letter-spacing="1">✨ NEW COLLECTION 2026</text>
+
+    <!-- Main Title -->
+    <text x="0" y="75" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="36" font-weight="800">
+      Experience Luxury.
+    </text>
+    <text x="0" y="118" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="36" font-weight="800">
+      Redefined For You.
+    </text>
+
+    <!-- Subtitle -->
+    <text x="0" y="156" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="400">
+      Customizable hero banner with dual responsive image modes,
+    </text>
+    <text x="0" y="176" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="400">
+      high conversion CTA, and fluid typography.
+    </text>
+
+    <!-- Buttons -->
+    <g transform="translate(0, 205)">
+      <!-- Primary Button -->
+      <rect width="140" height="42" rx="8" fill="url(#btnGrad)" />
+      <text x="32" y="26" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">SHOP NOW →</text>
+
+      <!-- Secondary Button -->
+      <rect x="155" width="130" height="42" rx="8" fill="#ffffff" opacity="0.12" stroke="#ffffff" stroke-width="1" stroke-opacity="0.3" />
+      <text x="180" y="26" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="600">Explore Look</text>
+    </g>
+  </g>
+
+  <!-- Hero Visual Card Right -->
+  <g transform="translate(480, 70)" filter="url(#shadow)">
+    <rect width="260" height="310" rx="20" fill="#1e293b" stroke="#334155" stroke-width="1.5" />
+    <!-- Inner graphic image placeholder -->
+    <rect x="15" y="15" width="230" height="200" rx="14" fill="#334155" />
+    <circle cx="130" cy="115" r="45" fill="#475569" />
+    <path d="M100 135 C115 110, 145 110, 160 135" fill="none" stroke="#a855f7" stroke-width="4" stroke-linecap="round" />
+    <circle cx="130" cy="95" r="14" fill="#ec4899" />
+    
+    <!-- Product card tags below image -->
+    <rect x="15" y="230" width="120" height="12" rx="6" fill="#94a3b8" />
+    <rect x="15" y="250" width="80" height="10" rx="5" fill="#64748b" />
+    <rect x="15" y="275" width="60" height="18" rx="4" fill="#10b981" />
+    <text x="24" y="288" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">$189.00</text>
+    
+    <!-- Rating badge -->
+    <g transform="translate(160, 275)">
+      <text x="0" y="14" fill="#fbbf24" font-size="12">★★★★★</text>
+    </g>
+  </g>
+
+  <!-- Slide indicator dots -->
+  <g transform="translate(360, 415)">
+    <rect width="28" height="6" rx="3" fill="#ffffff" />
+    <circle cx="42" cy="3" r="3" fill="#ffffff" opacity="0.3" />
+    <circle cx="56" cy="3" r="3" fill="#ffffff" opacity="0.3" />
+  </g>
+</svg>

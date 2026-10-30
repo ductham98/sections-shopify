@@ -1,0 +1,627 @@
+{% comment %}
+  Custom FAQ + Contact Section
+  Features:
+  - Adjustable content max width
+  - Custom FAQ blocks
+  - Shopify contact form
+  - Responsive layout
+  - Custom colors and spacing
+{% endcomment %}
+
+<section
+  id="CustomFaqContact-{{ section.id }}"
+  class="c-faq-contact"
+  style="
+    --cfc-bg: {{ section.settings.background_color }};
+    --cfc-fg: {{ section.settings.text_color }};
+    --cfc-border: {{ section.settings.border_color }};
+    --cfc-pad-top: {{ section.settings.padding_top }}px;
+    --cfc-pad-bottom: {{ section.settings.padding_bottom }}px;
+    --cfc-max-width: {{ section.settings.max_width }}px;
+  "
+>
+  <div class="cfc__container">
+    <div class="cfc__layout">
+      <div class="cfc__main">
+        <div class="cfc__heading">
+          <div class="cfc__title-wrap">
+            {% if section.settings.heading != blank %}
+              <h2 class="cfc__title">
+                {{ section.settings.heading | escape }}
+              </h2>
+            {% endif %}
+
+            {% if section.settings.intro != blank %}
+              <div class="cfc__intro rte">
+                {{ section.settings.intro }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="cfc__faq-list">
+          {% for block in section.blocks %}
+            {% if block.type == 'faq' %}
+              <details class="cfc__item" {{ block.shopify_attributes }}>
+                <summary class="cfc__question">
+                  <span>{{ block.settings.question | escape }}</span>
+
+                  <svg
+                    class="cfc__icon"
+                    viewBox="0 0 14 14"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M7 1V13M13 7H1"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </summary>
+
+                <div class="cfc__answer rte">
+                  {{ block.settings.answer }}
+                </div>
+              </details>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <aside class="cfc__contact">
+        {% if section.settings.contact_heading != blank %}
+          <h3 class="cfc__contact-title">
+            {{ section.settings.contact_heading | escape }}
+          </h3>
+        {% endif %}
+
+        {% if section.settings.contact_description != blank %}
+          <div class="cfc__contact-description rte">
+            {{ section.settings.contact_description }}
+          </div>
+        {% endif %}
+
+        {% assign contact_form_id = 'CustomFaqContactForm-' | append: section.id %}
+
+        {% form 'contact', id: contact_form_id, class: 'cfc__form' %}
+          {% if form.posted_successfully? %}
+            <p
+              class="cfc__message cfc__message--success"
+              tabindex="-1"
+            >
+              {{ section.settings.success_message | escape }}
+            </p>
+          {% endif %}
+
+          {{ form.errors | default_errors }}
+
+          <div class="cfc__field">
+            <label for="CFCName-{{ section.id }}">
+              {{ section.settings.name_label | escape }}
+            </label>
+
+            <input
+              id="CFCName-{{ section.id }}"
+              type="text"
+              name="contact[name]"
+              autocomplete="name"
+              placeholder="{{ section.settings.name_label | escape }}"
+              value="{% if form.name %}{{ form.name | escape }}{% endif %}"
+            >
+          </div>
+
+          <div class="cfc__field">
+            <label for="CFCEmail-{{ section.id }}">
+              {{ section.settings.email_label | escape }}
+            </label>
+
+            <input
+              id="CFCEmail-{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="{{ section.settings.email_label | escape }}"
+              value="{% if form.email %}{{ form.email | escape }}{% endif %}"
+              required
+              aria-required="true"
+            >
+          </div>
+
+          <div class="cfc__field">
+            <label for="CFCMessage-{{ section.id }}">
+              {{ section.settings.message_label | escape }}
+            </label>
+
+            <textarea
+              id="CFCMessage-{{ section.id }}"
+              name="contact[body]"
+              rows="4"
+              placeholder="{{ section.settings.message_label | escape }}"
+            >{{ form.body | escape }}</textarea>
+          </div>
+
+          <button class="cfc__submit" type="submit">
+            <span>{{ section.settings.submit_label | escape }}</span>
+
+            <svg
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M4 10h11M10 5l5 5-5 5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        {% endform %}
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  #CustomFaqContact-{{ section.id }} {
+    background: var(--cfc-bg);
+    color: var(--cfc-fg);
+    padding-top: var(--cfc-pad-top);
+    padding-bottom: var(--cfc-pad-bottom);
+  }
+
+  #CustomFaqContact-{{ section.id }} *,
+  #CustomFaqContact-{{ section.id }} *::before,
+  #CustomFaqContact-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__container {
+    width: calc(100% - 40px);
+    max-width: var(--cfc-max-width);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.8fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__main,
+  #CustomFaqContact-{{ section.id }} .cfc__contact {
+    min-width: 0;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__heading {
+    margin-bottom: 28px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__title-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 16px 28px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__title {
+    margin: 0;
+    color: inherit;
+    font-size: clamp(30px, 3vw, 44px);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    font-weight: 600;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__intro {
+    max-width: 440px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__intro p,
+  #CustomFaqContact-{{ section.id }} .cfc__contact-description p {
+    margin: 0;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__intro a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__item {
+    border-top: 1px solid var(--cfc-border);
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__item:last-child {
+    border-bottom: 1px solid var(--cfc-border);
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 0;
+    cursor: pointer;
+    list-style: none;
+    font-size: clamp(16px, 1.35vw, 20px);
+    line-height: 1.35;
+    font-weight: 500;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__question::-webkit-details-marker {
+    display: none;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__question::marker {
+    content: "";
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__icon {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    transition: transform 180ms ease;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__item[open] .cfc__icon {
+    transform: rotate(45deg);
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__answer {
+    padding: 0 34px 24px 0;
+    font-size: 15px;
+    line-height: 1.7;
+    opacity: 0.88;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__answer > :first-child {
+    margin-top: 0;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__answer > :last-child {
+    margin-bottom: 0;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__answer li + li {
+    margin-top: 6px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__contact {
+    position: sticky;
+    top: 24px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__contact-title {
+    margin: 0 0 10px;
+    color: inherit;
+    font-size: clamp(25px, 2.3vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__contact-description {
+    margin-bottom: 28px;
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.78;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__form {
+    display: grid;
+    gap: 18px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__field {
+    display: grid;
+    gap: 8px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__field label {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__field input,
+  #CustomFaqContact-{{ section.id }} .cfc__field textarea {
+    display: block;
+    width: 100%;
+    min-height: 50px;
+    padding: 14px 15px;
+    border: 1px solid var(--cfc-border);
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 14px;
+    box-shadow: none;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__field textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__field input::placeholder,
+  #CustomFaqContact-{{ section.id }} .cfc__field textarea::placeholder {
+    color: currentColor;
+    opacity: 0.55;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__field input:focus-visible,
+  #CustomFaqContact-{{ section.id }} .cfc__field textarea:focus-visible,
+  #CustomFaqContact-{{ section.id }} .cfc__submit:focus-visible,
+  #CustomFaqContact-{{ section.id }} .cfc__question:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__submit {
+    display: inline-flex;
+    width: 100%;
+    min-height: 54px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 18px;
+    border: 1px solid var(--cfc-fg);
+    border-radius: 0;
+    background: var(--cfc-fg);
+    color: var(--cfc-bg);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 180ms ease;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__submit:hover {
+    opacity: 0.84;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__submit svg {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__message {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--cfc-border);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  #CustomFaqContact-{{ section.id }} .cfc__message--success {
+    border-color: currentColor;
+  }
+
+  #CustomFaqContact-{{ section.id }} .errors {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 989px) {
+    #CustomFaqContact-{{ section.id }} .cfc__layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 44px;
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__contact {
+      position: static;
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__title-wrap {
+      display: grid;
+      gap: 14px;
+    }
+  }
+
+  @media screen and (max-width: 599px) {
+    #CustomFaqContact-{{ section.id }} .cfc__container {
+      width: calc(100% - 32px);
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__layout {
+      gap: 36px;
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__heading {
+      margin-bottom: 20px;
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__question {
+      padding: 19px 0;
+      gap: 14px;
+      font-size: 16px;
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__answer {
+      padding-right: 8px;
+      font-size: 14px;
+    }
+
+    #CustomFaqContact-{{ section.id }} .cfc__contact-description {
+      margin-bottom: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #CustomFaqContact-{{ section.id }} .cfc__icon,
+    #CustomFaqContact-{{ section.id }} .cfc__submit {
+      transition: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom FAQ",
+  "tag": "section",
+  "class": "section-faq-contact",
+  "settings": [
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Content max width",
+      "min": 800,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "FAQ heading",
+      "default": "FAQs"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Please read our FAQs page to find out more.</p>"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Contact heading",
+      "default": "Didn’t find your answer?"
+    },
+    {
+      "type": "richtext",
+      "id": "contact_description",
+      "label": "Contact description",
+      "default": "<p>Don't hesitate to contact us.</p>"
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Name field label",
+      "default": "Name"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email field label",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Message field label",
+      "default": "Message"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Send message"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for contacting us. We’ll get back to you soon."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#171717"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#D9D9D9"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 84
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 84
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Frequently asked question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Write the answer to this question here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Why choose our products?",
+            "answer": "<p>We carefully select products designed to make everyday life simpler and more comfortable.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do your products come with a warranty?",
+            "answer": "<p>Eligible products include a one-year warranty. Please check the product page for details.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>Shipping times vary by destination and product. Check your order confirmation and shipping updates for the latest information.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

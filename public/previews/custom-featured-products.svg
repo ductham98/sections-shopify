@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#fafafa" />
+
+  <g transform="translate(0, 45)" text-anchor="middle">
+    <text x="400" y="20" fill="#059669" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="700" letter-spacing="1">CURATED SELECTION</text>
+    <text x="400" y="55" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800">Featured Products</text>
+    <text x="400" y="78" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13">Explore our handpicked premium goods designed for everyday longevity</text>
+  </g>
+
+  <!-- Product Grid (4 items) -->
+  <g transform="translate(40, 140)">
+    <!-- Card 1 -->
+    <g transform="translate(0, 0)">
+      <rect width="168" height="255" rx="12" fill="#ffffff" stroke="#e4e4e7" stroke-width="1.2" />
+      <rect x="12" y="12" width="144" height="130" rx="8" fill="#f4f4f5" />
+      <circle cx="84" cy="77" r="30" fill="#e4e4e7" />
+      <rect x="20" y="20" width="44" height="18" rx="4" fill="#ef4444" />
+      <text x="27" y="33" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="700">SALE</text>
+      <text x="14" y="165" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Aura Desk Mat</text>
+      <text x="14" y="182" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Vegan Leather</text>
+      <text x="14" y="208" fill="#059669" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="800">$48.00</text>
+      <text x="65" y="208" fill="#a1a1aa" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" text-decoration="line-through">$65.00</text>
+      <rect x="14" y="222" width="140" height="24" rx="6" fill="#18181b" />
+      <text x="56" y="238" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Add to Cart</text>
+    </g>
+
+    <!-- Card 2 -->
+    <g transform="translate(184, 0)">
+      <rect width="168" height="255" rx="12" fill="#ffffff" stroke="#e4e4e7" stroke-width="1.2" />
+      <rect x="12" y="12" width="144" height="130" rx="8" fill="#f4f4f5" />
+      <circle cx="84" cy="77" r="30" fill="#e4e4e7" />
+      <text x="14" y="165" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Lumbar Pillow</text>
+      <text x="14" y="182" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Ergonomic Foam</text>
+      <text x="14" y="208" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="800">$75.00</text>
+      <rect x="14" y="222" width="140" height="24" rx="6" fill="#18181b" />
+      <text x="56" y="238" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Add to Cart</text>
+    </g>
+
+    <!-- Card 3 -->
+    <g transform="translate(368, 0)">
+      <rect width="168" height="255" rx="12" fill="#ffffff" stroke="#e4e4e7" stroke-width="1.2" />
+      <rect x="12" y="12" width="144" height="130" rx="8" fill="#f4f4f5" />
+      <circle cx="84" cy="77" r="30" fill="#e4e4e7" />
+      <rect x="20" y="20" width="40" height="18" rx="4" fill="#3b82f6" />
+      <text x="27" y="33" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="700">NEW</text>
+      <text x="14" y="165" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">Orbit Key Loop</text>
+      <text x="14" y="182" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Titanium Quick-Release</text>
+      <text x="14" y="208" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="800">$34.00</text>
+      <rect x="14" y="222" width="140" height="24" rx="6" fill="#18181b" />
+      <text x="56" y="238" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Add to Cart</text>
+    </g>
+
+    <!-- Card 4 -->
+    <g transform="translate(552, 0)">
+      <rect width="168" height="255" rx="12" fill="#ffffff" stroke="#e4e4e7" stroke-width="1.2" />
+      <rect x="12" y="12" width="144" height="130" rx="8" fill="#f4f4f5" />
+      <circle cx="84" cy="77" r="30" fill="#e4e4e7" />
+      <text x="14" y="165" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13" font-weight="700">MagSafe Stand</text>
+      <text x="14" y="182" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11">Weighted Walnut</text>
+      <text x="14" y="208" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="800">$89.00</text>
+      <rect x="14" y="222" width="140" height="24" rx="6" fill="#18181b" />
+      <text x="56" y="238" fill="#ffffff" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="700">Add to Cart</text>
+    </g>
+  </g>
+</svg>

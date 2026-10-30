@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <filter id="reviewShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.06" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="#fdfbf7" />
+
+  <!-- Header -->
+  <g transform="translate(0, 50)" text-anchor="middle">
+    <!-- Star Rating pill -->
+    <rect x="300" y="0" width="200" height="28" rx="14" fill="#fef3c7" />
+    <text x="350" y="19" fill="#d97706" font-size="13">★★★★★</text>
+    <text x="430" y="18" fill="#92400e" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="700">4.9/5 RATED</text>
+
+    <!-- Main Title -->
+    <text x="400" y="58" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="800">Loved by 12,000+ Customers</text>
+    <text x="400" y="82" fill="#71717a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="13">Authentic reviews from verified buyers around the world</text>
+  </g>
+
+  <!-- 3 Testimonial Cards -->
+  <g transform="translate(40, 160)">
+    <!-- Card 1 -->
+    <g transform="translate(0, 0)" filter="url(#reviewShadow)">
+      <rect width="224" height="235" rx="14" fill="#ffffff" stroke="#f4f4f5" stroke-width="1.5" />
+      <text x="20" y="35" fill="#f59e0b" font-size="16">★★★★★</text>
+      <text x="20" y="70" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">“The build quality is</text>
+      <text x="20" y="90" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">unbelievable. Arrived</text>
+      <text x="20" y="110" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">in 2 days, beautifully</text>
+      <text x="20" y="130" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">boxed. Will buy again!”</text>
+
+      <!-- User footer -->
+      <line x1="20" y1="160" x2="204" y2="160" stroke="#f4f4f5" stroke-width="1" />
+      <circle cx="38" cy="190" r="18" fill="#fbcfe8" />
+      <text x="32" y="195" fill="#db2777" font-weight="700" font-size="12">S</text>
+      <text x="64" y="188" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="700">Sarah Jenkins</text>
+      <text x="64" y="202" fill="#10b981" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600">✓ Verified Buyer</text>
+    </g>
+
+    <!-- Card 2 (Featured - slightly elevated) -->
+    <g transform="translate(248, -10)" filter="url(#reviewShadow)">
+      <rect width="224" height="245" rx="14" fill="#ffffff" stroke="#6366f1" stroke-width="2" />
+      <rect x="20" y="15" width="76" height="18" rx="9" fill="#e0e7ff" />
+      <text x="28" y="28" fill="#4338ca" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="700">TOP REVIEW</text>
+      <text x="20" y="55" fill="#f59e0b" font-size="16">★★★★★</text>
+      <text x="20" y="90" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="600">“Transformed our entire</text>
+      <text x="20" y="110" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="600">daily routine. Customer</text>
+      <text x="20" y="130" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="600">service helped guide</text>
+      <text x="20" y="150" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="600">us through setup fast.”</text>
+
+      <line x1="20" y1="175" x2="204" y2="175" stroke="#f4f4f5" stroke-width="1" />
+      <circle cx="38" cy="205" r="18" fill="#dbeafe" />
+      <text x="32" y="210" fill="#2563eb" font-weight="700" font-size="12">M</text>
+      <text x="64" y="203" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="700">Marcus Sterling</text>
+      <text x="64" y="217" fill="#10b981" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600">✓ Verified Buyer</text>
+    </g>
+
+    <!-- Card 3 -->
+    <g transform="translate(496, 0)" filter="url(#reviewShadow)">
+      <rect width="224" height="235" rx="14" fill="#ffffff" stroke="#f4f4f5" stroke-width="1.5" />
+      <text x="20" y="35" fill="#f59e0b" font-size="16">★★★★★</text>
+      <text x="20" y="70" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">“I recommend this to</text>
+      <text x="20" y="90" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">all my friends. Sleek,</text>
+      <text x="20" y="110" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">minimal, and actually</text>
+      <text x="20" y="130" fill="#27272a" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="500">delivers on promises.”</text>
+
+      <line x1="20" y1="160" x2="204" y2="160" stroke="#f4f4f5" stroke-width="1" />
+      <circle cx="38" cy="190" r="18" fill="#fef08a" />
+      <text x="33" y="195" fill="#ca8a04" font-weight="700" font-size="12">E</text>
+      <text x="64" y="188" fill="#18181b" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="700">Emily Ross</text>
+      <text x="64" y="202" fill="#10b981" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="600">✓ Verified Buyer</text>
+    </g>
+  </g>
+</svg>
