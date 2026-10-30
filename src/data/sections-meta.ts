@@ -21,8 +21,8 @@ export const SECTIONS_METADATA: SectionMeta[] = [
   {
     id: "custom-hero",
     filename: "custom-hero.liquid",
-    title: "Velroxa Responsive Hero",
-    titleVi: "Velroxa Hero Banner Tùy Biến Đa Kích Thước",
+    title: "Example Responsive Hero",
+    titleVi: "Example Hero Banner Tùy Biến Đa Kích Thước",
     category: "hero",
     plan: "free",
     description: "High-impact hero banner with separate desktop and mobile image support, customizable content alignments, overlays, fluid typography, and CTA buttons.",
@@ -44,7 +44,7 @@ export const SECTIONS_METADATA: SectionMeta[] = [
   {
     id: "custom-featured-products",
     filename: "custom-featured-products.liquid",
-    title: "Velroxa Featured Products",
+    title: "Example Featured Products",
     titleVi: "Lưới Sản Phẩm Nổi Bật Tùy Biến (Featured Products)",
     category: "product",
     plan: "free",
@@ -66,7 +66,7 @@ export const SECTIONS_METADATA: SectionMeta[] = [
   {
     id: "feature-categories",
     filename: "feature-categories.liquid",
-    title: "Velroxa Category Cards",
+    title: "Example Category Cards",
     titleVi: "Thẻ Danh Mục Sản Phẩm Hình Ảnh (Category Cards)",
     category: "features",
     plan: "free",
@@ -88,7 +88,7 @@ export const SECTIONS_METADATA: SectionMeta[] = [
   {
     id: "trust-bar",
     filename: "trust-bar.liquid",
-    title: "Velroxa Trust Bar",
+    title: "Example Trust Bar",
     titleVi: "Thanh Cam Kết Uy Tín & Quyền Lợi Khách Hàng",
     category: "social-proof",
     plan: "free",

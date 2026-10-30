@@ -7,7 +7,7 @@ import { AppHeader } from "./AppHeader";
 import { SectionSidebar } from "./SectionSidebar";
 import { MobileFilterDrawer } from "./MobileFilterDrawer";
 import { SectionGrid } from "../sections/SectionGrid";
-import { SectionPreviewModal } from "../sections/SectionPreviewModal";
+import { SectionPreviewModal } from "../preview/SectionPreviewModal";
 import { Toast } from "../ui/Toast";
 
 interface SectionMarketplaceProps {

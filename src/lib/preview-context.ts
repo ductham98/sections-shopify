@@ -13,7 +13,7 @@ export const SAMPLE_IMAGES = {
     {
       id: 101,
       title: "Aura Minimal Desk Mat",
-      vendor: "Velroxa Studio",
+      vendor: "Example Studio",
       price: 4800,
       compare_at_price: 6500,
       available: true,
@@ -41,7 +41,7 @@ export const SAMPLE_IMAGES = {
     {
       id: 102,
       title: "Ergonomic Lumbar Cushion",
-      vendor: "Velroxa Studio",
+      vendor: "Example Studio",
       price: 7500,
       compare_at_price: 9000,
       available: true,
@@ -69,7 +69,7 @@ export const SAMPLE_IMAGES = {
     {
       id: 103,
       title: "Titanium Orbit Key Loop",
-      vendor: "Velroxa Studio",
+      vendor: "Example Studio",
       price: 3400,
       compare_at_price: null,
       available: true,
@@ -97,7 +97,7 @@ export const SAMPLE_IMAGES = {
     {
       id: 104,
       title: "Solid Walnut MagSafe Stand",
-      vendor: "Velroxa Studio",
+      vendor: "Example Studio",
       price: 8900,
       compare_at_price: 11000,
       available: true,
@@ -260,7 +260,7 @@ export function getMockShopifyContext(filename: string, schema: SchemaData): Rec
   const defaultProduct = {
     id: 999,
     title: "Aura Pro Wireless ANC Earbuds",
-    vendor: "Velroxa Studio",
+    vendor: "Example Studio",
     price: 14900,
     compare_at_price: 19900,
     available: true,
@@ -296,7 +296,7 @@ export function getMockShopifyContext(filename: string, schema: SchemaData): Rec
       products: SAMPLE_IMAGES.products
     },
     shop: {
-      name: "Velroxa Living",
+      name: "Example Living",
       currency: "USD",
       money_format: "${{amount}}"
     },

@@ -159,18 +159,39 @@ Mỗi thẻ section card chỉ có duy nhất **2 hành động chính**:
 
 ---
 
-## 7. MODAL XEM TRƯỚC ĐA VIEWPORT (DESKTOP & MOBILE SIMULATION)
+## 7. SHOPIFY THEME PREVIEW WORKSPACE & LIQUID PREVIEW ENGINE
 
-Modal cho phép kiểm tra chi tiết giao diện section:
+Hệ thống xem trước giao diện section được xây dựng theo kiến trúc Theme Preview Workspace chuyên nghiệp, độc lập và có thể tái sử dụng:
 
-- **Thanh tiêu đề (Header):** Tên Section, Tên file, Tên Preset, Số dòng code và nút Đóng (X).
-- **Thanh công cụ (Toolbar):**
-  - Nút chuyển chế độ **Desktop** (mô phỏng màn hình máy tính).
-  - Nút chuyển chế độ **Mobile (375px)** (mô phỏng khung điện thoại iPhone 375px).
-  - Nút **Copy Code** phụ trợ.
-- **Khu vực hiển thị:**
-  - Iframe độc lập căn giữa màn hình, cuộn mượt mà khi nội dung dài.
-  - Phím `ESC` hoặc bấm ra ngoài nền đen để đóng modal, tự động khóa cuộn trang nền (`scroll lock`).
+### 1. Cấu trúc Mô-đun Preview Engine (`src/lib/preview/` & `src/data/preview/`)
+- **`liquid-engine.ts`**: Khởi tạo instance LiquidJS với các cấu hình an toàn (`strictFilters: false`, `strictVariables: false`, `lenientIf: true`).
+- **`liquid-filters.ts`**: Đăng ký đầy đủ các filter đặc thù của Shopify (`image_url`, `image_tag`, `placeholder_svg_tag`, `money`, `money_with_currency`, `t`, `default_errors`).
+- **`liquid-tags.ts`**: Tùy biến tag `{% form 'type' %}` của Shopify hỗ trợ cả form liên hệ (contact) và form thêm nhanh vào giỏ hàng (quick add).
+- **`liquid-schema.ts`**: Bóc tách tự động JSON Schema từ tag `{% schema %}`, trích xuất giá trị cài đặt mặc định (settings) và danh sách block mặc định từ các Presets.
+- **`shopify-context.ts`**: Cung cấp Mock Context chuẩn Shopify Storefront (`section`, `block`, `product`, `products`, `collection`, `shop`, `routes`, `cart`, `form`, `request`).
+- **`preview-compiler.ts`**: Trình biên dịch hoàn chỉnh chuyển mã Liquid nguyên bản thành tài liệu HTML sandbox độc lập, tự động báo cáo chiều cao qua `postMessage` và chặn các sự kiện click ngoài ý muốn.
+
+### 2. Thiết kế Preview Workspace (`src/components/preview/`)
+- **Kích thước Modal:** 
+  - Desktop: Chiều rộng 92vw (tối đa 1500px), chiều cao 90vh (tối đa 1000px), bo góc tròn 16px.
+  - Mobile: Toàn màn hình thuận tiện thao tác.
+  - Nền mờ `rgba(0, 0, 0, 0.55)` với hiệu ứng backdrop blur.
+- **Thanh tiêu đề (Header):**
+  - Tên Section & Huy hiệu file `.liquid` dạng code tag.
+  - Tên Preset, tổng số dòng và dung lượng file thực tế.
+  - Huy hiệu trạng thái kết xuất thời gian thực (`Live Preview`, `Compiling`, `Rendering Error`).
+  - Nút đóng với phím tắt `ESC`.
+- **Thanh công cụ (Preview Toolbar):**
+  - Chuyển đổi chế độ **Desktop** và **Mobile**.
+  - Các preset kích thước chuẩn: Desktop (`Fit`, `1200px`, `1440px`) & Mobile (`375px SE`, `390px Pro`, `430px Max`).
+  - Huy hiệu phần trăm tỷ lệ hiển thị (% Zoom/Fit).
+  - Nút **Refresh Preview** (biên dịch lại tức thì) & nút **Copy Code** tiện lợi.
+- **Khu vực Preview Canvas:**
+  - Nền workspace chuyên nghiệp `#F1F2F4` sạch sẽ.
+  - Loại bỏ hoàn toàn thanh trình duyệt giả (không còn 3 chấm màu hay URL giả mạo).
+  - Desktop hiển thị trực tiếp storefront căn giữa tự nhiên.
+  - Mobile hiển thị trong khung thiết bị tinh tế (Device Frame) với dynamic island và chiều rộng CSS thực tế để kích hoạt chuẩn xác các media queries `@media (max-width: 749px)`.
+  - Tự động khóa cuộn trang nền (`scroll lock`) khi mở workspace.
 
 ---
 
@@ -178,10 +199,10 @@ Modal cho phép kiểm tra chi tiết giao diện section:
 
 | # | Tên Section | File name | Danh mục | Plan | Preset Name | Dòng |
 |---|---|---|---|---|---|---|
-| 1 | **Velroxa Responsive Hero** | `custom-hero.liquid` | Hero & Banner | Free | `Custom Hero` | 1,130 |
-| 2 | **Velroxa Featured Products** | `custom-featured-products.liquid` | Product & Conversion | Free | `Custom Featured Products` | 1,826 |
-| 3 | **Velroxa Category Cards** | `feature-categories.liquid` | Features & Bento Grid | Free | `Custom Categories` | 1,350 |
-| 4 | **Velroxa Trust Bar** | `trust-bar.liquid` | Social Proof & Reviews | Free | `Custom Trust Bar` | 484 |
+| 1 | **Example Responsive Hero** | `custom-hero.liquid` | Hero & Banner | Free | `Custom Hero` | 1,130 |
+| 2 | **Example Featured Products** | `custom-featured-products.liquid` | Product & Conversion | Free | `Custom Featured Products` | 1,826 |
+| 3 | **Example Category Cards** | `feature-categories.liquid` | Features & Bento Grid | Free | `Custom Categories` | 1,350 |
+| 4 | **Example Trust Bar** | `trust-bar.liquid` | Social Proof & Reviews | Free | `Custom Trust Bar` | 484 |
 | 5 | **Instant Search FAQ** | `interactive-faq-accordion.liquid` | FAQ & Support | Free | `FAQ Accordion with Search` | 346 |
 | 6 | **Dual FAQ & Contact Form** | `faq-contact.liquid` | FAQ & Support | Free | `Custom FAQ` | 628 |
 | 7 | **Verified Customer Reviews** | `testimonials-carousel.liquid` | Social Proof & Reviews | Free | `Testimonials Grid` | 316 |

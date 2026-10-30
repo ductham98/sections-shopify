@@ -32,14 +32,12 @@ export function SectionCard({
 
   return (
     <div className="group flex flex-col rounded-xl border border-[#E5E5E5] bg-white overflow-hidden shadow-2xs hover:shadow-md hover:border-zinc-300 transition-all duration-200">
-      {/* Top bar over preview: Plan Badge + Action trigger */}
       <div className="relative border-b border-[#F0F0F0]">
-        {/* Plan Badge */}
-        <div className="absolute left-3 top-3 z-10">
+        {/* Top-Left Plan Badge */}
+        <div className="absolute top-2.5 left-2.5 z-10 pointer-events-none">
           <PlanBadge plan={section.plan} />
         </div>
 
-        {/* Live Section Preview Area */}
         <div
           onClick={() => onPreview(section)}
           className="relative h-[220px] w-full overflow-hidden bg-white cursor-pointer select-none"
@@ -98,11 +96,10 @@ export function SectionCard({
           {/* Action 2: Copy Code */}
           <button
             onClick={handleCopy}
-            className={`flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition shadow-2xs active:scale-[0.98] ${
-              copied
-                ? "bg-emerald-600 text-white border border-emerald-600"
-                : "bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-900"
-            }`}
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition shadow-2xs active:scale-[0.98] ${copied
+              ? "bg-emerald-600 text-white border border-emerald-600"
+              : "bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-900"
+              }`}
           >
             {copied ? (
               <>
