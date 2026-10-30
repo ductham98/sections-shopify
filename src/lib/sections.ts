@@ -53,3 +53,4 @@ export function getSectionById(id: string): SectionItem | undefined {
   const sections = getAllSections();
   return sections.find((s) => s.id === id);
 }
+

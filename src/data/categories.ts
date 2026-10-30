@@ -65,3 +65,4 @@ export const CATEGORIES: Category[] = [
     color: "rose"
   }
 ];
+
