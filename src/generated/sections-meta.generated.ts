@@ -6,7 +6,7 @@
 
 import { DiscoveredSectionMeta } from "@/lib/section-discovery";
 
-export const GENERATED_AT = "2026-10-30T04:33:40.138Z";
+export const GENERATED_AT = "2026-10-30T09:27:12.912Z";
 
 export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
   {

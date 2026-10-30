@@ -29,7 +29,7 @@ export function useActivePreview() {
     code: null,
     status: "idle",
     device: "desktop",
-    presentationMode: "fit",
+    presentationMode: "overview",
     viewportWidth: 1200,
     scale: 1,
     compiledHtml: null,
@@ -41,12 +41,12 @@ export function useActivePreview() {
 
   /**
    * Opens the preview for a selected section, canceling any previous compilation.
-   * Resets to default Showcase Fit Preview mode.
+   * Resets to default Overview mode with default viewport width.
    */
   const openPreview = useCallback(async (section: DiscoveredSectionMeta) => {
     const currentRequestId = ++activeRequestIdRef.current;
 
-    // Immediately switch active section and set loading state with Fit mode as default
+    // Immediately switch active section and set loading state with Overview as default
     setState((prev) => ({
       ...prev,
       section,
@@ -55,7 +55,7 @@ export function useActivePreview() {
       compiledHtml: previewHtmlCache.get(section.id) || null,
       error: undefined,
       device: "desktop",
-      presentationMode: "fit",
+      presentationMode: "overview",
       viewportWidth: 1200,
       scale: 1,
     }));
@@ -128,7 +128,7 @@ export function useActivePreview() {
       code: null,
       status: "idle",
       device: "desktop",
-      presentationMode: "fit",
+      presentationMode: "overview",
       viewportWidth: 1200,
       scale: 1,
       compiledHtml: null,
@@ -193,7 +193,7 @@ export function useActivePreview() {
     setState((prev) => ({
       ...prev,
       device,
-      presentationMode: "fit",
+      presentationMode: "overview",
       viewportWidth: device === "mobile" ? 390 : 1200,
     }));
   }, []);

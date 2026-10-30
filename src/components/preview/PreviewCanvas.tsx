@@ -24,24 +24,31 @@ export function PreviewCanvas({
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [contentHeight, setContentHeight] = useState<number>(500);
-  const [canvasDimensions, setCanvasDimensions] = useState({ width: 1200, height: 800 });
+  const [canvasDimensions, setCanvasDimensions] = useState({ width: 1200, height: 700 });
 
   // Monitor available workspace dimensions via ResizeObserver
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
+    let rafId: number | null = null;
     const ro = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        if (width > 0 && height > 0) {
-          setCanvasDimensions({ width, height });
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        for (const entry of entries) {
+          const { width, height } = entry.contentRect;
+          if (width > 0 && height > 0) {
+            setCanvasDimensions({ width, height });
+          }
         }
-      }
+      });
     });
 
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      ro.disconnect();
+    };
   }, []);
 
   // Measure iframe content height directly from contentDocument
@@ -64,31 +71,30 @@ export function PreviewCanvas({
         }
       }
     } catch {
-      // Fallback in case of cross-origin isolation
+      // Fallback in case of sandboxed isolation
     }
   }, []);
 
-  // Reset and re-measure whenever HTML changes
+  // Trigger measurement on HTML change, iframe load, and interval fallbacks
   useEffect(() => {
-    // Initial check
     measureIframeHeight();
-    const timer1 = setTimeout(measureIframeHeight, 100);
-    const timer2 = setTimeout(measureIframeHeight, 400);
-    const timer3 = setTimeout(measureIframeHeight, 1000);
+    const t1 = setTimeout(measureIframeHeight, 80);
+    const t2 = setTimeout(measureIframeHeight, 300);
+    const t3 = setTimeout(measureIframeHeight, 800);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-      clearTimeout(timer3);
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
     };
   }, [html, measureIframeHeight, refreshKey]);
 
-  // Listen to postMessage from iframe for dynamic height changes (accordion toggle, tabs, etc.)
+  // Listen to postMessage from iframe for dynamic height changes
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (
         event.data &&
-        event.data.type === "shopify-preview-height" &&
+        (event.data.type === "shopify-preview-dimensions" || event.data.type === "shopify-preview-height") &&
         typeof event.data.height === "number" &&
         event.data.height >= 20
       ) {
@@ -103,89 +109,76 @@ export function PreviewCanvas({
   // Target internal CSS viewport
   const targetWidth =
     device === "mobile"
-      ? (viewportWidth >= 300 && viewportWidth <= 500 ? viewportWidth : 390)
-      : (viewportWidth >= 1000 ? viewportWidth : 1200);
+      ? ([375, 390, 430].includes(viewportWidth) ? viewportWidth : 390)
+      : (viewportWidth === 1440 ? 1440 : 1200);
 
-  // Available workspace space with comfortable 32–48px whitespace margins
-  const paddingX = canvasDimensions.width < 640 ? 32 : 80;
-  const paddingY = canvasDimensions.width < 640 ? 32 : 80;
-  const availW = Math.max(canvasDimensions.width - paddingX, 280);
-  const availH = Math.max(canvasDimensions.height - paddingY, 200);
+  // Available workspace space from contentRect (inner dimensions inside padding, with a 6px safety margin)
+  const availW = Math.max(canvasDimensions.width - 6, 280);
+  const availH = Math.max(canvasDimensions.height - 6, 160);
 
-  const currentHeight = Math.max(contentHeight, 44);
-  const mobileScreenHeight = Math.min(Math.max(currentHeight, 120), 740);
+  const sectionInternalHeight = Math.max(contentHeight, 40);
 
-  // Intelligent Showcase Fit-to-View Scale calculation
+  // Calculate natural unscaled dimensions of the component to render
+  const sectionW = device === "mobile" ? targetWidth + 16 : targetWidth;
+  const sectionH = device === "mobile" ? sectionInternalHeight + 16 : sectionInternalHeight;
+
+  // Scale calculation:
+  // Overview: Fits entire section inside available canvas dimensions with no scrollbar
+  // Full Size: 100% natural scale with vertical scrolling
   let scale = 1.0;
-
-  if (device === "mobile") {
-    const frameW = targetWidth + 16;
-    const frameH = mobileScreenHeight + 16;
-
-    if (presentationMode === "fit") {
-      const scaleX = availW / frameW;
-      const scaleY = availH / frameH;
-      const rawScale = Math.min(scaleX, scaleY, 1.0);
-      scale = Math.round(rawScale * 100) / 100;
-    } else {
-      scale = 1.0;
-    }
+  if (presentationMode === "overview") {
+    const scaleX = availW / sectionW;
+    const scaleY = availH / sectionH;
+    const rawScale = Math.min(scaleX, scaleY, 1.0);
+    // Floor to 2 decimal places so visual size never exceeds availW or availH
+    scale = Math.max(Math.floor(rawScale * 100) / 100, 0.1);
   } else {
-    // Desktop Section Showcase
-    if (presentationMode === "fit") {
-      const scaleX = availW / targetWidth;
-      const scaleY = currentHeight > 0 ? availH / currentHeight : 1.0;
-
-      // In showcase mode: scale down to fit width, and scale down for tall sections with a sensible floor of 0.65
-      const effectiveHeightScale = Math.max(scaleY, 0.65);
-      const rawScale = Math.min(scaleX, effectiveHeightScale, 1.0);
-      scale = Math.round(rawScale * 100) / 100;
-    } else {
-      scale = 1.0;
-    }
+    scale = 1.0;
   }
 
-  // Notify toolbar of current zoom percentage
+  // Notify parent/toolbar of current zoom percentage
   useEffect(() => {
     onScaleChange(scale);
   }, [scale, onScaleChange]);
 
-  // Scaled dimensions that the layout box will physically occupy
-  const scaledDesktopW = Math.round(targetWidth * scale);
-  const scaledDesktopH = Math.round(currentHeight * scale);
-  const scaledMobileW = Math.round((targetWidth + 16) * scale);
-  const scaledMobileH = Math.round((mobileScreenHeight + 16) * scale);
+  // Exact physical layout dimensions for the display wrapper
+  const displayW = Math.round(sectionW * scale);
+  const displayH = Math.round(sectionH * scale);
 
-  // Check if content exceeds available height to switch from vertical center to top-alignment (prevent clipping top)
-  const isTallerThanCanvas =
-    device === "mobile"
-      ? scaledMobileH > availH
-      : scaledDesktopH > availH;
+  // In Full Size mode, determine if content is taller than available height
+  const isTallerThanCanvas = presentationMode === "full" && sectionH > availH;
 
   return (
     <div
       ref={containerRef}
-      className="preview-canvas flex-1 w-full bg-[#F1F2F4] overflow-auto p-4 sm:p-8 lg:p-10 flex"
+      className={`preview-canvas flex-1 w-full min-h-0 bg-[#F1F2F4] p-4 sm:p-8 flex ${
+        presentationMode === "overview"
+          ? "preview-canvas--overview overflow-hidden items-center justify-center"
+          : "preview-canvas--full overflow-y-auto overflow-x-hidden preview-scrollbar flex-col items-center"
+      }`}
     >
       <div
-        className="preview-stage w-full min-h-full flex flex-col items-center m-auto transition-all duration-200"
+        className="preview-stage w-full transition-all duration-200 flex flex-col items-center"
         style={{
+          minHeight: presentationMode === "overview" ? "auto" : "100%",
           justifyContent: isTallerThanCanvas ? "flex-start" : "center",
+          margin: presentationMode === "overview" ? "auto" : (isTallerThanCanvas ? "0 auto" : "auto"),
         }}
       >
         {device === "mobile" ? (
-          /* Scaled Mobile Device Frame */
+          /* Mobile Device Frame */
           <div
             className="preview-content relative transition-all duration-200"
             style={{
-              width: `${scaledMobileW}px`,
-              height: `${scaledMobileH}px`,
+              width: `${displayW}px`,
+              height: `${displayH}px`,
               flexShrink: 0,
             }}
           >
             <div
               style={{
-                width: `${targetWidth + 16}px`,
+                width: `${sectionW}px`,
+                height: `${sectionH}px`,
                 transform: `scale(${scale})`,
                 transformOrigin: "top left",
               }}
@@ -194,8 +187,7 @@ export function PreviewCanvas({
                 <div
                   className="w-full relative bg-white overflow-hidden"
                   style={{
-                    height: `${mobileScreenHeight}px`,
-                    overflowY: "auto",
+                    height: `${sectionInternalHeight}px`,
                   }}
                 >
                   <iframe
@@ -212,12 +204,12 @@ export function PreviewCanvas({
             </div>
           </div>
         ) : (
-          /* Scaled Desktop Showcase Canvas */
+          /* Desktop Showcase Canvas */
           <div
             className="preview-content relative transition-all duration-200"
             style={{
-              width: `${scaledDesktopW}px`,
-              height: `${scaledDesktopH}px`,
+              width: `${displayW}px`,
+              height: `${displayH}px`,
               flexShrink: 0,
             }}
           >
@@ -225,7 +217,7 @@ export function PreviewCanvas({
               className="rounded-xl overflow-hidden shadow-sm border border-neutral-300/80 bg-white"
               style={{
                 width: `${targetWidth}px`,
-                height: `${currentHeight}px`,
+                height: `${sectionInternalHeight}px`,
                 transform: `scale(${scale})`,
                 transformOrigin: "top left",
               }}

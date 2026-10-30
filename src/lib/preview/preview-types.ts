@@ -1,5 +1,5 @@
 export type DeviceMode = "desktop" | "mobile";
-export type PresentationMode = "fit" | "actual";
+export type PresentationMode = "overview" | "full";
 
 export type DesktopViewportWidth = 1200 | 1440;
 export type MobileViewportWidth = 375 | 390 | 430;

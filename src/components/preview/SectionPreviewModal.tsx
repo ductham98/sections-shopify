@@ -128,7 +128,7 @@ export function SectionPreviewModal({
 
         {/* C. Dedicated Scrollable Preview Workspace (SINGLE Active Preview Canvas) */}
         {state.status === "loading" && !state.compiledHtml ? (
-          <div className="flex-1 bg-[#F1F2F4] flex flex-col items-center justify-center p-8 gap-3">
+          <div className="flex-1 w-full min-h-0 bg-[#F1F2F4] flex flex-col items-center justify-center p-8 gap-3">
             <Loader2 className="w-8 h-8 text-neutral-600 animate-spin" />
             <p className="text-sm font-medium text-neutral-600">
               Compiling Shopify Liquid section...
@@ -138,7 +138,7 @@ export function SectionPreviewModal({
             </span>
           </div>
         ) : state.status === "error" && !state.compiledHtml ? (
-          <div className="flex-1 bg-[#F1F2F4] p-6 overflow-y-auto">
+          <div className="flex-1 w-full min-h-0 bg-[#F1F2F4] p-6 overflow-y-auto preview-scrollbar">
             <PreviewError
               message={state.error || "Failed to render Shopify section preview"}
               onRetry={onRefresh}

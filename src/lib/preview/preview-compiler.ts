@@ -28,6 +28,12 @@ function wrapHtmlEnvelope(contentHtml: string, title = "Shopify Section Preview"
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
+    #shopify-section-preview-root {
+      display: flow-root;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
     img, svg {
       display: block;
       max-width: 100%;
@@ -62,30 +68,76 @@ function wrapHtmlEnvelope(contentHtml: string, title = "Shopify Section Preview"
         e.preventDefault();
       }, true);
 
-      // Dynamic height reporter
-      function sendHeight() {
+      // Dynamic height reporter with requestAnimationFrame debounce
+      var lastSentHeight = 0;
+      var rafId = null;
+
+      function measureAndSend() {
+        var root = document.getElementById('shopify-section-preview-root');
         var body = document.body;
         var html = document.documentElement;
+
         var height = Math.max(
+          root ? root.scrollHeight : 0,
+          root ? root.offsetHeight : 0,
           body ? body.scrollHeight : 0,
           body ? body.offsetHeight : 0,
-          html ? html.clientHeight : 0,
           html ? html.scrollHeight : 0,
           html ? html.offsetHeight : 0
         );
-        if (window.parent) {
-          window.parent.postMessage({ type: 'shopify-preview-height', height: height }, '*');
+
+        if (height > 0 && Math.abs(height - lastSentHeight) >= 1) {
+          lastSentHeight = height;
+          if (window.parent) {
+            window.parent.postMessage({
+              type: 'shopify-preview-dimensions',
+              height: height,
+              width: root ? root.offsetWidth : (body ? body.offsetWidth : 1200)
+            }, '*');
+            // Backward compatibility
+            window.parent.postMessage({
+              type: 'shopify-preview-height',
+              height: height
+            }, '*');
+          }
         }
       }
 
-      window.addEventListener('load', sendHeight);
-      window.addEventListener('resize', sendHeight);
-      if (typeof ResizeObserver !== 'undefined' && document.body) {
-        new ResizeObserver(sendHeight).observe(document.body);
+      function scheduleMeasure() {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(measureAndSend);
       }
-      setTimeout(sendHeight, 200);
-      setTimeout(sendHeight, 600);
-      setTimeout(sendHeight, 1500);
+
+      window.addEventListener('load', scheduleMeasure);
+      window.addEventListener('resize', scheduleMeasure);
+
+      // Watch for font loading
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(scheduleMeasure);
+      }
+
+      // Watch for image loading
+      var images = document.images;
+      for (var i = 0; i < images.length; i++) {
+        if (!images[i].complete) {
+          images[i].addEventListener('load', scheduleMeasure);
+          images[i].addEventListener('error', scheduleMeasure);
+        }
+      }
+
+      // Watch DOM mutations and size changes
+      if (typeof ResizeObserver !== 'undefined') {
+        var ro = new ResizeObserver(scheduleMeasure);
+        var rootEl = document.getElementById('shopify-section-preview-root');
+        if (rootEl) ro.observe(rootEl);
+        if (document.body) ro.observe(document.body);
+      }
+
+      // Timed fallbacks for animations and late css
+      setTimeout(scheduleMeasure, 50);
+      setTimeout(scheduleMeasure, 200);
+      setTimeout(scheduleMeasure, 600);
+      setTimeout(scheduleMeasure, 1500);
     })();
   </script>
 </body>

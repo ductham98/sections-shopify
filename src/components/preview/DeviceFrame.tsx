@@ -10,13 +10,16 @@ interface DeviceFrameProps {
 export function DeviceFrame({ children, width }: DeviceFrameProps) {
   return (
     <div
-      className="mx-auto transition-all duration-300 relative"
-      style={{ width: `${width}px` }}
+      className="transition-all duration-200 relative"
+      style={{ width: `${width + 16}px` }}
     >
-      {/* Sleek Minimalist Mobile Chassis (Clean bezel without obstructing content) */}
-      <div className="relative rounded-[4px] bg-neutral-900 shadow-2xl ">
-        {/* Screen Container */}
-        <div className="relative rounded-[4px] overflow-hidden bg-white w-full">
+      {/* Sleek Minimalist Mobile Chassis */}
+      <div className="rounded-[36px] p-2 bg-neutral-900 shadow-xl ring-1 ring-neutral-800">
+        {/* Screen Container with exact viewport width */}
+        <div
+          className="rounded-[28px] overflow-hidden bg-white border border-neutral-800/20"
+          style={{ width: `${width}px` }}
+        >
           {children}
         </div>
       </div>

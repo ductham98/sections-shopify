@@ -32,12 +32,12 @@ export function PreviewToolbar({
   codeCopied,
 }: PreviewToolbarProps) {
   return (
-    <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 bg-white border-b border-[#E5E7EB] shrink-0 text-xs text-neutral-600 gap-3 flex-wrap">
+    <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 bg-white border-b border-[#E5E7EB] shrink-0 text-xs text-neutral-600 gap-3 flex-wrap select-none">
       {/* Left: Device Mode Toggles */}
       <div className="flex items-center gap-1 bg-neutral-100 p-1 rounded-lg border border-neutral-200/80">
         <button
           onClick={() => onDeviceChange("desktop")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
             device === "desktop"
               ? "bg-white text-neutral-900 shadow-2xs font-semibold"
               : "text-neutral-500 hover:text-neutral-900"
@@ -50,7 +50,7 @@ export function PreviewToolbar({
 
         <button
           onClick={() => onDeviceChange("mobile")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
             device === "mobile"
               ? "bg-white text-neutral-900 shadow-2xs font-semibold"
               : "text-neutral-500 hover:text-neutral-900"
@@ -62,33 +62,43 @@ export function PreviewToolbar({
         </button>
       </div>
 
-      {/* Center: Showcase Viewport Presets & Fit Mode */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-neutral-400 text-[11px] hidden md:inline">View:</span>
-        <div className="flex items-center gap-1 bg-neutral-100/80 p-0.5 rounded-lg border border-neutral-200/60">
-          {/* Fit Preview Button (Default) */}
+      {/* Center: Mode Toggles (Overview / Full Size) + Viewport width presets + Scale badge */}
+      <div className="flex items-center gap-2.5 flex-wrap">
+        {/* Mode Toggles */}
+        <div className="flex items-center gap-1 bg-neutral-100/90 p-1 rounded-lg border border-neutral-200/80">
           <button
-            onClick={() => onPresentationModeChange("fit")}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition ${
-              presentationMode === "fit"
+            onClick={() => onPresentationModeChange("overview")}
+            className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
+              presentationMode === "overview"
                 ? "bg-white text-neutral-900 shadow-2xs font-semibold"
-                : "text-neutral-500 hover:text-neutral-800"
+                : "text-neutral-500 hover:text-neutral-900"
             }`}
-            title="Auto-scale section to fit comfortably in workspace"
+            title="Overview: Auto-fit complete section into workspace without scrolling"
           >
-            Fit
+            Overview
           </button>
+          <button
+            onClick={() => onPresentationModeChange("full")}
+            className={`px-3 py-1.5 rounded-md font-medium transition cursor-pointer ${
+              presentationMode === "full"
+                ? "bg-white text-neutral-900 shadow-2xs font-semibold"
+                : "text-neutral-500 hover:text-neutral-900"
+            }`}
+            title="Full Size: Inspect at 100% actual dimensions with scrolling"
+          >
+            Full Size
+          </button>
+        </div>
 
+        {/* Viewport Width Presets */}
+        <div className="flex items-center gap-1 bg-neutral-100/80 p-0.5 rounded-lg border border-neutral-200/60">
           {device === "desktop" ? (
             <>
               <button
-                onClick={() => {
-                  onViewportWidthChange(1200);
-                  if (presentationMode === "actual") onPresentationModeChange("fit");
-                }}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
-                  viewportWidth === 1200 && presentationMode !== "actual"
-                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                onClick={() => onViewportWidthChange(1200)}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition cursor-pointer ${
+                  viewportWidth === 1200
+                    ? "bg-white text-neutral-900 shadow-2xs font-semibold"
                     : "text-neutral-500 hover:text-neutral-800"
                 }`}
                 title="1200px Desktop Viewport"
@@ -96,13 +106,10 @@ export function PreviewToolbar({
                 1200px
               </button>
               <button
-                onClick={() => {
-                  onViewportWidthChange(1440);
-                  if (presentationMode === "actual") onPresentationModeChange("fit");
-                }}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
-                  viewportWidth === 1440 && presentationMode !== "actual"
-                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                onClick={() => onViewportWidthChange(1440)}
+                className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition cursor-pointer ${
+                  viewportWidth === 1440
+                    ? "bg-white text-neutral-900 shadow-2xs font-semibold"
                     : "text-neutral-500 hover:text-neutral-800"
                 }`}
                 title="1440px Wide Desktop Viewport"
@@ -113,13 +120,10 @@ export function PreviewToolbar({
           ) : (
             <>
               <button
-                onClick={() => {
-                  onViewportWidthChange(375);
-                  if (presentationMode === "actual") onPresentationModeChange("fit");
-                }}
-                className={`px-2 py-1 rounded-md text-[11px] font-mono transition ${
-                  viewportWidth === 375 && presentationMode !== "actual"
-                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                onClick={() => onViewportWidthChange(375)}
+                className={`px-2 py-1 rounded-md text-[11px] font-mono transition cursor-pointer ${
+                  viewportWidth === 375
+                    ? "bg-white text-neutral-900 shadow-2xs font-semibold"
                     : "text-neutral-500 hover:text-neutral-800"
                 }`}
                 title="375px Compact Mobile"
@@ -127,13 +131,10 @@ export function PreviewToolbar({
                 375px
               </button>
               <button
-                onClick={() => {
-                  onViewportWidthChange(390);
-                  if (presentationMode === "actual") onPresentationModeChange("fit");
-                }}
-                className={`px-2 py-1 rounded-md text-[11px] font-mono transition ${
-                  viewportWidth === 390 && presentationMode !== "actual"
-                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                onClick={() => onViewportWidthChange(390)}
+                className={`px-2 py-1 rounded-md text-[11px] font-mono transition cursor-pointer ${
+                  viewportWidth === 390
+                    ? "bg-white text-neutral-900 shadow-2xs font-semibold"
                     : "text-neutral-500 hover:text-neutral-800"
                 }`}
                 title="390px Standard Mobile"
@@ -141,13 +142,10 @@ export function PreviewToolbar({
                 390px
               </button>
               <button
-                onClick={() => {
-                  onViewportWidthChange(430);
-                  if (presentationMode === "actual") onPresentationModeChange("fit");
-                }}
-                className={`px-2 py-1 rounded-md text-[11px] font-mono transition ${
-                  viewportWidth === 430 && presentationMode !== "actual"
-                    ? "bg-neutral-200/70 text-neutral-900 font-semibold"
+                onClick={() => onViewportWidthChange(430)}
+                className={`px-2 py-1 rounded-md text-[11px] font-mono transition cursor-pointer ${
+                  viewportWidth === 430
+                    ? "bg-white text-neutral-900 shadow-2xs font-semibold"
                     : "text-neutral-500 hover:text-neutral-800"
                 }`}
                 title="430px Large Mobile"
@@ -156,23 +154,13 @@ export function PreviewToolbar({
               </button>
             </>
           )}
-
-          {/* 100% / Actual View Button */}
-          <button
-            onClick={() => onPresentationModeChange("actual")}
-            className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition ${
-              presentationMode === "actual"
-                ? "bg-white text-neutral-900 shadow-2xs font-semibold"
-                : "text-neutral-500 hover:text-neutral-800"
-            }`}
-            title="Display section at 100% actual scale"
-          >
-            100%
-          </button>
         </div>
 
-        {/* Zoom / Scale badge */}
-        <span className="px-2 py-0.5 rounded bg-neutral-100 text-neutral-500 font-mono text-[11px] border border-neutral-200/60">
+        {/* Scale Indicator */}
+        <span
+          className="px-2 py-1 rounded bg-neutral-100 text-neutral-600 font-mono text-[11px] border border-neutral-200/80 font-medium"
+          title={`Current rendering scale: ${Math.round(scalePercent * 100)}%`}
+        >
           {Math.round(scalePercent * 100)}%
         </span>
       </div>
@@ -182,7 +170,7 @@ export function PreviewToolbar({
         <button
           onClick={onRefresh}
           disabled={isRefreshing}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 font-medium transition active:scale-95 disabled:opacity-50 shadow-2xs"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 bg-white text-neutral-700 hover:bg-neutral-50 hover:border-neutral-300 font-medium transition active:scale-95 disabled:opacity-50 shadow-2xs cursor-pointer"
           title="Reload preview template"
         >
           <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? "animate-spin text-neutral-900" : "text-neutral-500"}`} />
@@ -191,7 +179,7 @@ export function PreviewToolbar({
 
         <button
           onClick={onCopyCode}
-          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-medium transition active:scale-95 shadow-2xs ${
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-medium transition active:scale-95 shadow-2xs cursor-pointer ${
             codeCopied
               ? "bg-emerald-600 text-white border border-emerald-600"
               : "bg-neutral-900 text-white hover:bg-neutral-800 border border-neutral-900"
