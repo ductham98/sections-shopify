@@ -4,7 +4,7 @@
  */
 
 export const PREVIEW_FALLBACK_IMAGES = {
-  hero: "https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&auto=format&fit=crop&q=85",
+  hero: "https://images.unsplash.com/photo-1773847469674-189153e5e32d",
   heroMobile: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&auto=format&fit=crop&q=85",
   categories: [
     "https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80",

@@ -62,25 +62,16 @@ export function SectionCard({
           className="relative h-[220px] w-full overflow-hidden bg-neutral-100/70 cursor-pointer select-none flex items-center justify-center"
         >
           {!imageError ? (
-            <>
-              {/* Skeleton placeholder while loading image */}
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-neutral-100 animate-pulse flex items-center justify-center">
-                  <div className="w-8 h-8 rounded-lg bg-neutral-200/60" />
-                </div>
-              )}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
+            <div className="w-full h-full p-3">
               <img
                 src={thumbnailUrl}
                 alt={section.title}
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageError(true)}
-                className={`w-full h-full object-cover object-top transition-all duration-300 group-hover:scale-[1.02] ${
-                  imageLoaded ? "opacity-100" : "opacity-0"
-                }`}
+                className={`w-full h-full object-cover object-top transition-all duration-300 group-hover:scale-[1.02] rounded-t-md overflow-hidden`}
                 loading="lazy"
               />
-            </>
+            </div>
           ) : (
             /* Neutral Minimal Fallback Graphic when screenshot is unavailable */
             <div className="w-full h-full p-6 flex flex-col justify-between bg-neutral-50/80 border border-neutral-100 text-neutral-400">
@@ -144,8 +135,8 @@ export function SectionCard({
             onClick={handleCopy}
             disabled={copying}
             className={`w-full flex items-center justify-center gap-1.5 rounded-lg py-2 px-3 text-xs font-semibold transition shadow-2xs active:scale-[0.98] ${copied
-                ? "bg-emerald-600 text-white border border-emerald-600"
-                : "bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-900"
+              ? "bg-emerald-600 text-white border border-emerald-600"
+              : "bg-zinc-900 text-white hover:bg-zinc-800 border border-zinc-900"
               }`}
           >
             {copied ? (

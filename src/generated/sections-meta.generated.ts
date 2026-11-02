@@ -10,78 +10,6 @@ export const GENERATED_AT = "2026-11-02T07:21:33.929Z";
 
 export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
   {
-    "id": "announcement-bar-ticker",
-    "filename": "announcement-bar-ticker.liquid",
-    "title": "Announcement Ticker",
-    "presetName": "Announcement Ticker",
-    "category": "header",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Announcement Ticker section with 5 customizable settings.",
-    "tags": [
-      "announcement",
-      "bar",
-      "ticker",
-      "themeable"
-    ],
-    "lineCount": 215,
-    "fileSizeBytes": 5628,
-    "fileSizeFormatted": "5.5 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 5,
-    "blocksCount": 1,
-    "thumbnail": {
-      "url": "/thumbnails/announcement-bar-ticker.webp?v=b9e5e3cabab52a04",
-      "generatedAt": "2026-11-02T07:16:24.868Z",
-      "sourceHash": "8e9e9489267ff918",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "b9e5e3cabab52a04"
-    }
-  },
-  {
-    "id": "feature-categories",
-    "filename": "feature-categories.liquid",
-    "title": "Custom Categories",
-    "presetName": "Custom Categories",
-    "category": "features",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Custom Categories section with 75 customizable settings.",
-    "tags": [
-      "feature",
-      "categories",
-      "custom",
-      "category",
-      "responsive",
-      "themeable"
-    ],
-    "lineCount": 1350,
-    "fileSizeBytes": 37185,
-    "fileSizeFormatted": "36.3 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 75,
-    "blocksCount": 1,
-    "thumbnail": {
-      "url": "/thumbnails/feature-categories.webp?v=a50a9b84ef4f654f",
-      "generatedAt": "2026-11-02T07:16:25.512Z",
-      "sourceHash": "e8e1c644a85fcfbf",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "a50a9b84ef4f654f"
-    }
-  },
-  {
     "id": "faq-contact",
     "filename": "faq-contact.liquid",
     "title": "Custom FAQ",
@@ -104,7 +32,7 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "settingsCount": 15,
     "blocksCount": 1,
     "thumbnail": {
-      "url": "/thumbnails/faq-contact.webp?v=39bd72afc4e82c0a",
+      "url": "/thumbnails/faq-contact.webp",
       "generatedAt": "2026-11-02T07:16:26.051Z",
       "sourceHash": "b1d54da53b11777d",
       "engineVersion": "v1.0.0",
@@ -117,293 +45,38 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     }
   },
   {
-    "id": "custom-featured-products",
-    "filename": "custom-featured-products.liquid",
-    "title": "Custom Featured Products",
-    "presetName": "Custom Featured Products",
-    "category": "product",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Custom Featured Products section with 121 customizable settings.",
-    "tags": [
-      "custom",
-      "featured",
-      "products",
-      "responsive",
-      "themeable"
-    ],
-    "lineCount": 1826,
-    "fileSizeBytes": 49315,
-    "fileSizeFormatted": "48.2 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 121,
-    "blocksCount": 0,
-    "thumbnail": {
-      "url": "/thumbnails/custom-featured-products.webp?v=cc7edfd163083e01",
-      "generatedAt": "2026-11-02T07:16:26.706Z",
-      "sourceHash": "c00424cc4f535560",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "cc7edfd163083e01"
-    }
-  },
-  {
-    "id": "custom-hero",
-    "filename": "custom-hero.liquid",
-    "title": "Custom Hero",
-    "presetName": "Custom Hero",
+    "id": "hero",
+    "filename": "hero.liquid",
+    "title": "Section Hero",
+    "presetName": "Section Hero",
     "category": "hero",
     "plan": "free",
-    "description": "Shopify Online Store 2.0 Custom Hero section with 57 customizable settings.",
+    "description": "Shopify Online Store 2.0 Custom FAQ section with 15 customizable settings.",
     "tags": [
-      "custom",
       "hero",
-      "responsive",
-      "themeable"
-    ],
-    "lineCount": 1131,
-    "fileSizeBytes": 27928,
-    "fileSizeFormatted": "27.3 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 57,
-    "blocksCount": 0,
-    "thumbnail": {
-      "url": "/thumbnails/custom-hero.webp?v=60e9aa739351b874",
-      "generatedAt": "2026-11-02T07:21:05.127Z",
-      "sourceHash": "547a9964522255da",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "60e9aa739351b874"
-    }
-  },
-  {
-    "id": "trust-bar",
-    "filename": "trust-bar.liquid",
-    "title": "Custom Trust Bar",
-    "presetName": "Custom Trust Bar",
-    "category": "social-proof",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Custom Trust Bar section with 25 customizable settings.",
-    "tags": [
-      "trust",
-      "bar",
+      "contact",
       "custom",
-      "trust_item",
-      "responsive",
       "themeable"
     ],
-    "lineCount": 484,
-    "fileSizeBytes": 13438,
-    "fileSizeFormatted": "13.1 KB",
+    "lineCount": 628,
+    "fileSizeBytes": 16081,
+    "fileSizeFormatted": "15.7 KB",
     "updatedAt": "2026-10-30",
     "hasSchema": true,
     "previewStatus": "ready",
-    "settingsCount": 25,
+    "settingsCount": 15,
     "blocksCount": 1,
     "thumbnail": {
-      "url": "/thumbnails/trust-bar.webp?v=3fd1623920a204e2",
-      "generatedAt": "2026-11-02T07:16:27.886Z",
-      "sourceHash": "66d37ed9de1e8b5f",
+      "url": "/thumbnails/hero.webp",
+      "generatedAt": "2026-11-02T07:16:26.051Z",
+      "sourceHash": "b1d54da53b11777d",
       "engineVersion": "v1.0.0",
       "viewport": {
         "width": 1200,
         "height": 700
       },
       "status": "ready",
-      "compositeHash": "3fd1623920a204e2"
-    }
-  },
-  {
-    "id": "interactive-faq-accordion",
-    "filename": "interactive-faq-accordion.liquid",
-    "title": "FAQ Accordion with Search",
-    "presetName": "FAQ Accordion with Search",
-    "category": "faq",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 FAQ Accordion with Search section with 11 customizable settings.",
-    "tags": [
-      "interactive",
-      "faq",
-      "accordion",
-      "with",
-      "search",
-      "faq_item",
-      "themeable"
-    ],
-    "lineCount": 346,
-    "fileSizeBytes": 9442,
-    "fileSizeFormatted": "9.2 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 11,
-    "blocksCount": 1,
-    "thumbnail": {
-      "url": "/thumbnails/interactive-faq-accordion.webp?v=5b5a8716fcb4fd58",
-      "generatedAt": "2026-11-02T07:16:28.403Z",
-      "sourceHash": "b0706bebabeac9de",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "5b5a8716fcb4fd58"
-    }
-  },
-  {
-    "id": "product-features-grid",
-    "filename": "product-features-grid.liquid",
-    "title": "Features Bento Grid",
-    "presetName": "Features Bento Grid",
-    "category": "features",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Features Bento Grid section with 6 customizable settings.",
-    "tags": [
-      "product",
-      "features",
-      "grid",
-      "bento",
-      "feature",
-      "themeable"
-    ],
-    "lineCount": 358,
-    "fileSizeBytes": 9680,
-    "fileSizeFormatted": "9.5 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 6,
-    "blocksCount": 1,
-    "thumbnail": {
-      "url": "/thumbnails/product-features-grid.webp?v=595af4ca4e70d14e",
-      "generatedAt": "2026-11-02T07:16:28.935Z",
-      "sourceHash": "08318d7161cbd839",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "595af4ca4e70d14e"
-    }
-  },
-  {
-    "id": "logo-cloud-marquee",
-    "filename": "logo-cloud-marquee.liquid",
-    "title": "Logo Cloud Marquee",
-    "presetName": "Logo Cloud Marquee",
-    "category": "social-proof",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Logo Cloud Marquee section with 5 customizable settings.",
-    "tags": [
-      "logo",
-      "cloud",
-      "marquee",
-      "themeable"
-    ],
-    "lineCount": 191,
-    "fileSizeBytes": 4689,
-    "fileSizeFormatted": "4.6 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 5,
-    "blocksCount": 1,
-    "thumbnail": {
-      "url": "/thumbnails/logo-cloud-marquee.webp?v=2f8705a998d6fede",
-      "generatedAt": "2026-11-02T07:16:29.450Z",
-      "sourceHash": "15dcaba6abe40a34",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "2f8705a998d6fede"
-    }
-  },
-  {
-    "id": "sticky-add-to-cart",
-    "filename": "sticky-add-to-cart.liquid",
-    "title": "Sticky Add to Cart Bar",
-    "presetName": "Sticky Add to Cart Bar",
-    "category": "product",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Sticky Add to Cart Bar section with 5 customizable settings.",
-    "tags": [
-      "sticky",
-      "add",
-      "cart",
-      "bar",
-      "themeable"
-    ],
-    "lineCount": 208,
-    "fileSizeBytes": 5414,
-    "fileSizeFormatted": "5.3 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 5,
-    "blocksCount": 0,
-    "thumbnail": {
-      "url": "/thumbnails/sticky-add-to-cart.webp?v=fc6eaaef12ed163b",
-      "generatedAt": "2026-11-02T07:16:30.061Z",
-      "sourceHash": "292c51ea57b1e789",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "fc6eaaef12ed163b"
-    }
-  },
-  {
-    "id": "testimonials-carousel",
-    "filename": "testimonials-carousel.liquid",
-    "title": "Testimonials Grid",
-    "presetName": "Testimonials Grid",
-    "category": "social-proof",
-    "plan": "free",
-    "description": "Shopify Online Store 2.0 Testimonials Grid section with 8 customizable settings.",
-    "tags": [
-      "testimonials",
-      "carousel",
-      "grid",
-      "review",
-      "themeable"
-    ],
-    "lineCount": 327,
-    "fileSizeBytes": 9009,
-    "fileSizeFormatted": "8.8 KB",
-    "updatedAt": "2026-10-30",
-    "hasSchema": true,
-    "previewStatus": "ready",
-    "settingsCount": 8,
-    "blocksCount": 1,
-    "thumbnail": {
-      "url": "/thumbnails/testimonials-carousel.webp?v=9b8a3ee8611f90bb",
-      "generatedAt": "2026-11-02T07:16:30.680Z",
-      "sourceHash": "c1b1a3d00b936d4f",
-      "engineVersion": "v1.0.0",
-      "viewport": {
-        "width": 1200,
-        "height": 700
-      },
-      "status": "ready",
-      "compositeHash": "9b8a3ee8611f90bb"
+      "compositeHash": "39bd72afc4e82c0a"
     }
   }
 ];
