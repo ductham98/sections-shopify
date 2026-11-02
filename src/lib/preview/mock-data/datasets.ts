@@ -28,7 +28,7 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     url: "/products/aura-minimal-desk-mat",
     has_only_default_variant: false,
     featured_image: {
-      src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85",
+      src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e",
       alt: "Vegan Leather Desk Mat",
       width: 900,
       height: 600,
@@ -36,18 +36,18 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     featured_media: {
       media_type: "image",
       preview_image: {
-        src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85",
+        src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e",
         alt: "Vegan Leather Desk Mat",
       },
       alt: "Vegan Leather Desk Mat",
     },
     images: [
-      { src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85", alt: "Desk Mat" },
+      { src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e", alt: "Desk Mat" },
     ],
     media: [
       {
         media_type: "image",
-        preview_image: { src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85", alt: "Desk Mat" },
+        preview_image: { src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e", alt: "Desk Mat" },
         alt: "Desk Mat",
       },
     ],
@@ -74,7 +74,7 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     url: "/products/ergonomic-lumbar-cushion",
     has_only_default_variant: true,
     featured_image: {
-      src: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=900&auto=format&fit=crop&q=85",
+      src: "https://plus.unsplash.com/premium_photo-1673548917477-4c0c8889b439",
       alt: "Ergonomic Lumbar Cushion",
       width: 900,
       height: 600,
@@ -82,18 +82,18 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     featured_media: {
       media_type: "image",
       preview_image: {
-        src: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=900&auto=format&fit=crop&q=85",
+        src: "https://plus.unsplash.com/premium_photo-1673548917477-4c0c8889b439",
         alt: "Ergonomic Lumbar Cushion",
       },
       alt: "Ergonomic Lumbar Cushion",
     },
     images: [
-      { src: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=900&auto=format&fit=crop&q=85", alt: "Lumbar Cushion" },
+      { src: "https://plus.unsplash.com/premium_photo-1673548917477-4c0c8889b439", alt: "Lumbar Cushion" },
     ],
     media: [
       {
         media_type: "image",
-        preview_image: { src: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=900&auto=format&fit=crop&q=85", alt: "Lumbar Cushion" },
+        preview_image: { src: "https://plus.unsplash.com/premium_photo-1673548917477-4c0c8889b439", alt: "Lumbar Cushion" },
         alt: "Lumbar Cushion",
       },
     ],
@@ -119,7 +119,7 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     url: "/products/titanium-orbit-key-loop",
     has_only_default_variant: true,
     featured_image: {
-      src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&auto=format&fit=crop&q=85",
+      src: "https://images.unsplash.com/photo-1760716478125-aa948e99ef85",
       alt: "Titanium Key Carrier",
       width: 900,
       height: 600,
@@ -127,16 +127,16 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     featured_media: {
       media_type: "image",
       preview_image: {
-        src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&auto=format&fit=crop&q=85",
+        src: "https://images.unsplash.com/photo-1760716478125-aa948e99ef85",
         alt: "Titanium Key Carrier",
       },
       alt: "Titanium Key Carrier",
     },
-    images: [{ src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&auto=format&fit=crop&q=85", alt: "Titanium EDC" }],
+    images: [{ src: "https://images.unsplash.com/photo-1760716478125-aa948e99ef85", alt: "Titanium EDC" }],
     media: [
       {
         media_type: "image",
-        preview_image: { src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&auto=format&fit=crop&q=85", alt: "Titanium EDC" },
+        preview_image: { src: "https://images.unsplash.com/photo-1760716478125-aa948e99ef85", alt: "Titanium EDC" },
         alt: "Titanium EDC",
       },
     ],
@@ -160,7 +160,7 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     url: "/products/solid-walnut-magsafe-stand",
     has_only_default_variant: false,
     featured_image: {
-      src: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=900&auto=format&fit=crop&q=85",
+      src: "https://plus.unsplash.com/premium_photo-1682402663301-7ca06756825a",
       alt: "MagSafe Stand",
       width: 900,
       height: 600,
@@ -168,16 +168,16 @@ const GENERAL_PRODUCTS: MockProduct[] = [
     featured_media: {
       media_type: "image",
       preview_image: {
-        src: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=900&auto=format&fit=crop&q=85",
+        src: "https://plus.unsplash.com/premium_photo-1682402663301-7ca06756825a",
         alt: "MagSafe Stand",
       },
       alt: "MagSafe Stand",
     },
-    images: [{ src: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=900&auto=format&fit=crop&q=85", alt: "MagSafe Stand" }],
+    images: [{ src: "https://plus.unsplash.com/premium_photo-1682402663301-7ca06756825a", alt: "MagSafe Stand" }],
     media: [
       {
         media_type: "image",
-        preview_image: { src: "https://images.unsplash.com/photo-1508057198894-247b23fe5ade?w=900&auto=format&fit=crop&q=85", alt: "MagSafe Stand" },
+        preview_image: { src: "https://plus.unsplash.com/premium_photo-1682402663301-7ca06756825a", alt: "MagSafe Stand" },
         alt: "MagSafe Stand",
       },
     ],

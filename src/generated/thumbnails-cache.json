@@ -10,5 +10,17 @@
     },
     "status": "ready",
     "compositeHash": "8c9846953dcbcca7"
+  },
+  "custom-feature-products": {
+    "url": "/thumbnails/custom-feature-products.webp?v=a9120a2fd5cedbe0",
+    "generatedAt": "2026-11-02T07:50:56.614Z",
+    "sourceHash": "c1b3c4067ff34895",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "a9120a2fd5cedbe0"
   }
 }

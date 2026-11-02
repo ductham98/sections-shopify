@@ -78,6 +78,41 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
       "status": "ready",
       "compositeHash": "39bd72afc4e82c0a"
     }
+  },
+  {
+    "id": "custom-feature-products",
+    "filename": "custom-feature-products.liquid",
+    "title": "Custom Feature Products",
+    "presetName": "Custom Feature Products",
+    "category": "product",
+    "plan": "free",
+    "description": "Shopify Online Store 2.0 Custom FAQ section with 15 customizable settings.",
+    "tags": [
+      "product",
+      "categories",
+      "custom",
+      "themeable"
+    ],
+    "lineCount": 628,
+    "fileSizeBytes": 16081,
+    "fileSizeFormatted": "15.7 KB",
+    "updatedAt": "2026-10-30",
+    "hasSchema": true,
+    "previewStatus": "ready",
+    "settingsCount": 15,
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/custom-feature-products.webp",
+      "generatedAt": "2026-11-02T07:16:26.051Z",
+      "sourceHash": "b1d54da53b11777d",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "39bd72afc4e82c0a"
+    }
   }
 ];
 

@@ -54,7 +54,7 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     url: "/products/aura-minimal-desk-mat",
     has_only_default_variant: false,
     featured_image: {
-      src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85",
+      src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e",
       alt: "Vegan Leather Desk Mat",
       width: 900,
       height: 600,
@@ -62,7 +62,7 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     featured_media: {
       media_type: "image",
       preview_image: {
-        src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85",
+        src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e",
         alt: "Vegan Leather Desk Mat",
       },
       alt: "Vegan Leather Desk Mat",
@@ -71,7 +71,7 @@ export const MOCK_PRODUCTS: MockProduct[] = [
       {
         media_type: "image",
         preview_image: {
-          src: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=900&auto=format&fit=crop&q=85",
+          src: "https://plus.unsplash.com/premium_photo-1678074057896-eee996d4a23e",
           alt: "Primary Desk Mat",
         },
         alt: "Primary Desk Mat",
