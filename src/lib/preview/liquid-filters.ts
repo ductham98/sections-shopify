@@ -15,27 +15,18 @@ export function registerShopifyFilters(engine: Liquid): void {
    * Usage: {{ product.featured_image | image_url: width: 600 }}
    */
   engine.registerFilter("image_url", (input: unknown, options?: { width?: number; height?: number } | number) => {
-    if (!input) {
-      return "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80";
-    }
+    const fallback = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80";
+    if (!input) return fallback;
 
     let url = "";
     if (typeof input === "string") {
       url = input;
     } else if (typeof input === "object" && input !== null) {
       const img = input as ImageObject;
-      if (img.src) {
-        url = img.src;
-      } else if (img.url) {
-        url = img.url;
-      } else if (img.preview_image?.src) {
-        url = img.preview_image.src;
-      }
+      url = img.src || img.url || img.preview_image?.src || "";
     }
 
-    if (!url) {
-      return "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80";
-    }
+    if (!url) return fallback;
 
     const requestedWidth = typeof options === "number" ? options : options?.width;
     if (requestedWidth && url.includes("images.unsplash.com")) {
@@ -70,35 +61,21 @@ export function registerShopifyFilters(engine: Liquid): void {
     }
 
     const attrs: string[] = [`src="${src}"`];
-
     const opts = options || {};
     const alt = opts.alt !== undefined ? String(opts.alt) : defaultAlt;
     attrs.push(`alt="${alt.replace(/"/g, "&quot;")}"`);
 
-    if (opts.class) {
-      attrs.push(`class="${String(opts.class)}"`);
-    }
-    if (opts.loading) {
-      attrs.push(`loading="${String(opts.loading)}"`);
-    } else {
-      attrs.push(`loading="lazy"`);
-    }
-    if (opts.width || width) {
-      attrs.push(`width="${opts.width || width}"`);
-    }
-    if (opts.height || height) {
-      attrs.push(`height="${opts.height || height}"`);
-    }
-    if (opts.style) {
-      attrs.push(`style="${String(opts.style)}"`);
-    }
+    if (opts.class) attrs.push(`class="${String(opts.class)}"`);
+    attrs.push(`loading="${opts.loading ? String(opts.loading) : "lazy"}"`);
+    if (opts.width || width) attrs.push(`width="${opts.width || width}"`);
+    if (opts.height || height) attrs.push(`height="${opts.height || height}"`);
+    if (opts.style) attrs.push(`style="${String(opts.style)}"`);
 
     return `<img ${attrs.join(" ")} />`;
   });
 
   /**
    * Filter: placeholder_svg_tag
-   * Usage: {{ 'collection-1' | placeholder_svg_tag: 'custom-class' }}
    */
   engine.registerFilter("placeholder_svg_tag", (input: unknown, className?: string) => {
     const name = String(input || "image");
@@ -121,29 +98,33 @@ export function registerShopifyFilters(engine: Liquid): void {
     </svg>`;
   });
 
-  /**
-   * Filter: money
-   * Usage: {{ product.price | money }}
-   */
+  // Money formatting
   engine.registerFilter("money", (cents: unknown) => {
     const num = Number(cents);
     if (isNaN(num)) return "$0.00";
     return `$${(num / 100).toFixed(2)}`;
   });
 
-  /**
-   * Filter: money_with_currency
-   */
   engine.registerFilter("money_with_currency", (cents: unknown) => {
     const num = Number(cents);
     if (isNaN(num)) return "$0.00 USD";
     return `$${(num / 100).toFixed(2)} USD`;
   });
 
-  /**
-   * Filter: t (translation filter)
-   * Usage: {{ 'products.product.price.from_price_html' | t: price: product.price }}
-   */
+  engine.registerFilter("money_without_trailing_zeros", (cents: unknown) => {
+    const num = Number(cents);
+    if (isNaN(num)) return "$0";
+    const val = num / 100;
+    return val % 1 === 0 ? `$${val}` : `$${val.toFixed(2)}`;
+  });
+
+  engine.registerFilter("money_without_currency", (cents: unknown) => {
+    const num = Number(cents);
+    if (isNaN(num)) return "0.00";
+    return (num / 100).toFixed(2);
+  });
+
+  // Translation filter: {{ 'key' | t }}
   engine.registerFilter("t", (key: unknown, params?: Record<string, unknown>) => {
     const k = String(key || "");
     if (k.includes("from_price")) {
@@ -153,14 +134,34 @@ export function registerShopifyFilters(engine: Liquid): void {
     if (k.includes("add_to_cart")) return "Add to cart";
     if (k.includes("sold_out")) return "Sold out";
     if (k.includes("sale")) return "Sale";
+    if (k.includes("regular_price")) return "Regular price";
     return k.split(".").pop() || k;
   });
 
-  /**
-   * Filter: default_errors
-   */
-  engine.registerFilter("default_errors", () => {
-    return "";
+  // Assets and URLs
+  engine.registerFilter("asset_url", (file: unknown) => `/assets/${file || ""}`);
+  engine.registerFilter("asset_img_url", () => "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop&q=80");
+  engine.registerFilter("file_url", (file: unknown) => `/files/${file || ""}`);
+  engine.registerFilter("file_img_url", () => "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop&q=80");
+  engine.registerFilter("stylesheet_tag", (url: unknown) => `<link rel="stylesheet" href="${url}" />`);
+  engine.registerFilter("script_tag", () => "");
+  engine.registerFilter("link_to", (label: unknown, url: unknown) => `<a href="${url || "#"}">${label || ""}</a>`);
+  engine.registerFilter("within", (url: unknown) => url || "#");
+
+  // String / Format helpers
+  engine.registerFilter("handleize", (val: unknown) => String(val || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+  engine.registerFilter("handle", (val: unknown) => String(val || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+  engine.registerFilter("pluralize", (count: unknown, singular: string, plural: string) => Number(count) === 1 ? singular : plural);
+  engine.registerFilter("default_errors", () => "");
+
+  // Date formatting
+  engine.registerFilter("date", (val: unknown, format?: string) => {
+    if (!val) return "";
+    const d = new Date(String(val));
+    if (isNaN(d.getTime())) return String(val);
+    if (format === "%B %d, %Y") {
+      return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+    }
+    return d.toLocaleDateString("en-US");
   });
 }
-

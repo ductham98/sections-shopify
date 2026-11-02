@@ -1,39 +1,59 @@
 import { SectionSchema } from "./preview-types";
-import { getDefaultSectionSettings, getDefaultSectionBlocks } from "./liquid-schema";
-import { MOCK_PRODUCTS, MOCK_STICKY_PRODUCT } from "../../data/preview/products";
-import { MOCK_COLLECTION, MOCK_COLLECTIONS } from "../../data/preview/collections";
-import { MOCK_SHOP, MOCK_ROUTES, MOCK_CART } from "../../data/preview/shop";
+import { buildSectionSettings, buildSectionBlocks } from "./schema-engine";
+import { getMockDataset } from "./mock-data/datasets";
+import { DatasetId } from "./mock-data/types";
 
 export interface ShopifyContextOptions {
   sectionId?: string;
+  datasetId?: DatasetId;
   schema?: SectionSchema | null;
   overrides?: Record<string, unknown>;
+  productLimit?: number;
 }
 
 export function buildShopifyContext(options: ShopifyContextOptions = {}): Record<string, unknown> {
-  const { sectionId = "template--preview-section", schema = null, overrides = {} } = options;
+  const {
+    sectionId = "preview-section",
+    datasetId = "general",
+    schema = null,
+    overrides = {},
+    productLimit,
+  } = options;
 
-  const defaultSettings = getDefaultSectionSettings(schema, sectionId);
-  const defaultBlocks = getDefaultSectionBlocks(schema);
+  const dataset = getMockDataset(datasetId);
+
+  // Apply optional product limit from Inspector
+  const products = productLimit ? dataset.products.slice(0, productLimit) : dataset.products;
+  const collection = {
+    ...dataset.collection,
+    products,
+    products_count: products.length,
+    all_products_count: products.length,
+  };
+
+  const defaultSettings = buildSectionSettings(
+    schema,
+    dataset,
+    sectionId,
+    (overrides.settings as Record<string, unknown>) || {}
+  );
+  const defaultBlocks = buildSectionBlocks(schema);
 
   const section = {
     id: sectionId,
-    settings: {
-      ...defaultSettings,
-      ...(overrides.settings as Record<string, unknown> || {}),
-    },
+    settings: defaultSettings,
     blocks: defaultBlocks,
   };
 
   const context: Record<string, unknown> = {
     section,
-    product: MOCK_STICKY_PRODUCT,
-    products: MOCK_PRODUCTS,
-    collection: MOCK_COLLECTION,
-    collections: MOCK_COLLECTIONS,
-    shop: MOCK_SHOP,
-    routes: MOCK_ROUTES,
-    cart: MOCK_CART,
+    product: dataset.featuredProduct,
+    products,
+    collection,
+    collections: dataset.collections,
+    shop: dataset.shop,
+    routes: dataset.routes,
+    cart: dataset.cart,
     form: {
       posted_successfully: false,
       "posted_successfully?": false,
@@ -42,8 +62,13 @@ export function buildShopifyContext(options: ShopifyContextOptions = {}): Record
     request: {
       page_type: "index",
       design_mode: false,
-      host: "example.store",
+      host: dataset.shop.domain,
       path: "/",
+    },
+    localization: {
+      language: { iso_code: "en", name: "English" },
+      country: { iso_code: "US", name: "United States", currency: { iso_code: "USD", symbol: "$" } },
+      market: { id: "us", handle: "us" },
     },
     ...overrides,
   };

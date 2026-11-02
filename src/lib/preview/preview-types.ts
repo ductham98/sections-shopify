@@ -1,6 +1,23 @@
 export type DeviceMode = "desktop" | "mobile";
 export type PresentationMode = "overview" | "full";
 
+export type ViewportPreset = "desktop" | "laptop" | "tablet" | "mobile" | "small-mobile";
+
+export interface ViewportPresetConfig {
+  id: ViewportPreset;
+  name: string;
+  width: number;
+  type: "desktop" | "tablet" | "mobile";
+}
+
+export const VIEWPORT_PRESETS: Record<ViewportPreset, ViewportPresetConfig> = {
+  desktop: { id: "desktop", name: "Desktop", width: 1440, type: "desktop" },
+  laptop: { id: "laptop", name: "Laptop", width: 1280, type: "desktop" },
+  tablet: { id: "tablet", name: "Tablet", width: 768, type: "tablet" },
+  mobile: { id: "mobile", name: "Mobile", width: 390, type: "mobile" },
+  "small-mobile": { id: "small-mobile", name: "Small Mobile", width: 375, type: "mobile" },
+};
+
 export type DesktopViewportWidth = 1200 | 1440;
 export type MobileViewportWidth = 375 | 390 | 430;
 export type ViewportWidth = DesktopViewportWidth | MobileViewportWidth | "fit";

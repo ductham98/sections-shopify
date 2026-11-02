@@ -2,8 +2,10 @@
 
 import { useState, useCallback, useRef } from "react";
 import { DiscoveredSectionMeta } from "@/lib/section-discovery";
-import { DeviceMode, PresentationMode } from "./preview-types";
+import { DeviceMode, PresentationMode, SectionSchema } from "./preview-types";
 import { compileSectionPreview } from "./preview-compiler";
+import { SectionSourceManager, SectionDependencyAnalysis } from "./source-manager";
+import { extractSchema } from "./schema-engine";
 import { fetchSectionCode, invalidateSectionCode } from "@/lib/section-client";
 
 export type PreviewLifecycleStatus = "idle" | "loading" | "ready" | "error";
@@ -17,6 +19,8 @@ export interface ActivePreviewState {
   viewportWidth: number;
   scale: number;
   compiledHtml: string | null;
+  schema?: SectionSchema;
+  dependencyAnalysis?: SectionDependencyAnalysis;
   error?: string;
   isRefreshing: boolean;
 }
@@ -30,23 +34,20 @@ export function useActivePreview() {
     status: "idle",
     device: "desktop",
     presentationMode: "overview",
-    viewportWidth: 1200,
+    viewportWidth: 1440,
     scale: 1,
     compiledHtml: null,
     isRefreshing: false,
   });
 
-  // Track active request ID to prevent race conditions during rapid switching
   const activeRequestIdRef = useRef<number>(0);
 
   /**
-   * Opens the preview for a selected section, canceling any previous compilation.
-   * Resets to default Overview mode with default viewport width.
+   * Opens preview for a section, analyzing schema and source.
    */
   const openPreview = useCallback(async (section: DiscoveredSectionMeta) => {
     const currentRequestId = ++activeRequestIdRef.current;
 
-    // Immediately switch active section and set loading state with Overview as default
     setState((prev) => ({
       ...prev,
       section,
@@ -56,44 +57,41 @@ export function useActivePreview() {
       error: undefined,
       device: "desktop",
       presentationMode: "overview",
-      viewportWidth: 1200,
+      viewportWidth: 1440,
       scale: 1,
     }));
 
     try {
-      // 1. Fetch raw Liquid code on demand
       const code = await fetchSectionCode(section.id);
+      if (activeRequestIdRef.current !== currentRequestId) return;
 
-      // Check if this request is still active
-      if (activeRequestIdRef.current !== currentRequestId) {
-        return;
-      }
+      const { schema } = extractSchema(code);
+      const dependencyAnalysis = SectionSourceManager.analyzeDependencies(code);
 
-      // 2. Check if we have cached compiled HTML for this section
       const cached = previewHtmlCache.get(section.id);
       if (cached) {
         setState((prev) => ({
           ...prev,
           code,
           compiledHtml: cached,
+          schema: schema || undefined,
+          dependencyAnalysis,
           status: "ready",
           error: undefined,
         }));
         return;
       }
 
-      // 3. Compile Liquid to isolated HTML
       const result = await compileSectionPreview(code, { sectionId: section.id });
-
-      if (activeRequestIdRef.current !== currentRequestId) {
-        return;
-      }
+      if (activeRequestIdRef.current !== currentRequestId) return;
 
       if (result.error) {
         setState((prev) => ({
           ...prev,
           code,
           compiledHtml: result.previewHtml,
+          schema: schema || undefined,
+          dependencyAnalysis,
           status: "error",
           error: result.error,
         }));
@@ -103,6 +101,8 @@ export function useActivePreview() {
           ...prev,
           code,
           compiledHtml: result.previewHtml,
+          schema: schema || undefined,
+          dependencyAnalysis,
           status: "ready",
           error: undefined,
         }));
@@ -118,9 +118,6 @@ export function useActivePreview() {
     }
   }, []);
 
-  /**
-   * Closes and completely disposes of the active preview iframe and its DOM resources.
-   */
   const closePreview = useCallback(() => {
     activeRequestIdRef.current++;
     setState({
@@ -129,7 +126,7 @@ export function useActivePreview() {
       status: "idle",
       device: "desktop",
       presentationMode: "overview",
-      viewportWidth: 1200,
+      viewportWidth: 1440,
       scale: 1,
       compiledHtml: null,
       error: undefined,
@@ -137,9 +134,6 @@ export function useActivePreview() {
     });
   }, []);
 
-  /**
-   * Refreshes the active preview by clearing the cache and recompiling.
-   */
   const refreshPreview = useCallback(async () => {
     if (!state.section) return;
 
@@ -154,6 +148,9 @@ export function useActivePreview() {
       const code = await fetchSectionCode(section.id);
       if (activeRequestIdRef.current !== currentRequestId) return;
 
+      const { schema } = extractSchema(code);
+      const dependencyAnalysis = SectionSourceManager.analyzeDependencies(code);
+
       const result = await compileSectionPreview(code, { sectionId: section.id });
       if (activeRequestIdRef.current !== currentRequestId) return;
 
@@ -162,6 +159,8 @@ export function useActivePreview() {
           ...prev,
           code,
           compiledHtml: result.previewHtml,
+          schema: schema || undefined,
+          dependencyAnalysis,
           status: "error",
           error: result.error,
           isRefreshing: false,
@@ -172,6 +171,8 @@ export function useActivePreview() {
           ...prev,
           code,
           compiledHtml: result.previewHtml,
+          schema: schema || undefined,
+          dependencyAnalysis,
           status: "ready",
           error: undefined,
           isRefreshing: false,
@@ -193,8 +194,7 @@ export function useActivePreview() {
     setState((prev) => ({
       ...prev,
       device,
-      presentationMode: "overview",
-      viewportWidth: device === "mobile" ? 390 : 1200,
+      viewportWidth: device === "mobile" ? 390 : 1440,
     }));
   }, []);
 

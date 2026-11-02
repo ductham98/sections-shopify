@@ -1,32 +1,43 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { DeviceMode, PresentationMode } from "@/lib/preview/preview-types";
-import { DeviceFrame } from "./DeviceFrame";
+import { ViewportPreset, VIEWPORT_PRESETS } from "@/lib/preview/preview-types";
+import { DatasetId } from "@/lib/preview/mock-data/types";
+import { PreviewViewport } from "./PreviewViewport";
 
-interface PreviewCanvasProps {
-  html: string;
-  device: DeviceMode;
-  presentationMode: PresentationMode;
-  viewportWidth: number;
-  onScaleChange: (scale: number) => void;
+export interface PreviewCanvasProps {
+  sectionId: string;
+  viewportPreset: ViewportPreset;
+  zoom: number;
+  onZoomChange: (zoom: number) => void;
+  isFitToView: boolean;
   refreshKey: number;
+  selectedDataset?: DatasetId;
+  productLimit?: number;
+  settingsOverrides?: Record<string, unknown>;
+  fallbackHtml?: string;
 }
 
 export function PreviewCanvas({
-  html,
-  device,
-  presentationMode,
-  viewportWidth,
-  onScaleChange,
+  sectionId,
+  viewportPreset,
+  zoom,
+  onZoomChange,
+  isFitToView,
   refreshKey,
+  selectedDataset,
+  productLimit,
+  settingsOverrides,
+  fallbackHtml,
 }: PreviewCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [contentHeight, setContentHeight] = useState<number>(500);
+  const [contentHeight, setContentHeight] = useState<number>(600);
   const [canvasDimensions, setCanvasDimensions] = useState({ width: 1200, height: 700 });
 
-  // Monitor available workspace dimensions via ResizeObserver
+  // Current simulated viewport width
+  const viewportWidth = VIEWPORT_PRESETS[viewportPreset].width;
+
+  // Measure workspace canvas container dimensions
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -51,50 +62,12 @@ export function PreviewCanvas({
     };
   }, []);
 
-  // Measure iframe content height directly from contentDocument
-  const measureIframeHeight = useCallback(() => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-
-    try {
-      const doc = iframe.contentDocument || iframe.contentWindow?.document;
-      if (doc && doc.body) {
-        const root = doc.getElementById("shopify-section-preview-root") || doc.body;
-        const measured = Math.max(
-          root.scrollHeight,
-          root.offsetHeight,
-          doc.body.scrollHeight,
-          doc.body.offsetHeight
-        );
-        if (measured >= 20) {
-          setContentHeight(measured);
-        }
-      }
-    } catch {
-      // Fallback in case of sandboxed isolation
-    }
-  }, []);
-
-  // Trigger measurement on HTML change, iframe load, and interval fallbacks
-  useEffect(() => {
-    measureIframeHeight();
-    const t1 = setTimeout(measureIframeHeight, 80);
-    const t2 = setTimeout(measureIframeHeight, 300);
-    const t3 = setTimeout(measureIframeHeight, 800);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
-  }, [html, measureIframeHeight, refreshKey]);
-
-  // Listen to postMessage from iframe for dynamic height changes
+  // Listen to postMessage from sandboxed iframe for dynamic height changes
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (
         event.data &&
-        (event.data.type === "shopify-preview-dimensions" || event.data.type === "shopify-preview-height") &&
+        event.data.type === "shopify-preview-dimensions" &&
         typeof event.data.height === "number" &&
         event.data.height >= 20
       ) {
@@ -106,133 +79,81 @@ export function PreviewCanvas({
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  // Target internal CSS viewport
-  const targetWidth =
-    device === "mobile"
-      ? ([375, 390, 430].includes(viewportWidth) ? viewportWidth : 390)
-      : (viewportWidth === 1440 ? 1440 : 1200);
+  // Compute optimal Fit-to-View zoom
+  const computeFitZoom = useCallback(
+    (targetW: number, containerW: number) => {
+      const availW = Math.max(containerW - 64, 300);
+      if (targetW <= availW) {
+        return 1.0;
+      }
+      const raw = availW / targetW;
+      const floored = Math.floor(raw * 100) / 100;
+      return Math.max(Math.min(floored, 1.5), 0.25);
+    },
+    []
+  );
 
-  // Available workspace space from contentRect (inner dimensions inside padding, with a 6px safety margin)
-  const availW = Math.max(canvasDimensions.width - 6, 280);
-  const availH = Math.max(canvasDimensions.height - 6, 160);
-
-  const sectionInternalHeight = Math.max(contentHeight, 40);
-
-  // Calculate natural unscaled dimensions of the component to render
-  const sectionW = device === "mobile" ? targetWidth + 16 : targetWidth;
-  const sectionH = device === "mobile" ? sectionInternalHeight + 16 : sectionInternalHeight;
-
-  // Scale calculation:
-  // Overview: Fits entire section inside available canvas dimensions with no scrollbar
-  // Full Size: 100% natural scale with vertical scrolling
-  let scale = 1.0;
-  if (presentationMode === "overview") {
-    const scaleX = availW / sectionW;
-    const scaleY = availH / sectionH;
-    const rawScale = Math.min(scaleX, scaleY, 1.0);
-    // Floor to 2 decimal places so visual size never exceeds availW or availH
-    scale = Math.max(Math.floor(rawScale * 100) / 100, 0.1);
-  } else {
-    scale = 1.0;
-  }
-
-  // Notify parent/toolbar of current zoom percentage
+  // Recalculate zoom when Fit-to-view is active or container / viewport changes
   useEffect(() => {
-    onScaleChange(scale);
-  }, [scale, onScaleChange]);
+    if (isFitToView) {
+      const idealZoom = computeFitZoom(viewportWidth, canvasDimensions.width);
+      onZoomChange(idealZoom);
+    }
+  }, [isFitToView, viewportWidth, canvasDimensions.width, computeFitZoom, onZoomChange]);
 
-  // Exact physical layout dimensions for the display wrapper
-  const displayW = Math.round(sectionW * scale);
-  const displayH = Math.round(sectionH * scale);
+  const handleHeightMeasured = useCallback((measured: number) => {
+    if (measured >= 20) {
+      setContentHeight(measured);
+    }
+  }, []);
 
-  // In Full Size mode, determine if content is taller than available height
-  const isTallerThanCanvas = presentationMode === "full" && sectionH > availH;
+  // Physical layout dimensions for the display wrapper
+  const displayW = Math.round(viewportWidth * zoom);
+  const displayH = Math.round(contentHeight * zoom);
 
   return (
     <div
       ref={containerRef}
-      className={`preview-canvas flex-1 w-full min-h-0 bg-[#F1F2F4] p-4 sm:p-8 flex ${presentationMode === "overview"
-          ? "preview-canvas--overview overflow-hidden items-center justify-center"
-          : "preview-canvas--full overflow-y-auto overflow-x-hidden preview-scrollbar flex-col items-center"
-        }`}
+      className="preview-canvas flex-1 w-full min-h-0 bg-[#F1F2F4] p-4 sm:p-8 overflow-y-auto overflow-x-hidden preview-scrollbar flex flex-col items-center"
     >
       <div
-        className="preview-stage w-full transition-all duration-200 flex flex-col items-center"
+        className="preview-stage w-full flex flex-col items-center transition-all duration-150"
         style={{
-          minHeight: presentationMode === "overview" ? "auto" : "100%",
-          justifyContent: isTallerThanCanvas ? "flex-start" : "center",
-          margin: presentationMode === "overview" ? "auto" : (isTallerThanCanvas ? "0 auto" : "auto"),
+          minHeight: "100%",
+          margin: contentHeight * zoom < canvasDimensions.height - 80 ? "auto 0" : "0",
         }}
       >
-        {device === "mobile" ? (
-          /* Mobile Device Frame */
+        {/* Physical layout wrapper that reserves exact scaled dimensions */}
+        <div
+          className="preview-display-wrapper relative shrink-0 transition-[width,height] duration-150"
+          style={{
+            width: `${displayW}px`,
+            height: `${displayH}px`,
+          }}
+        >
+          {/* Scaled sandboxed iframe container */}
           <div
-            className="preview-content relative transition-all duration-200"
+            className="preview-scaled-box absolute top-0 left-0"
             style={{
-              width: `${displayW}px`,
-              height: `${displayH}px`,
-              flexShrink: 0,
+              width: `${viewportWidth}px`,
+              transform: `scale(${zoom})`,
+              transformOrigin: "top left",
             }}
           >
-            <div
-              style={{
-                width: `${sectionW}px`,
-                height: `${sectionH}px`,
-                transform: `scale(${scale})`,
-                transformOrigin: "top left",
-              }}
-            >
-              <DeviceFrame width={targetWidth}>
-                <div
-                  className="w-full relative bg-white overflow-hidden"
-                  style={{
-                    height: `${sectionInternalHeight}px`,
-                  }}
-                >
-                  <iframe
-                    key={`iframe-m-${refreshKey}-${targetWidth}`}
-                    ref={iframeRef}
-                    srcDoc={html}
-                    title="Shopify Mobile Preview"
-                    onLoad={measureIframeHeight}
-                    className="w-full h-full border-0 bg-white block"
-                    sandbox="allow-same-origin allow-scripts"
-                  />
-                </div>
-              </DeviceFrame>
-            </div>
+            <PreviewViewport
+              sectionId={sectionId}
+              viewportWidth={viewportWidth}
+              viewportPreset={viewportPreset}
+              contentHeight={contentHeight}
+              refreshKey={refreshKey}
+              selectedDataset={selectedDataset}
+              productLimit={productLimit}
+              settingsOverrides={settingsOverrides}
+              onHeightMeasured={handleHeightMeasured}
+              fallbackHtml={fallbackHtml}
+            />
           </div>
-        ) : (
-          /* Desktop Showcase Canvas */
-          <div
-            className="preview-content relative transition-all duration-200"
-            style={{
-              width: `${displayW}px`,
-              height: `${displayH}px`,
-              flexShrink: 0,
-            }}
-          >
-            <div
-              className="rounded-[4px] overflow-hidden shadow-sm border border-neutral-300/80 bg-white"
-              style={{
-                width: `${targetWidth}px`,
-                height: `${sectionInternalHeight}px`,
-                transform: `scale(${scale})`,
-                transformOrigin: "top left",
-              }}
-            >
-              <iframe
-                key={`iframe-d-${refreshKey}-${targetWidth}-${presentationMode}`}
-                ref={iframeRef}
-                srcDoc={html}
-                title="Shopify Desktop Preview"
-                onLoad={measureIframeHeight}
-                className="w-full h-full border-0 bg-white block"
-                sandbox="allow-same-origin allow-scripts"
-              />
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
 import { ActivePreviewState } from "@/lib/preview/use-active-preview";
-import { DeviceMode, PresentationMode } from "@/lib/preview/preview-types";
 import { fetchSectionCode } from "@/lib/section-client";
 import { PreviewHeader } from "./PreviewHeader";
-import { PreviewToolbar } from "./PreviewToolbar";
-import { PreviewCanvas } from "./PreviewCanvas";
-import { PreviewError } from "./PreviewError";
+import { PreviewWorkspace } from "./PreviewWorkspace";
 import { PreviewStatusType } from "./PreviewStatus";
 
 export interface SectionPreviewModalProps {
@@ -16,10 +12,10 @@ export interface SectionPreviewModalProps {
   state: ActivePreviewState;
   onClose: () => void;
   onRefresh: () => void;
-  onDeviceChange: (device: DeviceMode) => void;
-  onPresentationModeChange: (mode: PresentationMode) => void;
-  onViewportWidthChange: (width: number) => void;
-  onScaleChange: (scale: number) => void;
+  onDeviceChange?: (device: "desktop" | "mobile") => void;
+  onPresentationModeChange?: (mode: "overview" | "full") => void;
+  onViewportWidthChange?: (width: number) => void;
+  onScaleChange?: (scale: number) => void;
   onCopySuccess: (title: string) => void;
 }
 
@@ -28,10 +24,6 @@ export function SectionPreviewModal({
   state,
   onClose,
   onRefresh,
-  onDeviceChange,
-  onPresentationModeChange,
-  onViewportWidthChange,
-  onScaleChange,
   onCopySuccess,
 }: SectionPreviewModalProps) {
   const [codeCopied, setCodeCopied] = useState(false);
@@ -111,49 +103,21 @@ export function SectionPreviewModal({
           onClose={onClose}
         />
 
-        {/* B. Sticky Preview Toolbar */}
-        <PreviewToolbar
-          device={state.device}
-          onDeviceChange={onDeviceChange}
-          presentationMode={state.presentationMode}
-          onPresentationModeChange={onPresentationModeChange}
-          viewportWidth={state.viewportWidth}
-          onViewportWidthChange={onViewportWidthChange}
-          scalePercent={state.scale}
-          onRefresh={onRefresh}
+        {/* B. Sandboxed Iframe Preview Workspace with Preview Inspector */}
+        <PreviewWorkspace
+          sectionId={state.section.id}
+          sectionTitle={state.section.title}
+          filename={state.section.filename}
+          status={statusType}
+          schema={state.schema}
+          dependencyAnalysis={state.dependencyAnalysis}
+          html={state.compiledHtml}
+          error={state.error}
           isRefreshing={state.isRefreshing || state.status === "loading"}
+          onRefresh={onRefresh}
           onCopyCode={handleCopyCode}
           codeCopied={codeCopied}
         />
-
-        {/* C. Dedicated Scrollable Preview Workspace (SINGLE Active Preview Canvas) */}
-        {state.status === "loading" && !state.compiledHtml ? (
-          <div className="flex-1 w-full min-h-0 bg-[#F1F2F4] flex flex-col items-center justify-center p-8 gap-3">
-            <Loader2 className="w-8 h-8 text-neutral-600 animate-spin" />
-            <p className="text-sm font-medium text-neutral-600">
-              Compiling Shopify Liquid section...
-            </p>
-            <span className="text-xs text-neutral-400 font-mono">
-              {state.section.filename}
-            </span>
-          </div>
-        ) : state.status === "error" && !state.compiledHtml ? (
-          <div className="flex-1 w-full min-h-0 bg-[#F1F2F4] p-6 overflow-y-auto preview-scrollbar">
-            <PreviewError
-              message={state.error || "Failed to render Shopify section preview"}
-              onRetry={onRefresh}
-            />
-          </div>
-        ) : state.compiledHtml ? (
-          <PreviewCanvas
-            html={state.compiledHtml}
-            device={state.device}
-            presentationMode={state.presentationMode}
-            viewportWidth={state.viewportWidth}
-            onScaleChange={onScaleChange}
-            refreshKey={0}
-          />
-        ) : null}
       </div>
     </div>
   );
