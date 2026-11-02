@@ -151,11 +151,10 @@ export function PreviewCanvas({
   return (
     <div
       ref={containerRef}
-      className={`preview-canvas flex-1 w-full min-h-0 bg-[#F1F2F4] p-4 sm:p-8 flex ${
-        presentationMode === "overview"
+      className={`preview-canvas flex-1 w-full min-h-0 bg-[#F1F2F4] p-4 sm:p-8 flex ${presentationMode === "overview"
           ? "preview-canvas--overview overflow-hidden items-center justify-center"
           : "preview-canvas--full overflow-y-auto overflow-x-hidden preview-scrollbar flex-col items-center"
-      }`}
+        }`}
     >
       <div
         className="preview-stage w-full transition-all duration-200 flex flex-col items-center"
@@ -214,7 +213,7 @@ export function PreviewCanvas({
             }}
           >
             <div
-              className="rounded-xl overflow-hidden shadow-sm border border-neutral-300/80 bg-white"
+              className="rounded-[4px] overflow-hidden shadow-sm border border-neutral-300/80 bg-white"
               style={{
                 width: `${targetWidth}px`,
                 height: `${sectionInternalHeight}px`,
