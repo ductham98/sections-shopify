@@ -1,5 +1,5 @@
 import { SectionSourceManager } from "@/lib/preview/source-manager";
-import { compileSectionPreview } from "@/lib/preview/preview-compiler";
+import { getSharedPreviewDocument } from "@/lib/preview/shared-preview-document";
 import { DatasetId } from "@/lib/preview/mock-data/types";
 
 export async function GET(
@@ -23,7 +23,7 @@ export async function GET(
     }
   }
 
-  // 1. Retrieve original Liquid source code via SectionSourceManager
+  // 1. Verify existence of Liquid source code via SectionSourceManager
   const liquidSource = await SectionSourceManager.getSource(sectionId);
 
   if (!liquidSource) {
@@ -51,9 +51,9 @@ export async function GET(
     });
   }
 
-  // 2. Compile standalone preview document
-  const result = await compileSectionPreview(liquidSource, {
-    sectionId,
+  // 2. Compile preview document using the unified Shared Preview Document service
+  const result = await getSharedPreviewDocument(sectionId, {
+    customSource: liquidSource,
     datasetId: dataset,
     productLimit,
     overrides: {

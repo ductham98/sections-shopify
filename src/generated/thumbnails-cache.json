@@ -1,0 +1,134 @@
+{
+  "announcement-bar-ticker": {
+    "url": "/thumbnails/announcement-bar-ticker.webp?v=b9e5e3cabab52a04",
+    "generatedAt": "2026-11-02T07:16:24.868Z",
+    "sourceHash": "8e9e9489267ff918",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "b9e5e3cabab52a04"
+  },
+  "feature-categories": {
+    "url": "/thumbnails/feature-categories.webp?v=a50a9b84ef4f654f",
+    "generatedAt": "2026-11-02T07:16:25.512Z",
+    "sourceHash": "e8e1c644a85fcfbf",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "a50a9b84ef4f654f"
+  },
+  "faq-contact": {
+    "url": "/thumbnails/faq-contact.webp?v=39bd72afc4e82c0a",
+    "generatedAt": "2026-11-02T07:16:26.051Z",
+    "sourceHash": "b1d54da53b11777d",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "39bd72afc4e82c0a"
+  },
+  "custom-featured-products": {
+    "url": "/thumbnails/custom-featured-products.webp?v=cc7edfd163083e01",
+    "generatedAt": "2026-11-02T07:16:26.706Z",
+    "sourceHash": "c00424cc4f535560",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "cc7edfd163083e01"
+  },
+  "custom-hero": {
+    "url": "/thumbnails/custom-hero.webp?v=60e9aa739351b874",
+    "generatedAt": "2026-11-02T07:21:05.127Z",
+    "sourceHash": "547a9964522255da",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "60e9aa739351b874"
+  },
+  "trust-bar": {
+    "url": "/thumbnails/trust-bar.webp?v=3fd1623920a204e2",
+    "generatedAt": "2026-11-02T07:16:27.886Z",
+    "sourceHash": "66d37ed9de1e8b5f",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "3fd1623920a204e2"
+  },
+  "interactive-faq-accordion": {
+    "url": "/thumbnails/interactive-faq-accordion.webp?v=5b5a8716fcb4fd58",
+    "generatedAt": "2026-11-02T07:16:28.403Z",
+    "sourceHash": "b0706bebabeac9de",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "5b5a8716fcb4fd58"
+  },
+  "product-features-grid": {
+    "url": "/thumbnails/product-features-grid.webp?v=595af4ca4e70d14e",
+    "generatedAt": "2026-11-02T07:16:28.935Z",
+    "sourceHash": "08318d7161cbd839",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "595af4ca4e70d14e"
+  },
+  "logo-cloud-marquee": {
+    "url": "/thumbnails/logo-cloud-marquee.webp?v=2f8705a998d6fede",
+    "generatedAt": "2026-11-02T07:16:29.450Z",
+    "sourceHash": "15dcaba6abe40a34",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "2f8705a998d6fede"
+  },
+  "sticky-add-to-cart": {
+    "url": "/thumbnails/sticky-add-to-cart.webp?v=fc6eaaef12ed163b",
+    "generatedAt": "2026-11-02T07:16:30.061Z",
+    "sourceHash": "292c51ea57b1e789",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "fc6eaaef12ed163b"
+  },
+  "testimonials-carousel": {
+    "url": "/thumbnails/testimonials-carousel.webp?v=9b8a3ee8611f90bb",
+    "generatedAt": "2026-11-02T07:16:30.680Z",
+    "sourceHash": "c1b1a3d00b936d4f",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "9b8a3ee8611f90bb"
+  }
+}

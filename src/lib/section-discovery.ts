@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { SectionSchema } from "./preview/preview-types";
+import { SectionThumbnail, loadAllThumbnailCache } from "./preview/thumbnail-cache";
+
+export type { SectionThumbnail } from "./preview/thumbnail-cache";
 
 export type SectionCategory =
   | "hero"
@@ -33,6 +36,7 @@ export interface DiscoveredSectionMeta {
   schemaError?: string;
   settingsCount: number;
   blocksCount: number;
+  thumbnail?: SectionThumbnail;
 }
 
 export interface SectionsConfigFile {
@@ -261,6 +265,20 @@ export function parseSectionFile(
 
   const tags = extractTags(filename, title, presetName, schema);
 
+  const cache = loadAllThumbnailCache();
+  const cachedThumbnail = cache[id];
+  const webpPath = path.join(process.cwd(), "public", "thumbnails", `${id}.webp`);
+  const fileExists = fs.existsSync(webpPath);
+
+  const thumbnail: SectionThumbnail = cachedThumbnail || {
+    url: `/thumbnails/${id}.webp`,
+    generatedAt: fileExists ? updatedAt : "",
+    sourceHash: "",
+    engineVersion: "v1.0.0",
+    viewport: { width: 1200, height: 700 },
+    status: fileExists ? "ready" : "pending",
+  };
+
   return {
     id,
     filename,
@@ -279,6 +297,7 @@ export function parseSectionFile(
     schemaError,
     settingsCount,
     blocksCount,
+    thumbnail,
   };
 }
 

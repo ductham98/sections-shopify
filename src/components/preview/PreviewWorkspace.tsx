@@ -150,6 +150,7 @@ export function PreviewWorkspace({
           <PreviewInspector
             isOpen={isInspectorOpen}
             onClose={() => setIsInspectorOpen(false)}
+            sectionId={sectionId}
             schema={schema}
             settingsOverrides={settingsOverrides}
             onSettingChange={handleSettingChange}

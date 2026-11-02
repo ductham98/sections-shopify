@@ -6,7 +6,7 @@
 
 import { DiscoveredSectionMeta } from "@/lib/section-discovery";
 
-export const GENERATED_AT = "2026-11-02T07:03:22.431Z";
+export const GENERATED_AT = "2026-11-02T07:21:33.929Z";
 
 export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
   {
@@ -30,7 +30,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 5,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/announcement-bar-ticker.webp?v=b9e5e3cabab52a04",
+      "generatedAt": "2026-11-02T07:16:24.868Z",
+      "sourceHash": "8e9e9489267ff918",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "b9e5e3cabab52a04"
+    }
   },
   {
     "id": "feature-categories",
@@ -55,7 +67,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 75,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/feature-categories.webp?v=a50a9b84ef4f654f",
+      "generatedAt": "2026-11-02T07:16:25.512Z",
+      "sourceHash": "e8e1c644a85fcfbf",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "a50a9b84ef4f654f"
+    }
   },
   {
     "id": "faq-contact",
@@ -78,7 +102,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 15,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/faq-contact.webp?v=39bd72afc4e82c0a",
+      "generatedAt": "2026-11-02T07:16:26.051Z",
+      "sourceHash": "b1d54da53b11777d",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "39bd72afc4e82c0a"
+    }
   },
   {
     "id": "custom-featured-products",
@@ -102,7 +138,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 121,
-    "blocksCount": 0
+    "blocksCount": 0,
+    "thumbnail": {
+      "url": "/thumbnails/custom-featured-products.webp?v=cc7edfd163083e01",
+      "generatedAt": "2026-11-02T07:16:26.706Z",
+      "sourceHash": "c00424cc4f535560",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "cc7edfd163083e01"
+    }
   },
   {
     "id": "custom-hero",
@@ -125,7 +173,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 57,
-    "blocksCount": 0
+    "blocksCount": 0,
+    "thumbnail": {
+      "url": "/thumbnails/custom-hero.webp?v=60e9aa739351b874",
+      "generatedAt": "2026-11-02T07:21:05.127Z",
+      "sourceHash": "547a9964522255da",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "60e9aa739351b874"
+    }
   },
   {
     "id": "trust-bar",
@@ -150,7 +210,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 25,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/trust-bar.webp?v=3fd1623920a204e2",
+      "generatedAt": "2026-11-02T07:16:27.886Z",
+      "sourceHash": "66d37ed9de1e8b5f",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "3fd1623920a204e2"
+    }
   },
   {
     "id": "interactive-faq-accordion",
@@ -176,7 +248,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 11,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/interactive-faq-accordion.webp?v=5b5a8716fcb4fd58",
+      "generatedAt": "2026-11-02T07:16:28.403Z",
+      "sourceHash": "b0706bebabeac9de",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "5b5a8716fcb4fd58"
+    }
   },
   {
     "id": "product-features-grid",
@@ -201,7 +285,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 6,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/product-features-grid.webp?v=595af4ca4e70d14e",
+      "generatedAt": "2026-11-02T07:16:28.935Z",
+      "sourceHash": "08318d7161cbd839",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "595af4ca4e70d14e"
+    }
   },
   {
     "id": "logo-cloud-marquee",
@@ -224,7 +320,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 5,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/logo-cloud-marquee.webp?v=2f8705a998d6fede",
+      "generatedAt": "2026-11-02T07:16:29.450Z",
+      "sourceHash": "15dcaba6abe40a34",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "2f8705a998d6fede"
+    }
   },
   {
     "id": "sticky-add-to-cart",
@@ -248,7 +356,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 5,
-    "blocksCount": 0
+    "blocksCount": 0,
+    "thumbnail": {
+      "url": "/thumbnails/sticky-add-to-cart.webp?v=fc6eaaef12ed163b",
+      "generatedAt": "2026-11-02T07:16:30.061Z",
+      "sourceHash": "292c51ea57b1e789",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "fc6eaaef12ed163b"
+    }
   },
   {
     "id": "testimonials-carousel",
@@ -272,7 +392,19 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
     "hasSchema": true,
     "previewStatus": "ready",
     "settingsCount": 8,
-    "blocksCount": 1
+    "blocksCount": 1,
+    "thumbnail": {
+      "url": "/thumbnails/testimonials-carousel.webp?v=9b8a3ee8611f90bb",
+      "generatedAt": "2026-11-02T07:16:30.680Z",
+      "sourceHash": "c1b1a3d00b936d4f",
+      "engineVersion": "v1.0.0",
+      "viewport": {
+        "width": 1200,
+        "height": 700
+      },
+      "status": "ready",
+      "compositeHash": "9b8a3ee8611f90bb"
+    }
   }
 ];
 

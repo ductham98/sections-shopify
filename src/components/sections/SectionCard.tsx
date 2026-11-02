@@ -28,7 +28,10 @@ export function SectionCard({
 }: SectionCardProps) {
   const [copied, setCopied] = useState(false);
   const [copying, setCopying] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  const thumbnailUrl = section.thumbnail?.url || `/thumbnails/${section.id}.webp`;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -53,24 +56,35 @@ export function SectionCard({
   return (
     <div className="group flex flex-col rounded-xl border border-[#E5E5E5] bg-white overflow-hidden shadow-2xs hover:shadow-md hover:border-zinc-300 transition-all duration-200">
       <div className="relative border-b border-[#F0F0F0]">
-        {/* Thumbnail Preview Area (Lightweight, NO iframe) */}
+        {/* Thumbnail Preview Area (Real Screenshot, NO iframe) */}
         <div
           onClick={() => onPreview(section)}
-          className="relative h-[220px] w-full overflow-hidden bg-neutral-50/70 cursor-pointer select-none flex items-center justify-center"
+          className="relative h-[220px] w-full overflow-hidden bg-neutral-100/70 cursor-pointer select-none flex items-center justify-center"
         >
           {!imageError ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={`/previews/${section.id}.svg`}
-              alt={section.title}
-              onError={() => setImageError(true)}
-              className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
-              loading="lazy"
-            />
+            <>
+              {/* Skeleton placeholder while loading image */}
+              {!imageLoaded && (
+                <div className="absolute inset-0 bg-neutral-100 animate-pulse flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-neutral-200/60" />
+                </div>
+              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={thumbnailUrl}
+                alt={section.title}
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageError(true)}
+                className={`w-full h-full object-cover object-top transition-all duration-300 group-hover:scale-[1.02] ${
+                  imageLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                loading="lazy"
+              />
+            </>
           ) : (
-            /* Elegant Procedural Card Graphic for new sections without dedicated SVGs */
-            <div className="w-full h-full p-6 flex flex-col justify-between bg-gradient-to-b from-neutral-50 via-white to-neutral-100/60 border border-neutral-100">
-              <div className="flex items-center justify-between text-neutral-400">
+            /* Neutral Minimal Fallback Graphic when screenshot is unavailable */
+            <div className="w-full h-full p-6 flex flex-col justify-between bg-neutral-50/80 border border-neutral-100 text-neutral-400">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-white shadow-2xs border border-neutral-200/80 text-[11px] font-mono text-neutral-600">
                   <CategoryIcon className="w-3 h-3 text-neutral-500" />
                   <span className="capitalize">{section.category}</span>
@@ -79,8 +93,8 @@ export function SectionCard({
               </div>
 
               <div className="my-auto text-center px-4">
-                <div className="w-10 h-10 mx-auto rounded-xl bg-neutral-900 text-white flex items-center justify-center shadow-sm mb-2.5">
-                  <CategoryIcon className="w-5 h-5" />
+                <div className="w-9 h-9 mx-auto rounded-lg bg-neutral-200/80 text-neutral-600 flex items-center justify-center shadow-2xs mb-2">
+                  <CategoryIcon className="w-4 h-4" />
                 </div>
                 <h4 className="font-semibold text-xs text-neutral-800 line-clamp-1">
                   {section.title}

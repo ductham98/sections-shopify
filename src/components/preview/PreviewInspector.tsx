@@ -10,6 +10,7 @@ import {
   RotateCcw,
   X,
   Check,
+  Camera,
 } from "lucide-react";
 import { SectionSchema, SchemaSetting } from "@/lib/preview/preview-types";
 import { DatasetId } from "@/lib/preview/mock-data/types";
@@ -19,6 +20,7 @@ import { SectionDependencyAnalysis } from "@/lib/preview/source-manager";
 export interface PreviewInspectorProps {
   isOpen: boolean;
   onClose: () => void;
+  sectionId?: string;
   schema?: SectionSchema;
   settingsOverrides: Record<string, unknown>;
   onSettingChange: (id: string, value: unknown) => void;
@@ -36,6 +38,7 @@ type InspectorTab = "settings" | "dataset" | "mock-data" | "theme" | "diagnostic
 export function PreviewInspector({
   isOpen,
   onClose,
+  sectionId,
   schema,
   settingsOverrides,
   onSettingChange,
@@ -48,6 +51,28 @@ export function PreviewInspector({
   sectionFilename,
 }: PreviewInspectorProps) {
   const [activeTab, setActiveTab] = useState<InspectorTab>("settings");
+  const [isRegeneratingThumbnail, setIsRegeneratingThumbnail] = useState(false);
+  const [thumbnailFeedback, setThumbnailFeedback] = useState<string | null>(null);
+
+  const handleRegenerateThumbnail = async () => {
+    if (!sectionId || isRegeneratingThumbnail) return;
+    setIsRegeneratingThumbnail(true);
+    setThumbnailFeedback("Capturing Playwright screenshot...");
+    try {
+      const res = await fetch(`/api/thumbnails/${sectionId}?force=true`, { method: "POST" });
+      const data = await res.json();
+      if (data.success) {
+        setThumbnailFeedback(`Updated screenshot in ${data.durationMs}ms`);
+      } else {
+        setThumbnailFeedback(`Error: ${data.error || "Generation failed"}`);
+      }
+    } catch (err) {
+      setThumbnailFeedback(`Failed: ${String(err)}`);
+    } finally {
+      setIsRegeneratingThumbnail(false);
+      setTimeout(() => setThumbnailFeedback(null), 4000);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -398,6 +423,30 @@ export function PreviewInspector({
 
             <div className="p-2.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-900 text-[11px] leading-relaxed">
               <strong>Local Preview Guarantee:</strong> This environment renders Liquid sections using local deterministic datasets with zero external Shopify API calls.
+            </div>
+
+            {/* Thumbnail Generator Trigger */}
+            <div className="pt-2 border-t border-neutral-200 space-y-1.5">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 block">
+                Card Thumbnail Screenshot
+              </span>
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-neutral-50 border border-neutral-200 text-xs">
+                <div className="flex items-center gap-2 text-neutral-700">
+                  <Camera className="w-4 h-4 text-neutral-500" />
+                  <span className="text-[11px] font-medium">1200×700 WebP</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRegenerateThumbnail}
+                  disabled={isRegeneratingThumbnail}
+                  className="px-2.5 py-1 text-[11px] font-semibold bg-neutral-900 text-white rounded hover:bg-neutral-800 disabled:opacity-50 transition shadow-2xs"
+                >
+                  {isRegeneratingThumbnail ? "Capturing..." : "Regenerate"}
+                </button>
+              </div>
+              {thumbnailFeedback && (
+                <p className="text-[10px] text-neutral-500 font-mono px-1">{thumbnailFeedback}</p>
+              )}
             </div>
           </div>
         )}

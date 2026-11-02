@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "sections:generate": "tsx scripts/generate-sections-meta.ts",
+    "thumbnails:generate": "tsx scripts/generate-thumbnails.ts",
     "predev": "npm run sections:generate",
-    "prebuild": "npm run sections:generate",
+    "prebuild": "npm run thumbnails:generate && npm run sections:generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -26,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "playwright-core": "^1.64.1",
     "puppeteer-core": "^25.16.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
