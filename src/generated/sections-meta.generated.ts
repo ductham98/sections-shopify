@@ -9,14 +9,18 @@ import { DiscoveredSectionMeta } from "@/lib/section-discovery";
 export const GENERATED_AT = "2026-11-02T07:21:33.929Z";
 
 export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
+
+  // ***
+  // FAQ SECTIONS
+  // ***
   {
     "id": "faq-contact",
     "filename": "faq-contact.liquid",
-    "title": "Custom FAQ",
-    "presetName": "Custom FAQ",
+    "title": "FAQ Contact",
+    "presetName": "FAQ Contact",
     "category": "faq",
     "plan": "free",
-    "description": "Shopify Online Store 2.0 Custom FAQ section with 15 customizable settings.",
+    "description": "FAQ Com FAQ section with 15 customizable settings.",
     "tags": [
       "faq",
       "contact",
@@ -44,11 +48,16 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
       "compositeHash": "39bd72afc4e82c0a"
     }
   },
+
+  // *** 
+  // HERO SECTIONS
+  // ***
+  
   {
     "id": "hero",
     "filename": "hero.liquid",
-    "title": "Section Hero",
-    "presetName": "Section Hero",
+    "title": "Hero 1",
+    "presetName": "Hero 1",
     "category": "hero",
     "plan": "free",
     "description": "Shopify Online Store 2.0 Custom FAQ section with 15 customizable settings.",
@@ -79,11 +88,17 @@ export const DISCOVERED_SECTIONS: DiscoveredSectionMeta[] = [
       "compositeHash": "39bd72afc4e82c0a"
     }
   },
+
+  
+  // *** 
+  // FEATURE SECTIONS
+  // ***
+  
   {
-    "id": "custom-feature-products",
+    "id": "custom-feature-products-1",
     "filename": "custom-feature-products.liquid",
-    "title": "Custom Feature Products",
-    "presetName": "Custom Feature Products",
+    "title": "Feature Products 1",
+    "presetName": "Feature Products 1",
     "category": "product",
     "plan": "free",
     "description": "Shopify Online Store 2.0 Custom FAQ section with 15 customizable settings.",
