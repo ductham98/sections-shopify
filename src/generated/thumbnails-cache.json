@@ -1,26 +1,38 @@
 {
   "hero": {
-    "url": "/thumbnails/hero.webp?v=8c9846953dcbcca7",
-    "generatedAt": "2026-11-02T07:46:12.280Z",
-    "sourceHash": "547a9964522255da",
+    "url": "/thumbnails/hero.webp?v=f005d6e26e601b15",
+    "generatedAt": "2026-11-03T02:32:26.555Z",
+    "sourceHash": "f2d8db4a45d886c3",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "8c9846953dcbcca7"
+    "compositeHash": "f005d6e26e601b15"
   },
   "custom-feature-products": {
-    "url": "/thumbnails/custom-feature-products.webp?v=a9120a2fd5cedbe0",
-    "generatedAt": "2026-11-02T07:50:56.614Z",
-    "sourceHash": "c1b3c4067ff34895",
+    "url": "/thumbnails/custom-feature-products.webp?v=f1f22ba090465204",
+    "generatedAt": "2026-11-03T02:32:25.600Z",
+    "sourceHash": "660a83ff326e9089",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "a9120a2fd5cedbe0"
+    "compositeHash": "f1f22ba090465204"
+  },
+  "faq-contact": {
+    "url": "/thumbnails/faq-contact.webp?v=30ab38c8f31ecca1",
+    "generatedAt": "2026-11-03T02:32:23.231Z",
+    "sourceHash": "f4b3874b261748b9",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "30ab38c8f31ecca1"
   }
 }

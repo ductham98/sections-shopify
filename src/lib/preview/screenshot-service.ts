@@ -33,14 +33,33 @@ let sharedBrowserInstance: Browser | null = null;
  * Resolves available Chromium executable path on current machine.
  */
 export function getChromiumExecutablePath(): string | undefined {
+  const localAppData = process.env.LOCALAPPDATA || "";
+  const programFiles = process.env.ProgramFiles || "C:\\Program Files";
+  const programFilesX86 = process.env["ProgramFiles(x86)"] || "C:\\Program Files (x86)";
+
   const candidates = [
     process.env.CHROME_BIN,
     process.env.PUPPETEER_EXECUTABLE_PATH,
+    // Windows paths (Edge, Chrome, Brave)
+    "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+    "C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe",
+    `${programFilesX86}\\Microsoft\\Edge\\Application\\msedge.exe`,
+    `${programFiles}\\Microsoft\\Edge\\Application\\msedge.exe`,
+    "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
+    `${programFiles}\\Google\\Chrome\\Application\\chrome.exe`,
+    `${programFilesX86}\\Google\\Chrome\\Application\\chrome.exe`,
+    localAppData ? `${localAppData}\\Google\\Chrome\\Application\\chrome.exe` : undefined,
+    "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe",
+    // macOS paths
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
     "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    // Linux paths
     "/usr/bin/google-chrome",
     "/usr/bin/chromium-browser",
     "/usr/bin/chromium",
+    "/usr/bin/microsoft-edge",
   ];
   for (const c of candidates) {
     if (c && fs.existsSync(/*turbopackIgnore: true*/ c)) return c;

@@ -22,6 +22,7 @@ export async function compileSectionPreview(
   if (!liquidSource || !liquidSource.trim()) {
     const emptyDoc = generatePreviewDocument({
       title: "No Content",
+      sectionId,
       renderedHtml: "<p style='padding:40px;text-align:center;color:#6b7280;'>No Liquid source code provided.</p>",
     });
     return {
@@ -48,9 +49,9 @@ export async function compileSectionPreview(
     // 3. Render Liquid template
     const renderedBody = await engine.parseAndRender(templateWithoutSchema, context);
 
-    // 4. Extract <style> blocks from rendered output to organize inside <head>
+    // 4. Extract <style> and <script> blocks from rendered output
     const extractedStyles: string[] = [];
-    const bodyWithoutStyles = renderedBody.replace(
+    let bodyClean = renderedBody.replace(
       /<style\b[^>]*>([\s\S]*?)<\/style>/gi,
       (_: string, css: string) => {
         if (css && css.trim()) {
@@ -60,13 +61,27 @@ export async function compileSectionPreview(
       }
     );
 
-    const sectionCss = extractedStyles.join("\n\n");
+    const extractedScripts: string[] = [];
+    bodyClean = bodyClean.replace(
+      /<script\b[^>]*>([\s\S]*?)<\/script>/gi,
+      (_: string, js: string) => {
+        if (js && js.trim()) {
+          extractedScripts.push(js.trim());
+        }
+        return "";
+      }
+    );
 
-    // 5. Generate standalone HTML document
+    const sectionCss = extractedStyles.join("\n\n");
+    const sectionScripts = extractedScripts.join("\n\n");
+
+    // 5. Generate standalone HTML document with complete sandbox
     const fullDocument = generatePreviewDocument({
       title: schema?.name || sectionId,
-      renderedHtml: bodyWithoutStyles,
+      sectionId,
+      renderedHtml: bodyClean,
       sectionCss,
+      sectionScripts,
     });
 
     return {
@@ -80,6 +95,7 @@ export async function compileSectionPreview(
 
     const errorDocument = generatePreviewDocument({
       title: sectionId,
+      sectionId,
       renderedHtml: "",
       error: message,
     });

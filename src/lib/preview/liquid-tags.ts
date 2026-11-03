@@ -3,7 +3,8 @@ import { getSnippetTemplate } from "./snippets/snippet-registry";
 
 export function registerShopifyTags(engine: Liquid): void {
   /**
-   * Shopify {% form 'type', ... %} ... {% endform %} tag
+   * Shopify {% form 'type', [object], ... %} ... {% endform %} tag
+   * Emulates Shopify Storefront form generation with standard hidden inputs.
    */
   engine.registerTag("form", {
     parse: function (tagToken: TagToken, remainTokens: TopLevelToken[]) {
@@ -22,6 +23,13 @@ export function registerShopifyTags(engine: Liquid): void {
       const raw = this.rawArgs || "";
       let formClass = "";
       let formId = "";
+      let formType = "contact";
+
+      // Match form type: {% form 'product', product, ... %}
+      const typeMatch = raw.match(/^\s*['"]([a-zA-Z0-9_\-]+)['"]/);
+      if (typeMatch) {
+        formType = typeMatch[1];
+      }
 
       const classMatch = raw.match(/class:\s*(?:['"]([^'"]+)['"]|([a-zA-Z0-9_\-]+))/);
       if (classMatch) {
@@ -43,13 +51,37 @@ export function registerShopifyTags(engine: Liquid): void {
         }
       }
 
+      // Default ID and class by form type if not specified
+      if (!formId) {
+        formId = `${formType}-form`;
+      }
+      if (!formClass) {
+        formClass = `${formType}-form form`;
+      }
+
+      // Hidden inputs required by Shopify Storefront
+      const hiddenInputs = [
+        `<input type="hidden" name="form_type" value="${formType}" />`,
+        '<input type="hidden" name="utf8" value="✓" />',
+      ];
+
+      if (formType === "product") {
+        hiddenInputs.push('<input type="hidden" name="id" value="1001" />');
+      }
+
+      // Render inner template content
       const html = (yield this.liquid.renderer.renderTemplates(this.templates, ctx)) as string;
 
-      const attrs: string[] = ['method="post"', 'action="#"', 'onsubmit="event.preventDefault();"'];
+      const attrs: string[] = [
+        'method="post"',
+        'action="#"',
+        'enctype="multipart/form-data"',
+        'onsubmit="event.preventDefault();"',
+      ];
       if (formClass) attrs.push(`class="${formClass}"`);
       if (formId) attrs.push(`id="${formId}"`);
 
-      return `<form ${attrs.join(" ")}>${html}</form>`;
+      return `<form ${attrs.join(" ")}>\n${hiddenInputs.join("\n")}\n${html}\n</form>`;
     },
   });
 
@@ -75,10 +107,53 @@ export function registerShopifyTags(engine: Liquid): void {
   });
 
   /**
+   * Shopify {% stylesheet %} ... {% endstylesheet %}
+   */
+  engine.registerTag("stylesheet", {
+    parse: function (tagToken: TagToken, remainTokens: TopLevelToken[]) {
+      this.templates = [];
+      const stream = this.liquid.parser.parseStream(remainTokens);
+      stream
+        .on("tag:endstylesheet", () => stream.stop())
+        .on("template", (tpl: Template) => this.templates.push(tpl))
+        .on("end", () => {
+          throw new Error(`tag ${tagToken.getText()} not closed with endstylesheet`);
+        });
+      stream.start();
+    },
+    render: function* (ctx: Context): Generator<unknown, string, string> {
+      const css = (yield this.liquid.renderer.renderTemplates(this.templates, ctx)) as string;
+      return `<style data-shopify>${css}</style>`;
+    },
+  });
+
+  /**
+   * Shopify {% javascript %} ... {% endjavascript %}
+   */
+  engine.registerTag("javascript", {
+    parse: function (tagToken: TagToken, remainTokens: TopLevelToken[]) {
+      this.templates = [];
+      const stream = this.liquid.parser.parseStream(remainTokens);
+      stream
+        .on("tag:endjavascript", () => stream.stop())
+        .on("template", (tpl: Template) => this.templates.push(tpl))
+        .on("end", () => {
+          throw new Error(`tag ${tagToken.getText()} not closed with endjavascript`);
+        });
+      stream.start();
+    },
+    render: function* (ctx: Context): Generator<unknown, string, string> {
+      const js = (yield this.liquid.renderer.renderTemplates(this.templates, ctx)) as string;
+      return `<script data-shopify>${js}</script>`;
+    },
+  });
+
+  /**
    * Shopify {% paginate collection.products by 12 %} ... {% endpaginate %}
    */
   engine.registerTag("paginate", {
     parse: function (tagToken: TagToken, remainTokens: TopLevelToken[]) {
+      this.rawArgs = tagToken.args;
       this.templates = [];
       const stream = this.liquid.parser.parseStream(remainTokens);
       stream
@@ -90,13 +165,33 @@ export function registerShopifyTags(engine: Liquid): void {
       stream.start();
     },
     render: function* (ctx: Context): Generator<unknown, string, string> {
+      const raw = this.rawArgs || "";
+      const byMatch = raw.match(/by\s+(\d+)/i);
+      const pageSize = byMatch ? parseInt(byMatch[1], 10) : 12;
+
+      // Mock paginate context object
+      const paginateObj = {
+        current_page: 1,
+        current_offset: 0,
+        page_size: pageSize,
+        pages: 1,
+        items: pageSize,
+        parts: [
+          { is_link: false, title: 1 },
+        ],
+        previous: null,
+        next: null,
+      };
+
+      ctx.push({ paginate: paginateObj });
       const html = (yield this.liquid.renderer.renderTemplates(this.templates, ctx)) as string;
+      ctx.pop();
       return html;
     },
   });
 
   /**
-   * Shopify {% render 'snippet', [arg: val] %} snippet resolution
+   * Shopify {% render 'snippet', [arg: val] %} / {% include 'snippet' %}
    */
   const snippetRenderer = {
     parse(token: TagToken) {
@@ -116,7 +211,7 @@ export function registerShopifyTags(engine: Liquid): void {
         return `<!-- snippet '${snippetName}' not found -->`;
       }
 
-      // Parse optional parameters: e.g. foo: bar, product: collection.products[0]
+      // Parse parameters: e.g. foo: bar, product: collection.products[0], with: ...
       const snippetScope: Record<string, unknown> = {};
       const paramMatches = restArgs.matchAll(/([a-zA-Z0-9_\-]+)\s*:\s*([^,]+)/g);
       for (const pm of paramMatches) {
@@ -136,9 +231,10 @@ export function registerShopifyTags(engine: Liquid): void {
       }
 
       try {
-        const ctxData = typeof (ctx as unknown as { getAll?: () => Record<string, unknown> }).getAll === "function"
-          ? (ctx as unknown as { getAll: () => Record<string, unknown> }).getAll()
-          : (ctx.environments || {});
+        const ctxData =
+          typeof (ctx as unknown as { getAll?: () => Record<string, unknown> }).getAll === "function"
+            ? (ctx as unknown as { getAll: () => Record<string, unknown> }).getAll()
+            : ctx.environments || {};
         return (yield engine.parseAndRender(snippetTpl, { ...ctxData, ...snippetScope })) as string;
       } catch (e) {
         return `<!-- error rendering snippet '${snippetName}': ${String(e)} -->`;

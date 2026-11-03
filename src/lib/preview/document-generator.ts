@@ -3,8 +3,10 @@ import { getBaseThemeCss, getPreviewRuntimeScript } from "./theme-runtime";
 
 export interface GenerateDocumentOptions {
   title?: string;
+  sectionId?: string;
   renderedHtml: string;
   sectionCss?: string;
+  sectionScripts?: string;
   fontUrl?: string;
   error?: string;
 }
@@ -15,14 +17,16 @@ export interface GenerateDocumentOptions {
 export function generatePreviewDocument(options: GenerateDocumentOptions): string {
   const {
     title = "Shopify Section Preview",
+    sectionId = "preview-section",
     renderedHtml,
     sectionCss = "",
+    sectionScripts = "",
     fontUrl,
     error,
   } = options;
 
   const baseThemeCss = getBaseThemeCss();
-  const runtimeScript = getPreviewRuntimeScript();
+  const runtimeScript = getPreviewRuntimeScript(sectionId);
 
   if (error) {
     return `<!DOCTYPE html>
@@ -69,9 +73,54 @@ export function generatePreviewDocument(options: GenerateDocumentOptions): strin
   // Sanitize rendered HTML body while preserving valid SVG and data attributes
   const sanitizedHtml = DOMPurify.sanitize(renderedHtml, {
     FORBID_TAGS: ["script", "iframe", "frame", "object", "embed"],
-    FORBID_ATTR: ["onerror", "onload", "onclick", "ondblclick", "onmouseover", "onmouseout"],
-    ADD_TAGS: ["svg", "path", "g", "defs", "linearGradient", "stop", "circle", "rect", "line", "polyline", "polygon", "text", "tspan", "use"],
-    ADD_ATTR: ["target", "loading", "decoding", "viewBox", "xmlns", "fill", "stroke", "stroke-width", "stroke-linecap", "stroke-linejoin", "d", "cx", "cy", "r", "x", "y", "data-shopify-editor-block"],
+    FORBID_ATTR: ["onerror", "onload", "ondblclick", "onmouseover", "onmouseout"],
+    ADD_TAGS: [
+      "svg",
+      "path",
+      "g",
+      "defs",
+      "linearGradient",
+      "stop",
+      "circle",
+      "rect",
+      "line",
+      "polyline",
+      "polygon",
+      "text",
+      "tspan",
+      "use",
+    ],
+    ADD_ATTR: [
+      "target",
+      "loading",
+      "decoding",
+      "viewBox",
+      "xmlns",
+      "fill",
+      "stroke",
+      "stroke-width",
+      "stroke-linecap",
+      "stroke-linejoin",
+      "d",
+      "cx",
+      "cy",
+      "r",
+      "x",
+      "y",
+      "data-shopify-editor-block",
+      "data-vfp-carousel",
+      "data-vfp-track",
+      "data-vfp-prev",
+      "data-vfp-next",
+      "data-vfp-pagination",
+      "data-product-card",
+      "data-loop",
+      "data-autoplay",
+      "data-autoplay-speed",
+      "data-pagination",
+      "data-pause-hover",
+      "data-initialized",
+    ],
     WHOLE_DOCUMENT: false,
   });
 
@@ -88,9 +137,11 @@ export function generatePreviewDocument(options: GenerateDocumentOptions): strin
   ${sectionCss ? `<style id="shopify-section-styles">\n${sectionCss}\n</style>` : ""}
 </head>
 <body>
-  <div id="shopify-section-preview-root" class="shopify-section">
+  <div id="shopify-section-preview-root" class="shopify-section" data-section-id="${sectionId}">
     ${sanitizedHtml}
   </div>
+
+  ${sectionScripts ? `<script data-shopify-section-scripts>\n${sectionScripts}\n</script>` : ""}
 
   <script>
     ${runtimeScript}
@@ -98,4 +149,3 @@ export function generatePreviewDocument(options: GenerateDocumentOptions): strin
 </body>
 </html>`;
 }
-
