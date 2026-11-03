@@ -1,6 +1,7 @@
 import { SectionSchema, SchemaBlockDef } from "./preview-types";
 import { PREVIEW_FALLBACK_IMAGES } from "@/data/preview/settings";
 import { MockDataset } from "./mock-data/types";
+import { toShopifyFontDrop } from "./liquid-filters";
 
 const SCHEMA_REGEX = /{%\s*schema\s*%}([\s\S]*?){%\s*endschema\s*%}/i;
 
@@ -61,7 +62,11 @@ export function buildSectionSettings(
       if (!setting || !setting.id) continue;
 
       if (setting.default !== undefined) {
-        settings[setting.id] = setting.default;
+        if (setting.type === "font_picker") {
+          settings[setting.id] = toShopifyFontDrop(setting.default);
+        } else {
+          settings[setting.id] = setting.default;
+        }
       } else {
         // Safe typed fallbacks by setting type
         switch (setting.type) {
@@ -77,6 +82,9 @@ export function buildSectionSettings(
             break;
           case "color_background":
             settings[setting.id] = "#ffffff";
+            break;
+          case "font_picker":
+            settings[setting.id] = toShopifyFontDrop("assistant_n4");
             break;
           case "select":
             settings[setting.id] = setting.options?.[0]?.value ?? "";
@@ -109,7 +117,14 @@ export function buildSectionSettings(
   // 2. Overlay preset settings if available
   const preset = schema.presets?.[0];
   if (preset && preset.settings && typeof preset.settings === "object") {
-    Object.assign(settings, preset.settings);
+    for (const [key, val] of Object.entries(preset.settings)) {
+      const settingDef = schema.settings?.find((s) => s && s.id === key);
+      if (settingDef?.type === "font_picker") {
+        settings[key] = toShopifyFontDrop(val);
+      } else {
+        settings[key] = val;
+      }
+    }
   }
 
   // 3. Fallbacks for missing media / collection links
@@ -137,10 +152,16 @@ export function buildSectionSettings(
   }
 
   // 4. Merge temporary overrides (Inspector)
-  return {
-    ...settings,
-    ...overrides,
-  };
+  for (const [key, val] of Object.entries(overrides)) {
+    const settingDef = schema.settings?.find((s) => s && s.id === key);
+    if (settingDef?.type === "font_picker") {
+      settings[key] = toShopifyFontDrop(val);
+    } else {
+      settings[key] = val;
+    }
+  }
+
+  return settings;
 }
 
 /**

@@ -34,5 +34,65 @@
     },
     "status": "ready",
     "compositeHash": "30ab38c8f31ecca1"
+  },
+  "faq-contact-v1": {
+    "url": "/thumbnails/faq-contact-v1.webp?v=f3e440c1166e0851",
+    "generatedAt": "2026-11-03T04:34:00.220Z",
+    "sourceHash": "f4b3874b261748b9",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "f3e440c1166e0851"
+  },
+  "feature-products-v1": {
+    "url": "/thumbnails/feature-products-v1.webp?v=ecaa5cf39ebed07b",
+    "generatedAt": "2026-11-03T04:34:02.357Z",
+    "sourceHash": "c79cc93bf8fff661",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "ecaa5cf39ebed07b"
+  },
+  "hero-v1": {
+    "url": "/thumbnails/hero-v1.webp?v=c62f90a269c9c0fc",
+    "generatedAt": "2026-11-03T04:34:03.290Z",
+    "sourceHash": "f2d8db4a45d886c3",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "c62f90a269c9c0fc"
+  },
+  "newsletter-join-v1": {
+    "url": "/thumbnails/newsletter-join-v1.webp?v=fb29bcc5cbe99993",
+    "generatedAt": "2026-11-03T04:34:03.988Z",
+    "sourceHash": "dd1cdb01bed84fac",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "fb29bcc5cbe99993"
+  },
+  "room-gallery-v1": {
+    "url": "/thumbnails/room-gallery-v1.webp?v=e752e98e5f1f6ec0",
+    "generatedAt": "2026-11-03T04:44:24.418Z",
+    "sourceHash": "b7b8efc1bfd0e84a",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "e752e98e5f1f6ec0"
   }
 }

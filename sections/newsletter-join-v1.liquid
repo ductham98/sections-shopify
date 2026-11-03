@@ -1,0 +1,870 @@
+{% comment %}
+  SECTION: Custom Newsletter Join
+  Design: Premium Minimal / Botanical
+  Platform: Shopify Online Store 2.0
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'newsletter-' | append: section.id
+  assign newsletter_form_id = 'NewsletterForm-' | append: section.id
+-%}
+
+{%- style -%}
+  {{ section.settings.heading_font | font_face: font_display: 'swap' }}
+  {{ section.settings.body_font | font_face: font_display: 'swap' }}
+
+  /* =========================================
+     NEWSLETTER ROOT
+  ========================================= */
+
+  #newsletter-{{ section.id }} {
+    --newsletter-bg: {{ section.settings.background_color }};
+    --newsletter-heading: {{ section.settings.heading_color }};
+    --newsletter-accent: {{ section.settings.accent_color }};
+    --newsletter-description: {{ section.settings.description_color }};
+
+    --newsletter-input-bg: {{ section.settings.input_background }};
+    --newsletter-input-text: {{ section.settings.input_text_color }};
+    --newsletter-placeholder: {{ section.settings.placeholder_color }};
+    --newsletter-input-border: {{ section.settings.input_border_color }};
+
+    --newsletter-button-bg: {{ section.settings.button_background }};
+    --newsletter-button-text: {{ section.settings.button_text_color }};
+
+    --newsletter-heading-font: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --newsletter-body-font: {{ section.settings.body_font.family }}, {{ section.settings.body_font.fallback_families }};
+
+    --newsletter-content-width: {{ section.settings.content_width }}px;
+    --newsletter-form-width: {{ section.settings.form_width }}px;
+
+    --newsletter-heading-size: {{ section.settings.heading_size }}px;
+    --newsletter-mobile-heading-size: {{ section.settings.mobile_heading_size }}px;
+    --newsletter-body-size: {{ section.settings.body_size }}px;
+
+    --newsletter-section-radius: {{ section.settings.section_radius }}px;
+    --newsletter-input-radius: {{ section.settings.input_radius }}px;
+    --newsletter-button-radius: {{ section.settings.button_radius }}px;
+
+    display: block;
+    position: relative;
+    width: 100%;
+
+    max-width: {% if section.settings.full_width %}100%{% else %}{{ section.settings.content_width }}px{% endif %};
+
+    margin-left: auto;
+    margin-right: auto;
+
+    padding:
+      {{ section.settings.padding_top }}px
+      {{ section.settings.padding_horizontal }}px
+      {{ section.settings.padding_bottom }}px;
+
+    background: var(--newsletter-bg);
+
+    {% if section.settings.background_gradient != blank %}
+      background: {{ section.settings.background_gradient }};
+    {% endif %}
+
+    border: {{ section.settings.section_border_width }}px solid {{ section.settings.section_border_color }};
+    border-radius: var(--newsletter-section-radius);
+
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  #newsletter-{{ section.id }} *,
+  #newsletter-{{ section.id }} *::before,
+  #newsletter-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  /* =========================================
+     INNER CONTAINER
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__inner {
+    width: 100%;
+    max-width: var(--newsletter-content-width);
+    margin: 0 auto;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  /* =========================================
+     EYEBROW
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__eyebrow {
+    display: block;
+
+    margin: 0 0 12px;
+
+    color: var(--newsletter-accent);
+    font-family: var(--newsletter-body-font);
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* =========================================
+     HEADING
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__heading {
+    margin: 0 0 {{ section.settings.heading_spacing }}px;
+
+    color: var(--newsletter-heading);
+    font-family: var(--newsletter-heading-font);
+
+    font-size: var(--newsletter-heading-size);
+    font-weight: 700;
+    line-height: 1.2;
+
+    letter-spacing: -0.5px;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__heading-accent {
+    color: var(--newsletter-accent);
+
+    font-style:
+      {% if section.settings.accent_italic %}
+        italic
+      {% else %}
+        normal
+      {% endif %};
+  }
+
+  /* =========================================
+     DESCRIPTION
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__description {
+    margin: 0 auto {{ section.settings.description_spacing }}px;
+
+    color: var(--newsletter-description);
+    font-family: var(--newsletter-body-font);
+
+    font-size: var(--newsletter-body-size);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__description p {
+    margin: 0;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__description p + p {
+    margin-top: 2px;
+  }
+
+  /* =========================================
+     FORM WRAPPER
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__form-wrapper {
+    width: 100%;
+    max-width: var(--newsletter-form-width);
+
+    margin: 0 auto;
+  }
+
+  /* =========================================
+     FORM
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__form {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-height: 54px;
+
+    padding: 5px;
+    gap: 4px;
+
+    background: var(--newsletter-input-bg);
+
+    border: 1px solid var(--newsletter-input-border);
+    border-radius: var(--newsletter-input-radius);
+
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__form:focus-within {
+    border-color: var(--newsletter-accent);
+
+    box-shadow: 0 0 0 3px
+      {{ section.settings.accent_color | color_modify: 'alpha', 0.12 }};
+  }
+
+  /* =========================================
+     EMAIL INPUT
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__input {
+    flex: 1;
+
+    min-width: 0;
+    width: 100%;
+    height: 42px;
+
+    padding: 0 8px;
+
+    border: 0 !important;
+    border-radius: 0;
+
+    outline: none !important;
+    box-shadow: none !important;
+
+    background: transparent !important;
+
+    color: var(--newsletter-input-text);
+
+    font-family: var(--newsletter-body-font);
+    font-size: 14px;
+    font-weight: 400;
+
+    line-height: 1.4;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__input::placeholder {
+    color: var(--newsletter-placeholder);
+    opacity: 1;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__input:focus,
+  #newsletter-{{ section.id }} .newsletter__input:focus-visible {
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  /* =========================================
+     BUTTON
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__button {
+    display: inline-flex;
+    flex-shrink: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: {{ section.settings.button_height }}px;
+    min-width: 80px;
+
+    padding: 0 20px;
+
+    border: 0;
+    border-radius: var(--newsletter-button-radius);
+
+    background: var(--newsletter-button-bg);
+    color: var(--newsletter-button-text);
+
+    font-family: var(--newsletter-body-font);
+    font-size: 14px;
+    font-weight: 600;
+
+    line-height: 1.2;
+    text-align: center;
+
+    cursor: pointer;
+
+    transition:
+      background 0.25s ease,
+      color 0.25s ease,
+      transform 0.25s ease,
+      opacity 0.25s ease;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__button:hover {
+    opacity: 0.88;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__button:focus-visible {
+    outline: 2px solid var(--newsletter-button-bg);
+    outline-offset: 3px;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* =========================================
+     ACCESSIBILITY
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__visually-hidden {
+    position: absolute !important;
+
+    width: 1px !important;
+    height: 1px !important;
+
+    padding: 0 !important;
+    margin: -1px !important;
+
+    overflow: hidden !important;
+
+    clip: rect(0, 0, 0, 0) !important;
+
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  /* =========================================
+     SUCCESS / ERROR MESSAGES
+  ========================================= */
+
+  #newsletter-{{ section.id }} .newsletter__message {
+    margin-top: 12px;
+
+    font-family: var(--newsletter-body-font);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__message--success {
+    color: #426D4E;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__message--error {
+    color: #C0392B;
+  }
+
+  #newsletter-{{ section.id }} .newsletter__message ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  /* =========================================
+     MOBILE RESPONSIVE
+  ========================================= */
+
+  @media screen and (max-width: 749px) {
+
+    #newsletter-{{ section.id }} {
+      padding:
+        40px
+        20px
+        {{ section.settings.padding_bottom }}px;
+    }
+
+    #newsletter-{{ section.id }} .newsletter__heading {
+      font-size: var(--newsletter-mobile-heading-size);
+    }
+
+    #newsletter-{{ section.id }} .newsletter__description {
+      font-size: 14px;
+    }
+
+    #newsletter-{{ section.id }} .newsletter__form {
+      gap: 4px;
+    }
+
+    #newsletter-{{ section.id }} .newsletter__input {
+      min-width: 0;
+      padding-left: 6px;
+      padding-right: 6px;
+      font-size: 13px;
+    }
+
+    #newsletter-{{ section.id }} .newsletter__button {
+      min-width: 65px;
+      padding-left: 12px;
+      padding-right: 12px;
+      font-size: 13px;
+    }
+  }
+{%- endstyle -%}
+
+<!--
+  =========================================
+       NEWSLETTER SECTION HTML
+  =========================================
+-->
+
+<section
+  id="newsletter-{{ section.id }}"
+  class="custom-newsletter-join"
+  aria-label="Newsletter subscription"
+>
+  <div class="newsletter__inner">
+    {% if section.settings.eyebrow != blank %}
+      <span class="newsletter__eyebrow">
+        {{ section.settings.eyebrow | escape }}
+      </span>
+    {% endif %}
+
+    {% if section.settings.heading_before != blank
+      or section.settings.heading_accent != blank
+      or section.settings.heading_after != blank
+    %}
+      <h2 class="newsletter__heading">
+        {{ section.settings.heading_before | escape }}
+
+        {% if section.settings.heading_accent != blank %}
+          <span class="newsletter__heading-accent">
+            {{ section.settings.heading_accent | escape }}
+          </span>
+        {% endif %}
+
+        {{ section.settings.heading_after | escape }}
+      </h2>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <div class="newsletter__description">
+        {{ section.settings.description }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_form %}
+      <div class="newsletter__form-wrapper">
+        {%- form 'customer', id: newsletter_form_id, class: 'newsletter__customer-form' -%}
+          <input
+            type="hidden"
+            name="contact[tags]"
+            value="newsletter"
+          >
+
+          <div class="newsletter__form">
+            <label
+              for="NewsletterEmail-{{ section.id }}"
+              class="newsletter__visually-hidden"
+            >
+              Email address
+            </label>
+
+            <input
+              id="NewsletterEmail-{{ section.id }}"
+              class="newsletter__input"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ section.settings.input_placeholder | escape }}"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              required
+              aria-required="true"
+            >
+
+            <button
+              type="submit"
+              class="newsletter__button"
+              name="commit"
+            >
+              {{ section.settings.button_label | escape }}
+            </button>
+          </div>
+
+          {% if form.posted_successfully? %}
+            <div
+              class="newsletter__message newsletter__message--success"
+              role="status"
+            >
+              Thank you for subscribing!
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div
+              class="newsletter__message newsletter__message--error"
+              role="alert"
+            >
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+        {%- endform -%}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Newsletter Join",
+  "tag": "section",
+  "class": "section-custom-newsletter-join",
+  "settings": [
+    {
+      "type": "header",
+      "content": "01. General"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_form",
+      "label": "Show newsletter form",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width section",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content / Section max width",
+      "min": 400,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "form_width",
+      "label": "Newsletter form width",
+      "min": 250,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "default": 460
+    },
+
+    {
+      "type": "header",
+      "content": "02. Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "JOIN THE CIRCLE"
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Heading before accent",
+      "default": "A little"
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Heading accent",
+      "default": "calm,"
+    },
+    {
+      "type": "text",
+      "id": "heading_after",
+      "label": "Heading after accent",
+      "default": "delivered"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Seasonal rituals, new botanicals, and members-only notes.<br>Subscribe and we'll send 10% off your first order.</p>"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Input placeholder",
+      "default": "you@example.com"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Join"
+    },
+
+    {
+      "type": "header",
+      "content": "03. Layout"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop padding top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Desktop horizontal padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_radius",
+      "label": "Section border radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+
+    {
+      "type": "header",
+      "content": "04. Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "playfair_display_n4"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "assistant_n4"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Desktop heading size",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading size",
+      "min": 18,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "body_size",
+      "label": "Body font size",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "checkbox",
+      "id": "accent_italic",
+      "label": "Italic accent text",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "05. Content Spacing"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Heading bottom spacing",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "description_spacing",
+      "label": "Description bottom spacing",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+
+    {
+      "type": "header",
+      "content": "06. Section Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EAEEE2"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#20271F"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#426D4E"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#687064"
+    },
+
+    {
+      "type": "header",
+      "content": "07. Section Border"
+    },
+    {
+      "type": "range",
+      "id": "section_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "section_border_color",
+      "label": "Border color",
+      "default": "#D9E0D3"
+    },
+
+    {
+      "type": "header",
+      "content": "08. Input Design"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Input background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Input text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder color",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border color",
+      "default": "#DCE1DA"
+    },
+    {
+      "type": "range",
+      "id": "input_height",
+      "label": "Input height",
+      "min": 40,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 54
+    },
+    {
+      "type": "range",
+      "id": "input_radius",
+      "label": "Input border radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+
+    {
+      "type": "header",
+      "content": "09. Button Design"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#426D4E"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "button_height",
+      "label": "Button height",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Newsletter Join"
+    }
+  ]
+}
+{% endschema %}

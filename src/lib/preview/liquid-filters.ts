@@ -17,6 +17,66 @@ interface ParsedRgba {
   a: number;
 }
 
+export interface ShopifyFontDrop {
+  family: string;
+  fallback_families: string;
+  style: string;
+  weight: number;
+  system: boolean;
+  toString: () => string;
+}
+
+/**
+ * Normalizes font_picker setting values or font handles into a Shopify Font object.
+ */
+export function toShopifyFontDrop(input: unknown): ShopifyFontDrop {
+  if (typeof input === "object" && input !== null && "family" in input) {
+    const obj = input as Record<string, unknown>;
+    return {
+      family: String(obj.family || "sans-serif"),
+      fallback_families: String(obj.fallback_families || "sans-serif"),
+      style: String(obj.style || "normal"),
+      weight: Number(obj.weight) || 400,
+      system: Boolean(obj.system),
+      toString() {
+        return this.family;
+      },
+    };
+  }
+
+  const str = String(input || "sans-serif").trim();
+  // Standard Shopify font handle format: <family>_<style_char><weight_digit>
+  // e.g. playfair_display_n4, assistant_n4, helvetica_n7, roboto_i4
+  const match = str.match(/^([a-z0-9_]+?)(?:_([ni])(\d))?$/i);
+  let familyName = str;
+  let style = "normal";
+  let weight = 400;
+
+  if (match) {
+    familyName = match[1]
+      .split("_")
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+    if (match[2]?.toLowerCase() === "i") style = "italic";
+    if (match[3]) weight = parseInt(match[3], 10) * 100;
+  }
+
+  const isSerif = /playfair|merriweather|garamond|times|georgia|serif|baskerville/i.test(familyName);
+  const isMono = /mono|code|consolas/i.test(familyName);
+  const fallback = isSerif ? "serif" : isMono ? "monospace" : "sans-serif";
+
+  return {
+    family: familyName,
+    fallback_families: fallback,
+    style,
+    weight,
+    system: false,
+    toString() {
+      return this.family;
+    },
+  };
+}
+
 /**
  * Parses color strings (hex, rgb, rgba, hsl, named colors) to RGBA components.
  */
@@ -455,6 +515,39 @@ export function registerShopifyFilters(engine: Liquid): void {
     if (!q) return t;
     const re = new RegExp(`(${q.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi");
     return t.replace(re, "<mark>$1</mark>");
+  });
+
+  // Font Filters (Shopify OS 2.0 Typography)
+  engine.registerFilter("font_face", (input: unknown, options?: { font_display?: string }) => {
+    const font = toShopifyFontDrop(input);
+    const display = options?.font_display || "swap";
+    const googleFamily = font.family.replace(/\s+/g, "+");
+
+    return `@import url('https://fonts.googleapis.com/css2?family=${googleFamily}:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600;1,700&display=${display}');
+@font-face {
+  font-family: "${font.family}";
+  font-weight: ${font.weight};
+  font-style: ${font.style};
+  font-display: ${display};
+  src: local("${font.family}");
+}`;
+  });
+
+  engine.registerFilter("font_modify", (input: unknown, property: string, value: unknown) => {
+    const font = toShopifyFontDrop(input);
+    const prop = String(property || "").toLowerCase();
+    const val = String(value || "");
+
+    const modified = { ...font };
+    if (prop === "weight") {
+      if (val === "bold" || val === "bolder") modified.weight = 700;
+      else if (val === "light" || val === "lighter") modified.weight = 300;
+      else if (!isNaN(Number(val))) modified.weight = Number(val);
+    } else if (prop === "style") {
+      modified.style = val;
+    }
+
+    return modified;
   });
 
   // Date formatting

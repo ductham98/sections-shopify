@@ -1,0 +1,1435 @@
+{% liquid
+  assign section_id = 'customroomgallery-' | append: section.id
+  assign room_count = section.blocks.size
+%}
+
+<section
+  id="{{ section_id }}"
+  class="customroomgallery"
+  data-section-id="{{ section.id }}"
+  data-active-room="0"
+  style="
+    --crg-section-bg: {{ section.settings.background_color }};
+    --crg-heading-color: {{ section.settings.heading_color }};
+    --crg-highlight-color: {{ section.settings.highlight_color }};
+    --crg-description-color: {{ section.settings.description_color }};
+    --crg-text-color: {{ section.settings.card_text_color }};
+    --crg-overlay-color: {{ section.settings.overlay_color }};
+    --crg-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --crg-container-width: {{ section.settings.container_width }}px;
+    --crg-panel-height: {{ section.settings.panel_height }}px;
+    --crg-panel-gap: {{ section.settings.panel_gap }}px;
+    --crg-panel-radius: {{ section.settings.panel_radius }}px;
+    --crg-active-flex: {{ section.settings.active_panel_ratio }};
+    --crg-inactive-flex: {{ section.settings.inactive_panel_ratio }};
+    --crg-heading-size: {{ section.settings.heading_size }}px;
+    --crg-description-size: {{ section.settings.description_size }}px;
+  "
+>
+  <div class="crg__container">
+    {% if section.settings.show_heading or section.settings.show_description %}
+      <div class="crg__header crg__header--{{ section.settings.header_alignment }}">
+        {% if section.settings.show_heading %}
+          <h2 class="crg__heading">
+            {% if section.settings.heading_before != blank %}
+              <span class="crg__heading-before">
+                {{ section.settings.heading_before | escape }}
+              </span>
+            {% endif %}
+            {% if section.settings.heading_highlight != blank %}
+              <span class="crg__heading-highlight">
+                {{ section.settings.heading_highlight | escape }}
+              </span>
+            {% endif %}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.show_description and section.settings.description != blank %}
+          <div class="crg__description">
+            {{ section.settings.description | escape | newline_to_br }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if room_count > 0 %}
+      <div
+        class="crg__gallery"
+        data-crg-gallery
+        data-mobile-mode="{{ section.settings.mobile_layout }}"
+        role="list"
+        aria-label="{{ section.settings.gallery_aria_label | escape }}"
+      >
+        {% for block in section.blocks %}
+          {% liquid
+            assign room_title = block.settings.title
+            assign room_description = block.settings.description
+            assign room_image = block.settings.image
+            assign room_link = block.settings.link
+            assign room_link_label = block.settings.link_label
+          %}
+
+          <article
+            class="crg__panel{% if forloop.first %} is-active{% endif %}"
+            data-crg-panel
+            data-index="{{ forloop.index0 }}"
+            role="listitem"
+            tabindex="0"
+            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-label="{{ room_title | escape }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="crg__panel-image">
+              {% if room_image != blank %}
+                {{
+                  room_image
+                  | image_url: width: 1800
+                  | image_tag:
+                    class: 'crg__image',
+                    widths: '320, 480, 640, 800, 1000, 1200, 1600, 1800',
+                    sizes: '(min-width: 990px) 65vw, 100vw',
+                    loading: 'lazy',
+                    alt: room_image.alt
+                }}
+              {% else %}
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'crg__placeholder' }}
+              {% endif %}
+            </div>
+
+            <div class="crg__overlay"></div>
+
+            <div class="crg__inactive-content" aria-hidden="true">
+              {% if room_title != blank %}
+                <span class="crg__vertical-title">
+                  {{ room_title | escape }}
+                </span>
+              {% endif %}
+            </div>
+
+            <div class="crg__active-content">
+              {% if room_title != blank %}
+                <h3 class="crg__room-title">
+                  {{ room_title | escape }}
+                </h3>
+              {% endif %}
+
+              {% if room_description != blank %}
+                <p class="crg__room-description">
+                  {{ room_description | escape }}
+                </p>
+              {% endif %}
+
+              {% if room_link != blank and room_link_label != blank %}
+                <a
+                  class="crg__room-link"
+                  href="{{ room_link }}"
+                  aria-label="{{ room_link_label | escape }} - {{ room_title | escape }}"
+                >
+                  <span>{{ room_link_label | escape }}</span>
+                  <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path
+                      d="M3.5 10h12m-5-5 5 5-5 5"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="crg__empty">
+        <p>Add room blocks to display the gallery.</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #customroomgallery-{{ section.id }} {
+    width: 100%;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: var(--crg-section-bg);
+    color: var(--crg-heading-color);
+    font-family: {{ section.settings.body_font }};
+  }
+
+  #customroomgallery-{{ section.id }} *,
+  #customroomgallery-{{ section.id }} *::before,
+  #customroomgallery-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__container {
+    width: 100%;
+    max-width: var(--crg-container-width);
+    margin: 0 auto;
+    padding-right: {{ section.settings.container_padding }}px;
+    padding-left: {{ section.settings.container_padding }}px;
+  }
+
+  /* Header */
+
+  #customroomgallery-{{ section.id }} .crg__header {
+    margin-bottom: {{ section.settings.header_spacing }}px;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__header--left {
+    text-align: left;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__header--center {
+    text-align: center;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__header--right {
+    text-align: right;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__heading {
+    margin: 0;
+    color: var(--crg-heading-color);
+    font-family: {{ section.settings.heading_font }};
+    font-size: var(--crg-heading-size);
+    font-weight: {{ section.settings.heading_weight }};
+    letter-spacing: {{ section.settings.heading_letter_spacing }}%;
+    line-height: 1.15;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__heading-before {
+    color: var(--crg-heading-color);
+  }
+
+  #customroomgallery-{{ section.id }} .crg__heading-highlight {
+    color: var(--crg-highlight-color);
+  }
+
+  #customroomgallery-{{ section.id }} .crg__description {
+    max-width: {{ section.settings.description_width }}px;
+    margin: {{ section.settings.description_spacing }}px auto 0;
+    color: var(--crg-description-color);
+    font-size: var(--crg-description-size);
+    font-weight: {{ section.settings.description_weight }};
+    line-height: 1.6;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__header--left .crg__description {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__header--right .crg__description {
+    margin-right: 0;
+    margin-left: auto;
+  }
+
+  /* Gallery */
+
+  #customroomgallery-{{ section.id }} .crg__gallery {
+    display: flex;
+    align-items: stretch;
+    gap: var(--crg-panel-gap);
+    width: 100%;
+    height: var(--crg-panel-height);
+    overflow: hidden;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel {
+    position: relative;
+    display: block;
+    min-width: 0;
+    height: 100%;
+    flex: var(--crg-inactive-flex) 1 0;
+    overflow: hidden;
+    border-radius: var(--crg-panel-radius);
+    background: #b8b6b0;
+    color: var(--crg-text-color);
+    cursor: pointer;
+    isolation: isolate;
+    outline: none;
+    transition:
+      flex 650ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-radius 300ms ease;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel.is-active {
+    flex-grow: var(--crg-active-flex);
+    flex-shrink: 1;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel:focus-visible {
+    outline: 2px solid var(--crg-highlight-color);
+    outline-offset: 3px;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel-image {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__image,
+  #customroomgallery-{{ section.id }} .crg__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    object-position: {{ section.settings.image_position }};
+    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel:hover .crg__image {
+    transform: scale(1.035);
+  }
+
+  #customroomgallery-{{ section.id }} .crg__overlay {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      {{ section.settings.overlay_color | color_modify: 'alpha', section.settings.overlay_opacity | divided_by: 100.0 }} 0%,
+      {{ section.settings.overlay_color | color_modify: 'alpha', 0.35 }} 38%,
+      transparent 100%
+    );
+    pointer-events: none;
+    transition: opacity 350ms ease;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__inactive-content {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 24px 12px;
+    opacity: 1;
+    transition: opacity 220ms ease;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__vertical-title {
+    display: block;
+    max-height: 80%;
+    overflow: hidden;
+    color: var(--crg-text-color);
+    font-size: {{ section.settings.inactive_title_size }}px;
+    font-weight: {{ section.settings.room_title_weight }};
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    text-align: center;
+    text-overflow: ellipsis;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+  }
+
+  /* Active content */
+
+  #customroomgallery-{{ section.id }} .crg__active-content {
+    position: absolute;
+    z-index: 3;
+    right: {{ section.settings.content_offset_x }}px;
+    bottom: {{ section.settings.content_offset_y }}px;
+    left: {{ section.settings.content_offset_x }}px;
+    max-width: {{ section.settings.active_content_width }}px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px);
+    transition:
+      opacity 350ms ease,
+      transform 450ms cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 350ms ease;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel.is-active .crg__active-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 180ms;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__panel.is-active .crg__inactive-content {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__room-title {
+    margin: 0;
+    color: var(--crg-text-color);
+    font-family: {{ section.settings.heading_font }};
+    font-size: {{ section.settings.room_title_size }}px;
+    font-weight: {{ section.settings.room_title_weight }};
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__room-description {
+    max-width: {{ section.settings.room_description_width }}px;
+    margin: {{ section.settings.room_description_spacing }}px 0 0;
+    color: var(--crg-text-color);
+    font-size: {{ section.settings.room_description_size }}px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__room-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: {{ section.settings.link_spacing }}px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid {{ section.settings.link_border_color }};
+    color: var(--crg-text-color);
+    font-size: {{ section.settings.link_font_size }}px;
+    font-weight: {{ section.settings.link_font_weight }};
+    line-height: 1.4;
+    text-decoration: none;
+    transition: opacity 180ms ease;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__room-link:hover {
+    opacity: 0.72;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__room-link svg {
+    width: 17px;
+    height: 17px;
+    flex: 0 0 17px;
+    transition: transform 180ms ease;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__room-link:hover svg {
+    transform: translateX(3px);
+  }
+
+  #customroomgallery-{{ section.id }} .crg__empty {
+    padding: 40px 20px;
+    border: 1px dashed #bdbdbd;
+    color: #777;
+    text-align: center;
+  }
+
+  #customroomgallery-{{ section.id }} .crg__empty p {
+    margin: 0;
+  }
+
+  /* Tablet */
+
+  @media screen and (max-width: 989px) {
+    #customroomgallery-{{ section.id }} .crg__container {
+      padding-right: {{ section.settings.tablet_container_padding }}px;
+      padding-left: {{ section.settings.tablet_container_padding }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__gallery {
+      height: {{ section.settings.tablet_panel_height }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__heading {
+      font-size: {{ section.settings.tablet_heading_size }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__panel.is-active {
+      flex-grow: {{ section.settings.tablet_active_panel_ratio }};
+    }
+
+    #customroomgallery-{{ section.id }} .crg__panel {
+      flex-grow: {{ section.settings.tablet_inactive_panel_ratio }};
+    }
+
+    #customroomgallery-{{ section.id }} .crg__active-content {
+      right: 20px;
+      bottom: 24px;
+      left: 20px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__room-title {
+      font-size: {{ section.settings.tablet_room_title_size }}px;
+    }
+  }
+
+  /* Mobile */
+
+  @media screen and (max-width: 749px) {
+    #customroomgallery-{{ section.id }} {
+      padding-top: {{ section.settings.mobile_padding_top }}px;
+      padding-bottom: {{ section.settings.mobile_padding_bottom }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__container {
+      padding-right: {{ section.settings.mobile_container_padding }}px;
+      padding-left: {{ section.settings.mobile_container_padding }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__header {
+      margin-bottom: {{ section.settings.mobile_header_spacing }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__heading {
+      font-size: {{ section.settings.mobile_heading_size }}px;
+      line-height: 1.15;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__description {
+      margin-top: {{ section.settings.mobile_description_spacing }}px;
+      font-size: {{ section.settings.mobile_description_size }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__gallery {
+      flex-direction: column;
+      gap: {{ section.settings.mobile_panel_gap }}px;
+      height: auto;
+      overflow: visible;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__panel {
+      width: 100%;
+      height: {{ section.settings.mobile_inactive_panel_height }}px;
+      min-height: 0;
+      flex: none;
+      border-radius: {{ section.settings.mobile_panel_radius }}px;
+      transition:
+        height 550ms cubic-bezier(0.22, 1, 0.36, 1),
+        border-radius 300ms ease;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__panel.is-active {
+      height: {{ section.settings.mobile_active_panel_height }}px;
+      flex: none;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__inactive-content {
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12px 20px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__vertical-title {
+      max-width: 100%;
+      max-height: none;
+      font-size: {{ section.settings.mobile_inactive_title_size }}px;
+      writing-mode: horizontal-tb;
+      transform: none;
+      white-space: normal;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__active-content {
+      right: {{ section.settings.mobile_content_offset_x }}px;
+      bottom: {{ section.settings.mobile_content_offset_y }}px;
+      left: {{ section.settings.mobile_content_offset_x }}px;
+      max-width: none;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__room-title {
+      font-size: {{ section.settings.mobile_room_title_size }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__room-description {
+      margin-top: 8px;
+      font-size: {{ section.settings.mobile_room_description_size }}px;
+    }
+
+    #customroomgallery-{{ section.id }} .crg__room-link {
+      margin-top: 14px;
+      font-size: {{ section.settings.mobile_link_font_size }}px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #customroomgallery-{{ section.id }} *,
+    #customroomgallery-{{ section.id }} *::before,
+    #customroomgallery-{{ section.id }} *::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('customroomgallery-{{ section.id }}');
+
+    if (!root || root.dataset.initialized === 'true') return;
+
+    root.dataset.initialized = 'true';
+
+    const gallery = root.querySelector('[data-crg-gallery]');
+    if (!gallery) return;
+
+    const panels = Array.from(gallery.querySelectorAll('[data-crg-panel]'));
+
+    if (!panels.length) return;
+
+    const activatePanel = (selectedPanel) => {
+      panels.forEach((panel) => {
+        const isActive = panel === selectedPanel;
+
+        panel.classList.toggle('is-active', isActive);
+        panel.setAttribute('aria-expanded', String(isActive));
+      });
+
+      root.dataset.activeRoom = selectedPanel.dataset.index;
+    };
+
+    panels.forEach((panel) => {
+      panel.addEventListener('click', (event) => {
+        if (event.target.closest('a')) return;
+        activatePanel(panel);
+      });
+
+      panel.addEventListener('keydown', (event) => {
+        if (event.target.closest('a')) return;
+
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          activatePanel(panel);
+        }
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+          event.preventDefault();
+          const nextPanel = panels[(panels.indexOf(panel) + 1) % panels.length];
+          activatePanel(nextPanel);
+          nextPanel.focus();
+        }
+
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          const previousPanel = panels[(panels.indexOf(panel) - 1 + panels.length) % panels.length];
+          activatePanel(previousPanel);
+          previousPanel.focus();
+        }
+      });
+    });
+
+    document.addEventListener('shopify:block:select', (event) => {
+      const selectedBlock = event.target.closest('[data-crg-panel]');
+
+      if (selectedBlock && root.contains(selectedBlock)) {
+        activatePanel(selectedBlock);
+      }
+    });
+
+    const editorSection = root.closest('.shopify-section');
+
+    if (editorSection) {
+      editorSection.addEventListener('shopify:section:unload', () => {
+        root.dataset.initialized = 'false';
+      });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Room Gallery",
+  "tag": "section",
+  "class": "section-custom-room-gallery",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Heading text",
+      "default": "Designed"
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Heading highlighted text",
+      "default": "room by room"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Open a room to see how it comes together."
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "gallery_aria_label",
+      "label": "Gallery accessibility label",
+      "default": "Explore rooms"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Section width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "container_padding",
+      "label": "Container horizontal padding",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "panel_height",
+      "label": "Desktop gallery height",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "panel_gap",
+      "label": "Panel gap",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "panel_radius",
+      "label": "Panel border radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "active_panel_ratio",
+      "label": "Active panel ratio",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "inactive_panel_ratio",
+      "label": "Inactive panel ratio",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" }
+      ],
+      "default": "cover"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "center center", "label": "Center" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" },
+        { "value": "left center", "label": "Left" },
+        { "value": "right center", "label": "Right" }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "body_font",
+      "label": "Body font",
+      "options": [
+        { "value": "inherit", "label": "Theme default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Helvetica, sans-serif", "label": "Helvetica" },
+        { "value": "Georgia, serif", "label": "Georgia" },
+        { "value": "Times New Roman, serif", "label": "Times New Roman" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "heading_font",
+      "label": "Heading font",
+      "options": [
+        { "value": "inherit", "label": "Theme heading font" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Helvetica, sans-serif", "label": "Helvetica" },
+        { "value": "Georgia, serif", "label": "Georgia" },
+        { "value": "Times New Roman, serif", "label": "Times New Roman" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 42
+    },
+    {
+      "type": "range",
+      "id": "tablet_heading_size",
+      "label": "Tablet heading size",
+      "min": 20,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "label": "Mobile heading size",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" },
+        { "value": "700", "label": "Bold" },
+        { "value": "800", "label": "Extra bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Heading letter spacing",
+      "min": -5,
+      "max": 5,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "tablet_description_size",
+      "label": "Tablet description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_size",
+      "label": "Mobile description size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Room content"
+    },
+    {
+      "type": "range",
+      "id": "active_content_width",
+      "label": "Active content maximum width",
+      "min": 250,
+      "max": 700,
+      "step": 25,
+      "unit": "px",
+      "default": 450
+    },
+    {
+      "type": "range",
+      "id": "content_offset_x",
+      "label": "Content horizontal offset",
+      "min": 12,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "content_offset_y",
+      "label": "Content bottom offset",
+      "min": 12,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "room_title_size",
+      "label": "Room title size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "tablet_room_title_size",
+      "label": "Tablet room title size",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_room_title_size",
+      "label": "Mobile room title size",
+      "min": 18,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "room_title_weight",
+      "label": "Room title weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "inactive_title_size",
+      "label": "Collapsed room title size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "room_description_width",
+      "label": "Room description width",
+      "min": 200,
+      "max": 600,
+      "step": 25,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "room_description_size",
+      "label": "Room description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_room_description_size",
+      "label": "Mobile room description size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "room_description_spacing",
+      "label": "Room description spacing",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "link_spacing",
+      "label": "Link top spacing",
+      "min": 6,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "link_font_size",
+      "label": "Link font size",
+      "min": 11,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "range",
+      "id": "mobile_link_font_size",
+      "label": "Mobile link font size",
+      "min": 11,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "link_font_weight",
+      "label": "Link font weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#F0EFE9"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#171714"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Heading highlight color",
+      "default": "#315E4D"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#65645F"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Room content color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 65
+    },
+    {
+      "type": "color",
+      "id": "link_border_color",
+      "label": "Link underline color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Section top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Section bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header bottom spacing",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "description_width",
+      "label": "Description maximum width",
+      "min": 250,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "default": 550
+    },
+    {
+      "type": "range",
+      "id": "description_spacing",
+      "label": "Description top spacing",
+      "min": 4,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Tablet layout"
+    },
+    {
+      "type": "range",
+      "id": "tablet_container_padding",
+      "label": "Tablet container padding",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "tablet_panel_height",
+      "label": "Tablet gallery height",
+      "min": 250,
+      "max": 650,
+      "step": 10,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "tablet_active_panel_ratio",
+      "label": "Tablet active panel ratio",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "tablet_inactive_panel_ratio",
+      "label": "Tablet inactive panel ratio",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "mobile_container_padding",
+      "label": "Mobile container padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_header_spacing",
+      "label": "Mobile header spacing",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_spacing",
+      "label": "Mobile description spacing",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "mobile_panel_gap",
+      "label": "Mobile panel gap",
+      "min": 2,
+      "max": 16,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "mobile_active_panel_height",
+      "label": "Mobile active panel height",
+      "min": 220,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 360
+    },
+    {
+      "type": "range",
+      "id": "mobile_inactive_panel_height",
+      "label": "Mobile collapsed panel height",
+      "min": 44,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_panel_radius",
+      "label": "Mobile panel radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "mobile_inactive_title_size",
+      "label": "Mobile collapsed title size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_offset_x",
+      "label": "Mobile content horizontal offset",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_offset_y",
+      "label": "Mobile content bottom offset",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "room",
+      "name": "Room",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Room image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Room title",
+          "default": "The Kitchen"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Room description",
+          "default": "Where the day starts and the evening lands."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Room link"
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Explore the room"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Room Gallery",
+      "blocks": [
+        {
+          "type": "room",
+          "settings": {
+            "title": "The Kitchen",
+            "description": "Where the day starts and the evening lands.",
+            "link_label": "Shop the kitchen"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The Bedroom",
+            "description": "A calm space to slow down and recharge.",
+            "link_label": "Shop the bedroom"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The Living Room",
+            "description": "Designed for everyday moments together.",
+            "link_label": "Shop the living room"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The Studio",
+            "description": "A thoughtful space for work and creativity.",
+            "link_label": "Shop the studio"
+          }
+        },
+        {
+          "type": "room",
+          "settings": {
+            "title": "The Garden",
+            "description": "Bring a little more nature into your home.",
+            "link_label": "Shop the garden"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

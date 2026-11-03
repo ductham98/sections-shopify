@@ -124,7 +124,10 @@ export function detectCategory(
     text.includes("cart") ||
     text.includes("buy") ||
     text.includes("atc") ||
-    text.includes("checkout")
+    text.includes("checkout") ||
+    text.includes("newsletter") ||
+    text.includes("subscribe") ||
+    text.includes("signup")
   ) {
     return "product";
   }

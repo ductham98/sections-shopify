@@ -92,77 +92,28 @@ flowchart TD
 ```text
 sections-shopify/
 ├── sections/                         # 🌟 Thư mục chứa các file mã nguồn Liquid gốc
-│   ├── custom-feature-products.liquid # Section sản phẩm nổi bật đa tính năng (~2,294 dòng)
-│   ├── faq-contact.liquid             # Section FAQ Accordion kết hợp form liên hệ (~628 dòng)
-│   └── hero.liquid                    # Section Hero Banner responsive (~1,130 dòng)
+│   ├── faq-contact-v1.liquid          # Section FAQ Accordion kết hợp form liên hệ (~628 dòng)
+│   ├── feature-products-v1.liquid     # Section sản phẩm nổi bật đa tính năng (~2,294 dòng)
+│   ├── hero-v1.liquid                 # Section Hero Banner responsive (~1,130 dòng)
+│   └── newsletter-join-v1.liquid      # Section Newsletter Botanical / Minimal (~870 dòng)
 ├── public/
 │   └── thumbnails/                    # Ảnh chụp màn hình WebP kích thước 1200x700
-│       ├── custom-feature-products.webp
-│       ├── faq-contact.webp
-│       └── hero.webp
+│       ├── faq-contact-v1.webp
+│       ├── feature-products-v1.webp
+│       ├── hero-v1.webp
+│       └── newsletter-join-v1.webp
 ├── scripts/
 │   ├── generate-sections-meta.ts      # Script tự động quét sections/ -> gen metadata TypeScript
 │   └── generate-thumbnails.ts         # Script dùng Playwright chụp ảnh render WebP vào public/thumbnails/
 ├── src/
 │   ├── app/                           # Next.js App Router
-│   │   ├── globals.css                # Tailwind CSS v4 styling
-│   │   ├── layout.tsx                 # Root layout, fonts, title
-│   │   ├── page.tsx                   # Server Component trang chủ, gọi getAllSections()
-│   │   ├── api/
-│   │   │   ├── sections/[id]/route.ts # API trả về mã nguồn Liquid của 1 section (hỗ trợ hot-reload ở dev)
-│   │   │   └── thumbnails/[sectionId]/route.ts # API kích hoạt chụp lại WebP thumbnail
-│   │   └── preview/
-│   │       └── render/[sectionId]/route.ts # Endpoint trả về standalone HTML để nhúng vào iframe
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── AppHeader.tsx          # Thanh header trên cùng (Logo, số section, link GitHub, nút mobile filter)
-│   │   │   ├── SectionSidebar.tsx     # Sidebar lọc (Search, Radio Category kèm đếm số lượng động)
-│   │   │   ├── MobileFilterDrawer.tsx # Drawer trượt bộ lọc trên Mobile
-│   │   │   └── SectionMarketplace.tsx # Container chính điều phối state: search, filter, preview modal
-│   │   ├── preview/
-│   │   │   ├── SectionPreviewModal.tsx# Modal bao bọc cửa sổ xem trước
-│   │   │   ├── PreviewWorkspace.tsx   # Workspace chứa canvas + thanh toolbar + inspector
-│   │   │   ├── PreviewToolbar.tsx     # Công cụ: đổi Desktop/Mobile, Zoom in/out, Fit to view, Refresh
-│   │   │   ├── PreviewCanvas.tsx      # Canvas chứa iframe hiển thị section
-│   │   │   ├── DeviceFrame.tsx        # Khung viền mô phỏng màn hình Desktop và Mobile (375px/390px/430px)
-│   │   │   ├── PreviewInspector.tsx   # Panel trượt bên phải: chỉnh settings live, chọn dataset mock, xem diagnostic
-│   │   │   └── PreviewStatus.tsx      # Huy hiệu trạng thái: compiling, ready, error
-│   │   ├── sections/
-│   │   │   ├── SectionCard.tsx        # Thẻ card hiển thị section: ảnh WebP, icon danh mục, 1-Click Copy Code, nút Preview
-│   │   │   └── SectionGrid.tsx        # Lưới hiển thị các thẻ SectionCard
-│   │   └── ui/
-│   │       └── Toast.tsx              # Toast thông báo "Liquid code copied!"
-│   ├── data/
-│   │   ├── categories.ts              # Định nghĩa 7 danh mục (all, hero, features, product, social-proof, faq, header, uncategorized)
-│   │   ├── sections-meta.ts           # Re-export metadata từ file generated
-│   │   └── preview/                   # Dữ liệu tĩnh phụ trợ (collections, products, settings, shop)
+│   ├── components/                    # Header, Sidebar, Grid, Card, Modal, Preview Canvas & Inspector
 │   ├── generated/
-│   │   ├── sections-meta.generated.ts # ⚠️ AUTO-GENERATED: File chứa mảng metadata và source code của toàn bộ sections
-│   │   └── thumbnails-cache.json      # Cache hash kiểm tra thay đổi file để tránh chụp lại screenshot không cần thiết
+│   │   ├── sections-meta.generated.ts # ⚠️ AUTO-GENERATED: File chứa mảng metadata và source code
+│   │   └── thumbnails-cache.json      # Cache hash kiểm tra thay đổi file
 │   └── lib/
-│       ├── sections.ts                # Client/server helper đọc sections (dev: dynamic hot read, prod: dùng generated bundle)
-│       ├── section-discovery.ts       # Thuật toán phân tích Liquid, parse schema, phân loại category theo từ khóa
-│       ├── section-client.ts          # Client-side cache và fetch mã nguồn Liquid qua API
-│       └── preview/
-│           ├── shared-preview-document.ts # Cầu nối thống nhất giữa Iframe Preview và Screenshot Generator
-│           ├── preview-compiler.ts    # Bộ máy biên dịch LiquidJS bóc tách CSS/JS, bọc mã trong HTML sandbox
-│           ├── liquid-engine.ts       # Cấu hình LiquidJS engine
-│           ├── liquid-filters.ts      # Filter chuẩn Shopify (image_url, img_url, money, color_to_rgb, color_modify, t, json, ...)
-│           ├── liquid-tags.ts         # Tag chuẩn Shopify ({% form %}, {% stylesheet %}, {% javascript %}, {% paginate %}, {% render %})
-│           ├── liquid-schema.ts       # Trích xuất và bóc tách schema JSON
-│           ├── schema-engine.ts       # Tạo settings mặc định từ schema
-│           ├── shopify-context.ts     # Mock Storefront Context (section, blocks, request, theme, settings, shop, customer, cart)
-│           ├── theme-runtime.ts       # Dawn CSS foundation + window.Shopify Storefront JS API simulation
-│           ├── screenshot-service.ts  # Service khởi chạy Playwright headless browser (hỗ trợ Windows Edge/Chrome, Mac, Linux)
-│           ├── thumbnail-cache.ts     # Quản lý hash và tính hợp lệ của thumbnail WebP
-│           ├── use-active-preview.ts  # React Hook quản lý trạng thái modal preview
-│           ├── mock-data/             # 5 datasets sản phẩm mock chất lượng cao
-│           └── snippets/              # Registry cho các snippet thông dụng (price, icon, badge, product-card, social-icons, pagination)
-├── package.json
-├── tsconfig.json
-├── next.config.ts
-├── DOCUMENTATION.md                   # Tài liệu chi tiết kỹ thuật từ phiên bản trước
-└── README.md                          # Giới thiệu cơ bản dự án
+│       ├── section-discovery.ts       # Thuật toán phân tích Liquid, parse schema, phân loại category
+│       └── preview/                   # Preview compiler, mock context, filters, tags, runtime
 ```
 
 ---
@@ -179,13 +130,14 @@ Hệ thống giả lập môi trường Shopify Theme được thiết kế đ�
   - `{% render 'snippet' %}` & `{% include 'snippet' %}`: Snippet registry dựng sẵn (`price`, `icon`, `badge`, `product-card`, `social-icons`, `pagination`).
 - **Liquid Filters:**
   - Hình ảnh: `image_url` (hỗ trợ `width`, `height`, `crop`), `img_url` (hỗ trợ `master`, `600x`, `crop`), `image_tag` (tạo thẻ `<img>` kèm srcset, lazy loading), `placeholder_svg_tag`.
+  - Phông chữ & Typography: `font_face` (sinh `@font-face` và nạp Google Fonts `@import url(...)`), `font_modify` (biến đổi `weight` hoặc `style`).
   - Tiền tệ: `money`, `money_with_currency`, `money_without_trailing_zeros`, `money_without_currency`.
   - Màu sắc: `color_to_rgb`, `color_to_hex`, `color_to_hsl`, `color_modify` (ví dụ `alpha: 0.8`), `color_lighten`, `color_darken`, `color_mix`, `color_extract`.
   - Ngôn ngữ: `t` (tự động mapping từ điển chuẩn của Dawn và fallback thông minh).
   - Khác: `json`, `weight_with_unit`, `highlight`, `link_to`, `link_to_vendor`, `link_to_type`, `link_to_tag`, `within`.
 
 ### 5.2. Đối Tượng Ngữ Cảnh Storefront (Context Objects)
-- `section`: Gồm `id`, `index: 1`, `settings` (đầy đủ default từ schema), `blocks` (kèm `shopify_attributes` chuẩn editor).
+- `section`: Gồm `id`, `index: 1`, `settings` (đầy đủ default từ schema; các setting `font_picker` tự động phân giải thành Shopify Font Drop có `.family` và `.fallback_families`), `blocks` (kèm `shopify_attributes` chuẩn editor).
 - `request`: `design_mode: true` (kích hoạt các logic theme editor), `page_type: 'index'`, `host`, `locale`.
 - `theme`: `name: 'Dawn (Shopify OS 2.0)'`, `id: 98765432`, `role: 'main'`.
 - `settings`: Cung cấp các biến global theme Dawn (`page_width: 1200`, `currency_code_enabled`, `sale_badge_color_scheme`, `badge_position`, `card_style`).
@@ -193,22 +145,16 @@ Hệ thống giả lập môi trường Shopify Theme được thiết kế đ�
 - `cart`: Giỏ hàng mẫu 2 sản phẩm kèm giá, số lượng.
 - `routes`: Bộ URL chuẩn (`root_url`, `cart_url`, `cart_add_url`, `search_url`, `all_products_collection_url`, v.v.).
 
-### 5.3. Storefront Runtime Sandbox Trong Iframe
-- **Đối tượng `window.Shopify`:** Khởi tạo sẵn `Shopify.shop`, `Shopify.locale`, `Shopify.currency`, `Shopify.theme`, `Shopify.designMode: true`, `Shopify.routes`, và hàm `Shopify.formatMoney(cents)`.
-- **Theme Editor Lifecycle Events:** Tự động phát sự kiện `shopify:section:load` và `shopify:section:select` khi section được render để các script khởi tạo giao diện (carousel, slider, accordion) chạy mượt mà.
-- **Mock AJAX Cart API Interceptor:** Chặn các lệnh `fetch('/cart/add.js')`, `/cart.js`, `/cart/update.js` để trả về phản hồi giỏ hàng thành công trong bộ nhớ, cập nhật `item_count` và phát sự kiện `cart:updated`.
-- **Thực thi Section Scripts:** Các đoạn `<script>` viết riêng trong section (như controller của Carousel trong `custom-feature-products.liquid`) được bóc tách và thực thi độc lập bên trong sandbox iframe mà không bị DOMPurify loại bỏ.
-- **Dawn Theme CSS Foundation:** Cung cấp đầy đủ `:root` CSS variables, các class `.color-scheme-1` đến `5`, `.page-width`, `.visually-hidden`, `.button`, `.badge`, `.price`.
-
 ---
 
 ## 6. DANH SÁCH SECTION HIỆN CÓ & TÌNH TRẠNG (INVENTORY)
 
 | # | ID / Tên File | Tiêu đề hiển thị | Danh mục | Preset Name | Số dòng | Số settings |
 |---|---|---|---|---|---|---|
-| 1 | `hero.liquid` | Custom Hero | `hero` | Custom Hero | 1,130 | 15+ |
-| 2 | `faq-contact.liquid` | Custom FAQ & Contact | `faq` | Custom FAQ | 628 | 15+ |
-| 3 | `custom-feature-products.liquid` | Custom Feature Products | `product` | Custom Featured Products | 2,294 | 40+ |
+| 1 | `faq-contact-v1.liquid` | Custom FAQ | `faq` | Custom FAQ | 628 | 15+ |
+| 2 | `feature-products-v1.liquid` | Custom Featured Products | `features` | Custom Featured Products | 2,294 | 40+ |
+| 3 | `hero-v1.liquid` | Section Hero | `hero` | Section Hero | 1,130 | 15+ |
+| 4 | `newsletter-join-v1.liquid` | Newsletter Join | `product` | Botanical Newsletter | 870 | 25+ |
 
 ---
 
