@@ -94,5 +94,41 @@
     },
     "status": "ready",
     "compositeHash": "e752e98e5f1f6ec0"
+  },
+  "newsletter-v2": {
+    "url": "/thumbnails/newsletter-v2.webp?v=637e1bb30d3e8f74",
+    "generatedAt": "2026-11-03T05:38:52.050Z",
+    "sourceHash": "ac8489402a070215",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "637e1bb30d3e8f74"
+  },
+  "newsletter-v1": {
+    "url": "/thumbnails/newsletter-v1.webp?v=74dd65bf33381141",
+    "generatedAt": "2026-11-03T04:58:55.408Z",
+    "sourceHash": "dd1cdb01bed84fac",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "74dd65bf33381141"
+  },
+  "hero-tabs-v1": {
+    "url": "/thumbnails/hero-tabs-v1.webp?v=ba7328738af07321",
+    "generatedAt": "2026-11-03T05:38:52.621Z",
+    "sourceHash": "8c34a7d62d5d568e",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "ba7328738af07321"
   }
 }
