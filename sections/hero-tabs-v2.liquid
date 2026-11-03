@@ -18,64 +18,92 @@
   id="{{ section_id }}"
   class="customimagehero"
   data-section-id="{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+  data-pause-hover="{{ section.settings.pause_on_hover }}"
   style="
-    --cih-section-width: {{ section_width_value }};
-    --cih-background: {{ section.settings.background_color }};
-    --cih-card-background: {{ section.settings.card_background }};
-    --cih-card-opacity: {{ section.settings.card_opacity | divided_by: 100.0 }};
+    --cih-width: {{ section_width_value }};
+    --cih-bg: {{ section.settings.background_color }};
     --cih-text: {{ section.settings.text_color }};
     --cih-muted: {{ section.settings.description_color }};
     --cih-accent: {{ section.settings.accent_color }};
-    --cih-button-bg: {{ section.settings.button_background }};
-    --cih-button-text: {{ section.settings.button_text_color }};
+    --cih-card-bg: {{ section.settings.card_background }};
+    --cih-card-opacity: {{ section.settings.card_opacity | divided_by: 100.0 }};
     --cih-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
     --cih-radius: {{ section.settings.card_radius }}px;
+    --cih-marquee-bg: {{ section.settings.marquee_background }};
+    --cih-marquee-text: {{ section.settings.marquee_text_color }};
   "
 >
   <div class="cih__container">
     <div class="cih__hero" data-cih-hero>
-      {% for block in section.blocks %}
-        <div
-          class="cih__slide{% if forloop.first %} is-active{% endif %}"
-          data-cih-slide
-          data-index="{{ forloop.index0 }}"
-          aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
-          {{ block.shopify_attributes }}
-        >
-          <div class="cih__media">
-            {% if block.settings.image != blank %}
-              {{
-                block.settings.image
-                | image_url: width: 2400
-                | image_tag:
-                  class: 'cih__image',
-                  widths: '750, 1000, 1400, 1800, 2200, 2400',
-                  sizes: '100vw',
-                  loading: 'lazy',
-                  alt: block.settings.image.alt
-              }}
+      <div class="cih__track" data-cih-track>
+        {% for block in section.blocks %}
+          <div
+            class="cih__slide"
+            data-cih-slide
+            data-index="{{ forloop.index0 }}"
+            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {% liquid
+              assign desktop_slide_image = block.settings.image
+              assign mobile_slide_image = block.settings.mobile_image
+              assign slide_image_alt = desktop_slide_image.alt | default: mobile_slide_image.alt | default: block.settings.heading
+              if desktop_slide_image == blank and mobile_slide_image != blank
+                assign desktop_slide_image = mobile_slide_image
+              endif
+            %}
+            {% if desktop_slide_image != blank %}
+              <picture
+                class="cih__picture"
+                style="--cih-mobile-image-position: {{ block.settings.mobile_image_position | default: 'center center' }};"
+              >
+                {% if mobile_slide_image != blank %}
+                  <source
+                    media="(max-width: 749px)"
+                    srcset="
+                      {{ mobile_slide_image | image_url: width: 750 }} 750w,
+                      {{ mobile_slide_image | image_url: width: 1100 }} 1100w,
+                      {{ mobile_slide_image | image_url: width: 1500 }} 1500w
+                    "
+                    sizes="100vw"
+                  >
+                {% endif %}
+                {{
+                  desktop_slide_image
+                  | image_url: width: 2400
+                  | image_tag:
+                    class: 'cih__image',
+                    widths: '750, 1000, 1400, 1800, 2200, 2400',
+                    sizes: '100vw',
+                    loading: 'lazy',
+                    alt: slide_image_alt
+                }}
+              </picture>
             {% else %}
               {{ 'lifestyle-2' | placeholder_svg_tag: 'cih__placeholder' }}
             {% endif %}
           </div>
-        </div>
-      {% endfor %}
+        {% endfor %}
+      </div>
 
       <div class="cih__overlay"></div>
 
       {% if first_block != blank %}
-        <div class="cih__content" data-cih-content>
-          <div class="cih__eyebrow" data-cih-eyebrow>
+        <div
+          class="cih__content{% unless section.settings.show_card_background %} cih__content--no-background{% endunless %}"
+          data-cih-content
+        >
+          <p class="cih__eyebrow" data-cih-eyebrow>
             {{ first_block.settings.eyebrow | escape }}
-          </div>
+          </p>
 
-          <h2 class="cih__heading" data-cih-heading>
-            <span data-cih-heading-main>{{ first_block.settings.heading | escape }}</span>
-            {% if first_block.settings.heading_accent != blank %}
-              <span class="cih__heading-accent" data-cih-heading-accent>
-                {{ first_block.settings.heading_accent | escape }}
-              </span>
-            {% endif %}
+          <h2 class="cih__heading">
+            <span data-cih-heading>{{ first_block.settings.heading | escape }}</span>
+            <span class="cih__heading-accent" data-cih-accent>
+              {{ first_block.settings.heading_accent | escape }}
+            </span>
           </h2>
 
           <div class="cih__description" data-cih-description>
@@ -85,15 +113,13 @@
           <div class="cih__actions">
             <a
               class="cih__button cih__button--primary"
-              data-cih-button-primary
-              href="{{ first_block.settings.button_primary_link | default: '#' }}"
-              {% if first_block.settings.button_primary_label == blank %}
+              data-cih-primary
+              href="{{ first_block.settings.primary_link | default: '#' }}"
+              {% if first_block.settings.primary_label == blank %}
                 hidden
               {% endif %}
             >
-              <span data-cih-primary-label>
-                {{ first_block.settings.button_primary_label | escape }}
-              </span>
+              <span data-cih-primary-label>{{ first_block.settings.primary_label | escape }}</span>
               {% if section.settings.show_button_arrow %}
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <path d="M3.5 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -103,15 +129,13 @@
 
             <a
               class="cih__button cih__button--secondary"
-              data-cih-button-secondary
-              href="{{ first_block.settings.button_secondary_link | default: '#' }}"
-              {% if first_block.settings.button_secondary_label == blank %}
+              data-cih-secondary
+              href="{{ first_block.settings.secondary_link | default: '#' }}"
+              {% if first_block.settings.secondary_label == blank %}
                 hidden
               {% endif %}
             >
-              <span data-cih-secondary-label>
-                {{ first_block.settings.button_secondary_label | escape }}
-              </span>
+              <span data-cih-secondary-label>{{ first_block.settings.secondary_label | escape }}</span>
               {% if section.settings.show_button_arrow %}
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <path d="M3.5 10h12m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -122,9 +146,9 @@
         </div>
       {% endif %}
 
-      {% if section.settings.show_slider_controls and section.blocks.size > 1 %}
+      {% if section.settings.show_controls and section.blocks.size > 1 %}
         <div class="cih__controls" data-cih-controls>
-          <div class="cih__thumbnails" role="group" aria-label="Choose hero slide">
+          <div class="cih__thumbnails" role="group" aria-label="Choose slide">
             {% for block in section.blocks %}
               <button
                 type="button"
@@ -134,9 +158,10 @@
                 aria-label="Show slide {{ forloop.index }}"
                 aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
               >
-                {% if block.settings.image != blank %}
+                {% assign thumbnail_image = block.settings.image | default: block.settings.mobile_image %}
+                {% if thumbnail_image != blank %}
                   {{
-                    block.settings.image
+                    thumbnail_image
                     | image_url: width: 240
                     | image_tag:
                       class: 'cih__thumbnail-image',
@@ -155,28 +180,17 @@
           <div class="cih__control-bottom">
             <div class="cih__counter">
               <span data-cih-current>01</span>
-              <span class="cih__counter-divider">/</span>
-              <span data-cih-total>{{ section.blocks.size | prepend: '0' }}</span>
+              <span>/</span>
+              <span>{{ section.blocks.size | prepend: '0' }}</span>
             </div>
 
             <div class="cih__arrows">
-              <button
-                type="button"
-                class="cih__arrow"
-                data-cih-prev
-                aria-label="Previous slide"
-              >
+              <button type="button" class="cih__arrow" data-cih-prev aria-label="Previous slide">
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <path d="M12.5 4.5 7 10l5.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </button>
-
-              <button
-                type="button"
-                class="cih__arrow"
-                data-cih-next
-                aria-label="Next slide"
-              >
+              <button type="button" class="cih__arrow" data-cih-next aria-label="Next slide">
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
                   <path d="m7.5 4.5 5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -186,10 +200,61 @@
         </div>
       {% endif %}
 
+      {% if section.settings.marquee_position == 'inside' %}
+        {% if section.settings.show_marquee and section.settings.marquee_text != blank %}
+          <div class="cih__marquee cih__marquee--inside" data-cih-marquee>
+            <div
+              class="cih__marquee-track"
+              style="--cih-marquee-duration: {{ section.settings.marquee_speed }}s;"
+            >
+              {% for repeat in (1..4) %}
+                <div class="cih__marquee-group" aria-hidden="{% if repeat > 1 %}true{% else %}false{% endif %}">
+                  {% assign marquee_items = section.settings.marquee_text | split: '|' %}
+                  {% for item in marquee_items %}
+                    <span class="cih__marquee-item">
+                      {{ item | strip | escape }}
+                      {% if section.settings.show_marquee_separator %}
+                        <span class="cih__marquee-separator">{{ section.settings.marquee_separator }}</span>
+                      {% endif %}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
       {% if section.blocks.size == 0 %}
         <div class="cih__empty">Add hero slides to display this section.</div>
       {% endif %}
     </div>
+
+    {% if section.settings.marquee_position == 'outside'
+      and section.settings.show_marquee
+      and section.settings.marquee_text != blank
+    %}
+      <div class="cih__marquee" data-cih-marquee>
+        <div
+          class="cih__marquee-track"
+          style="--cih-marquee-duration: {{ section.settings.marquee_speed }}s;"
+        >
+          {% for repeat in (1..4) %}
+            <div class="cih__marquee-group" aria-hidden="{% if repeat > 1 %}true{% else %}false{% endif %}">
+              {% assign marquee_items = section.settings.marquee_text | split: '|' %}
+              {% for item in marquee_items %}
+                <span class="cih__marquee-item">
+                  {{ item | strip | escape }}
+                  {% if section.settings.show_marquee_separator %}
+                    <span class="cih__marquee-separator">{{ section.settings.marquee_separator }}</span>
+                  {% endif %}
+                </span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   <script type="application/json" data-cih-slide-data>
@@ -198,12 +263,12 @@
         {
           "eyebrow": {{ block.settings.eyebrow | json }},
           "heading": {{ block.settings.heading | json }},
-          "headingAccent": {{ block.settings.heading_accent | json }},
+          "accent": {{ block.settings.heading_accent | json }},
           "description": {{ block.settings.description | json }},
-          "primaryLabel": {{ block.settings.button_primary_label | json }},
-          "primaryLink": {{ block.settings.button_primary_link | default: '#' | json }},
-          "secondaryLabel": {{ block.settings.button_secondary_label | json }},
-          "secondaryLink": {{ block.settings.button_secondary_link | default: '#' | json }}
+          "primaryLabel": {{ block.settings.primary_label | json }},
+          "primaryLink": {{ block.settings.primary_link | default: '#' | json }},
+          "secondaryLabel": {{ block.settings.secondary_label | json }},
+          "secondaryLink": {{ block.settings.secondary_link | default: '#' | json }}
         }{% unless forloop.last %},{% endunless %}
       {% endfor %}
     ]
@@ -215,7 +280,7 @@
     width: 100%;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
-    background: var(--cih-background);
+    background: var(--cih-bg);
     font-family: {{ section.settings.body_font }};
   }
 
@@ -227,7 +292,7 @@
 
   #customimagehero-{{ section.id }} .cih__container {
     width: 100%;
-    max-width: var(--cih-section-width);
+    max-width: var(--cih-width);
     margin: 0 auto;
     padding-right: {{ section.settings.container_padding }}px;
     padding-left: {{ section.settings.container_padding }}px;
@@ -237,35 +302,47 @@
     position: relative;
     width: 100%;
     height: {{ section.settings.hero_height }}px;
-    min-height: 420px;
+    min-height: 400px;
     overflow: hidden;
     isolation: isolate;
     background: #77736c;
     color: var(--cih-text);
+    cursor: {% if section.settings.enable_drag %}grab{% else %}default{% endif %};
+    touch-action: pan-y;
   }
 
-  /* Background images */
+  #customimagehero-{{ section.id }} .cih__hero.is-dragging {
+    cursor: grabbing;
+    user-select: none;
+  }
+
+  #customimagehero-{{ section.id }} .cih__track {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transform: translate3d(0, 0, 0);
+    transition: transform {{ section.settings.transition_duration }}ms ease;
+    will-change: transform;
+  }
+
+  #customimagehero-{{ section.id }} .cih__track.is-dragging {
+    transition: none;
+  }
 
   #customimagehero-{{ section.id }} .cih__slide {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    visibility: hidden;
-    opacity: 0;
-    transition:
-      opacity 700ms ease,
-      visibility 700ms ease;
-  }
-
-  #customimagehero-{{ section.id }} .cih__slide.is-active {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  #customimagehero-{{ section.id }} .cih__media {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+  }
+
+  #customimagehero-{{ section.id }} .cih__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   #customimagehero-{{ section.id }} .cih__image,
@@ -275,6 +352,7 @@
     height: 100%;
     object-fit: {{ section.settings.image_fit }};
     object-position: {{ section.settings.image_position }};
+    pointer-events: none;
   }
 
   #customimagehero-{{ section.id }} .cih__overlay {
@@ -285,9 +363,8 @@
     background: linear-gradient(
       90deg,
       rgba(0, 0, 0, var(--cih-overlay)) 0%,
-      rgba(0, 0, 0, calc(var(--cih-overlay) * 0.55)) 32%,
-      rgba(0, 0, 0, 0.08) 75%,
-      rgba(0, 0, 0, 0.02) 100%
+      rgba(0, 0, 0, calc(var(--cih-overlay) * 0.55)) 35%,
+      rgba(0, 0, 0, 0.04) 100%
     );
   }
 
@@ -313,18 +390,15 @@
     backdrop-filter: blur({{ section.settings.card_blur }}px);
     -webkit-backdrop-filter: blur({{ section.settings.card_blur }}px);
     transform: translateY(-{{ section.settings.content_vertical_offset }}%);
-    animation: cihContentIn-{{ section.id }} 550ms ease both;
   }
 
-  @keyframes cihContentIn-{{ section.id }} {
-    from {
-      opacity: 0;
-      transform: translateY(calc(-{{ section.settings.content_vertical_offset }}% + 14px));
-    }
-    to {
-      opacity: 1;
-      transform: translateY(-{{ section.settings.content_vertical_offset }}%);
-    }
+  #customimagehero-{{ section.id }} .cih__content--no-background {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   #customimagehero-{{ section.id }} .cih__eyebrow {
@@ -360,7 +434,7 @@
     line-height: {{ section.settings.description_line_height }};
   }
 
-  /* CTA buttons */
+  /* Buttons */
 
   #customimagehero-{{ section.id }} .cih__actions {
     display: flex;
@@ -375,7 +449,7 @@
     min-height: {{ section.settings.button_height }}px;
     align-items: center;
     justify-content: center;
-    gap: 9px;
+    gap: 8px;
     padding: 10px {{ section.settings.button_padding }}px;
     border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
     border-radius: {{ section.settings.button_radius }}px;
@@ -384,11 +458,7 @@
     letter-spacing: {{ section.settings.button_letter_spacing }}px;
     line-height: 1.3;
     text-decoration: none;
-    transition:
-      background 200ms ease,
-      color 200ms ease,
-      border-color 200ms ease,
-      transform 200ms ease;
+    transition: all 200ms ease;
   }
 
   #customimagehero-{{ section.id }} .cih__button:hover {
@@ -396,8 +466,8 @@
   }
 
   #customimagehero-{{ section.id }} .cih__button--primary {
-    background: var(--cih-button-bg);
-    color: var(--cih-button-text);
+    background: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
   }
 
   #customimagehero-{{ section.id }} .cih__button--primary:hover {
@@ -412,7 +482,6 @@
   }
 
   #customimagehero-{{ section.id }} .cih__button--secondary:hover {
-    border-color: {{ section.settings.secondary_hover_border }};
     background: {{ section.settings.secondary_hover_background }};
     color: {{ section.settings.secondary_hover_text }};
   }
@@ -423,14 +492,7 @@
     flex: 0 0 16px;
   }
 
-  #customimagehero-{{ section.id }} .cih__button:focus-visible,
-  #customimagehero-{{ section.id }} .cih__arrow:focus-visible,
-  #customimagehero-{{ section.id }} .cih__thumbnail:focus-visible {
-    outline: 2px solid var(--cih-accent);
-    outline-offset: 4px;
-  }
-
-  /* Thumbnail panel */
+  /* Thumbnail controls */
 
   #customimagehero-{{ section.id }} .cih__controls {
     position: absolute;
@@ -458,10 +520,9 @@
   }
 
   #customimagehero-{{ section.id }} .cih__thumbnail {
-    position: relative;
     display: block;
     width: 100%;
-    aspect-ratio: {{ section.settings.thumbnail_aspect_ratio }};
+    aspect-ratio: {{ section.settings.thumbnail_ratio }};
     overflow: hidden;
     padding: 0;
     border: {{ section.settings.thumbnail_border_width }}px solid transparent;
@@ -469,10 +530,7 @@
     background: rgba(255, 255, 255, 0.12);
     cursor: pointer;
     appearance: none;
-    transition:
-      border-color 200ms ease,
-      opacity 200ms ease,
-      transform 200ms ease;
+    transition: border-color 200ms ease, transform 200ms ease;
   }
 
   #customimagehero-{{ section.id }} .cih__thumbnail:hover {
@@ -501,17 +559,10 @@
 
   #customimagehero-{{ section.id }} .cih__counter {
     display: flex;
-    align-items: center;
     gap: 5px;
     color: {{ section.settings.counter_color }};
     font-size: {{ section.settings.counter_size }}px;
-    font-weight: {{ section.settings.counter_weight }};
-    letter-spacing: 0.04em;
-    line-height: 1;
-  }
-
-  #customimagehero-{{ section.id }} .cih__counter-divider {
-    opacity: 0.65;
+    font-weight: 500;
   }
 
   #customimagehero-{{ section.id }} .cih__arrows {
@@ -532,10 +583,6 @@
     background: transparent;
     color: {{ section.settings.arrow_color }};
     cursor: pointer;
-    transition:
-      background 200ms ease,
-      opacity 200ms ease;
-    appearance: none;
   }
 
   #customimagehero-{{ section.id }} .cih__arrow:hover {
@@ -545,6 +592,87 @@
   #customimagehero-{{ section.id }} .cih__arrow svg {
     width: 17px;
     height: 17px;
+  }
+
+  /* Scrolling text */
+
+  #customimagehero-{{ section.id }} .cih__marquee {
+    width: 100%;
+    overflow: hidden;
+    padding-top: {{ section.settings.marquee_padding_top }}px;
+    padding-bottom: {{ section.settings.marquee_padding_bottom }}px;
+    background: var(--cih-marquee-bg);
+    color: var(--cih-marquee-text);
+  }
+
+  #customimagehero-{{ section.id }} .cih__marquee--inside {
+    position: absolute;
+    z-index: 4;
+    right: {{ section.settings.marquee_inside_inset }}px;
+    bottom: {{ section.settings.marquee_inside_bottom }}px;
+    left: {{ section.settings.marquee_inside_inset }}px;
+    width: auto;
+    padding-top: {{ section.settings.marquee_padding_top }}px;
+    padding-bottom: {{ section.settings.marquee_padding_bottom }}px;
+    border: {{ section.settings.marquee_inside_border_width }}px solid {{ section.settings.marquee_inside_border_color }};
+    border-radius: {{ section.settings.marquee_inside_radius }}px;
+    background: rgba(
+      {{ section.settings.marquee_inside_background | color_extract: 'red' }},
+      {{ section.settings.marquee_inside_background | color_extract: 'green' }},
+      {{ section.settings.marquee_inside_background | color_extract: 'blue' }},
+      {{ section.settings.marquee_inside_opacity | divided_by: 100.0 }}
+    );
+    backdrop-filter: blur({{ section.settings.marquee_inside_blur }}px);
+    -webkit-backdrop-filter: blur({{ section.settings.marquee_inside_blur }}px);
+  }
+
+  #customimagehero-{{ section.id }} .cih__marquee-track {
+    display: flex;
+    width: max-content;
+    animation: cihMarquee-{{ section.id }} var(--cih-marquee-duration) linear infinite;
+    animation-direction: {% if section.settings.marquee_direction == 'right' %}reverse{% else %}normal{% endif %};
+    will-change: transform;
+  }
+
+  #customimagehero-{{ section.id }} .cih__marquee:hover .cih__marquee-track {
+    {% if section.settings.marquee_pause_hover %}
+      animation-play-state: paused;
+    {% endif %}
+  }
+
+  #customimagehero-{{ section.id }} .cih__marquee-group {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: {{ section.settings.marquee_item_gap }}px;
+    padding-right: {{ section.settings.marquee_item_gap }}px;
+  }
+
+  #customimagehero-{{ section.id }} .cih__marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: {{ section.settings.marquee_item_gap }}px;
+    white-space: nowrap;
+    font-family: {{ section.settings.marquee_font }};
+    font-size: {{ section.settings.marquee_font_size }}px;
+    font-weight: {{ section.settings.marquee_font_weight }};
+    letter-spacing: {{ section.settings.marquee_letter_spacing }}px;
+    text-transform: {{ section.settings.marquee_transform }};
+  }
+
+  #customimagehero-{{ section.id }} .cih__marquee-separator {
+    color: {{ section.settings.marquee_separator_color }};
+    font-size: {{ section.settings.marquee_separator_size }}px;
+    line-height: 1;
+  }
+
+  @keyframes cihMarquee-{{ section.id }} {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%);
+    }
   }
 
   #customimagehero-{{ section.id }} [hidden] {
@@ -558,6 +686,13 @@
     justify-content: center;
     border: 1px dashed #aaa;
     color: #777;
+  }
+
+  #customimagehero-{{ section.id }} .cih__button:focus-visible,
+  #customimagehero-{{ section.id }} .cih__arrow:focus-visible,
+  #customimagehero-{{ section.id }} .cih__thumbnail:focus-visible {
+    outline: 2px solid var(--cih-accent);
+    outline-offset: 4px;
   }
 
   /* Tablet */
@@ -587,6 +722,10 @@
       bottom: {{ section.settings.tablet_controls_bottom }}px;
       width: {{ section.settings.tablet_controls_width }}px;
     }
+
+    #customimagehero-{{ section.id }} .cih__marquee-item {
+      font-size: {{ section.settings.tablet_marquee_font_size }}px;
+    }
   }
 
   /* Mobile */
@@ -604,15 +743,19 @@
 
     #customimagehero-{{ section.id }} .cih__hero {
       height: {{ section.settings.mobile_hero_height }}px;
-      min-height: 540px;
+      min-height: 520px;
+    }
+
+    #customimagehero-{{ section.id }} .cih__image {
+      object-position: var(--cih-mobile-image-position, {{ section.settings.image_position }});
     }
 
     #customimagehero-{{ section.id }} .cih__overlay {
       background: linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.58) 0%,
-        rgba(0, 0, 0, 0.18) 65%,
-        rgba(0, 0, 0, 0.05) 100%
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.12) 70%,
+        rgba(0, 0, 0, 0.04) 100%
       );
     }
 
@@ -627,8 +770,12 @@
       transform: none;
     }
 
+    #customimagehero-{{ section.id }} .cih__content--no-background {
+      padding: 0;
+    }
+
     #customimagehero-{{ section.id }} .cih__eyebrow {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-size: {{ section.settings.mobile_eyebrow_size }}px;
     }
 
@@ -638,19 +785,19 @@
     }
 
     #customimagehero-{{ section.id }} .cih__description {
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: {{ section.settings.mobile_description_size }}px;
       line-height: 1.5;
     }
 
     #customimagehero-{{ section.id }} .cih__actions {
       gap: 8px;
-      margin-top: 18px;
+      margin-top: 16px;
     }
 
     #customimagehero-{{ section.id }} .cih__button {
       min-height: {{ section.settings.mobile_button_height }}px;
-      padding: 9px 15px;
+      padding: 8px 13px;
       font-size: {{ section.settings.mobile_button_font_size }}px;
     }
 
@@ -663,54 +810,44 @@
     }
 
     #customimagehero-{{ section.id }} .cih__thumbnails {
-      gap: 6px;
+      gap: 5px;
     }
 
     #customimagehero-{{ section.id }} .cih__control-bottom {
-      margin-top: 9px;
-    }
-
-    #customimagehero-{{ section.id }} .cih__thumbnail {
-      border-radius: 5px;
-    }
-
-    #customimagehero-{{ section.id }} .cih__counter {
-      font-size: 10px;
+      margin-top: 8px;
     }
 
     #customimagehero-{{ section.id }} .cih__arrow {
       width: 26px;
       height: 26px;
     }
-  }
 
-  @media screen and (max-width: 380px) {
-    #customimagehero-{{ section.id }} .cih__content {
-      right: 12px;
-      left: 12px;
-      padding: 18px;
+    #customimagehero-{{ section.id }} .cih__marquee {
+      padding-top: {{ section.settings.mobile_marquee_padding }}px;
+      padding-bottom: {{ section.settings.mobile_marquee_padding }}px;
     }
 
-    #customimagehero-{{ section.id }} .cih__heading {
-      font-size: {{ section.settings.small_mobile_heading_size }}px;
+    #customimagehero-{{ section.id }} .cih__marquee--inside {
+      right: {{ section.settings.mobile_marquee_inside_inset }}px;
+      bottom: {{ section.settings.mobile_marquee_inside_bottom }}px;
+      left: {{ section.settings.mobile_marquee_inside_inset }}px;
+      padding-top: {{ section.settings.mobile_marquee_padding }}px;
+      padding-bottom: {{ section.settings.mobile_marquee_padding }}px;
     }
 
-    #customimagehero-{{ section.id }} .cih__actions {
-      align-items: flex-start;
-    }
-
-    #customimagehero-{{ section.id }} .cih__button {
-      padding-right: 12px;
-      padding-left: 12px;
+    #customimagehero-{{ section.id }} .cih__marquee-item {
+      font-size: {{ section.settings.mobile_marquee_font_size }}px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
+    #customimagehero-{{ section.id }} .cih__marquee-track {
+      animation-play-state: paused;
+    }
+
     #customimagehero-{{ section.id }} *,
     #customimagehero-{{ section.id }} *::before,
     #customimagehero-{{ section.id }} *::after {
-      scroll-behavior: auto !important;
-      animation-duration: 0.01ms !important;
       transition-duration: 0.01ms !important;
     }
   }
@@ -721,14 +858,15 @@
     const root = document.getElementById('customimagehero-{{ section.id }}');
 
     if (!root || root.dataset.initialized === 'true') return;
-
     root.dataset.initialized = 'true';
 
+    const hero = root.querySelector('[data-cih-hero]');
+    const track = root.querySelector('[data-cih-track]');
     const slides = Array.from(root.querySelectorAll('[data-cih-slide]'));
     const thumbnails = Array.from(root.querySelectorAll('[data-cih-thumbnail]'));
     const dataElement = root.querySelector('[data-cih-slide-data]');
 
-    if (!slides.length || !dataElement) return;
+    if (!hero || !track || !slides.length || !dataElement) return;
 
     let slideData = [];
 
@@ -740,32 +878,43 @@
     }
 
     const eyebrow = root.querySelector('[data-cih-eyebrow]');
-    const headingMain = root.querySelector('[data-cih-heading-main]');
-    const headingAccent = root.querySelector('[data-cih-heading-accent]');
+    const heading = root.querySelector('[data-cih-heading]');
+    const accent = root.querySelector('[data-cih-accent]');
     const description = root.querySelector('[data-cih-description]');
 
-    const primaryButton = root.querySelector('[data-cih-button-primary]');
+    const primary = root.querySelector('[data-cih-primary]');
     const primaryLabel = root.querySelector('[data-cih-primary-label]');
-    const secondaryButton = root.querySelector('[data-cih-button-secondary]');
+    const secondary = root.querySelector('[data-cih-secondary]');
     const secondaryLabel = root.querySelector('[data-cih-secondary-label]');
 
     const currentCounter = root.querySelector('[data-cih-current]');
     const previousButton = root.querySelector('[data-cih-prev]');
     const nextButton = root.querySelector('[data-cih-next]');
 
+    const autoplay = root.dataset.autoplay === 'true';
+    const interval = Math.max(2000, Number(root.dataset.interval) || 5000);
+    const pauseOnHover = root.dataset.pauseHover === 'true';
+    const enableDrag = {{ section.settings.enable_drag | json }};
+    const total = slides.length;
+
     let activeIndex = 0;
+    let timer = null;
+    let isPointerDown = false;
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
+    let startTranslate = 0;
+    let pointerId = null;
 
     const formatNumber = (number) => String(number).padStart(2, '0');
 
-    const updateText = (element, value) => {
-      if (!element) return;
-      element.textContent = value || '';
+    const setText = (element, value) => {
+      if (element) element.textContent = value || '';
     };
 
     const updateButton = (button, labelElement, label, link) => {
       if (!button || !labelElement) return;
-
-      updateText(labelElement, label);
+      setText(labelElement, label);
       button.href = link || '#';
       button.hidden = !label;
     };
@@ -773,25 +922,19 @@
     const updateContent = (data) => {
       if (!data) return;
 
-      updateText(eyebrow, data.eyebrow);
+      setText(eyebrow, data.eyebrow);
       if (eyebrow) eyebrow.hidden = !data.eyebrow;
 
-      updateText(headingMain, data.heading);
-
-      if (headingAccent) {
-        updateText(headingAccent, data.headingAccent);
-        headingAccent.hidden = !data.headingAccent;
-      }
+      setText(heading, data.heading);
+      setText(accent, data.accent);
+      if (accent) accent.hidden = !data.accent;
 
       if (description) {
         description.innerHTML = '';
 
         if (data.description) {
           data.description.split('\n').forEach((line, index) => {
-            if (index > 0) {
-              description.appendChild(document.createElement('br'));
-            }
-
+            if (index > 0) description.appendChild(document.createElement('br'));
             description.appendChild(document.createTextNode(line));
           });
         }
@@ -799,96 +942,180 @@
         description.hidden = !data.description;
       }
 
-      updateButton(primaryButton, primaryLabel, data.primaryLabel, data.primaryLink);
-
-      updateButton(secondaryButton, secondaryLabel, data.secondaryLabel, data.secondaryLink);
+      updateButton(primary, primaryLabel, data.primaryLabel, data.primaryLink);
+      updateButton(secondary, secondaryLabel, data.secondaryLabel, data.secondaryLink);
     };
 
-    const activateSlide = (index, moveFocus = false) => {
-      if (index < 0 || index >= slides.length) return;
+    const updatePosition = (animate = true) => {
+      track.classList.toggle('is-dragging', !animate);
+      track.style.transform = `translate3d(${-activeIndex * 100}%, 0, 0)`;
+    };
 
-      activeIndex = index;
+    const stopAutoplay = () => {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    const startAutoplay = () => {
+      stopAutoplay();
+
+      if (!autoplay || total < 2 || document.hidden) return;
+
+      timer = window.setInterval(() => {
+        if (!isPointerDown) {
+          activateSlide((activeIndex + 1) % total);
+        }
+      }, interval);
+    };
+
+    const activateSlide = (index, options = {}) => {
+      const nextIndex = Math.max(0, Math.min(total - 1, index));
+      activeIndex = nextIndex;
 
       slides.forEach((slide, slideIndex) => {
-        const isActive = slideIndex === index;
-
-        slide.classList.toggle('is-active', isActive);
-        slide.setAttribute('aria-hidden', String(!isActive));
+        slide.setAttribute('aria-hidden', String(slideIndex !== nextIndex));
       });
 
       thumbnails.forEach((thumbnail, thumbnailIndex) => {
-        const isActive = thumbnailIndex === index;
-
-        thumbnail.classList.toggle('is-active', isActive);
-        thumbnail.setAttribute('aria-pressed', String(isActive));
-
-        if (moveFocus && isActive) {
-          thumbnail.focus();
-        }
+        const active = thumbnailIndex === nextIndex;
+        thumbnail.classList.toggle('is-active', active);
+        thumbnail.setAttribute('aria-pressed', String(active));
       });
 
-      if (currentCounter) {
-        currentCounter.textContent = formatNumber(index + 1);
-      }
+      if (currentCounter) currentCounter.textContent = formatNumber(nextIndex + 1);
 
-      updateContent(slideData[index]);
+      updateContent(slideData[nextIndex]);
+      updatePosition(options.animate !== false);
+
+      if (options.restartAutoplay !== false) startAutoplay();
     };
 
+    const goNext = () => activateSlide((activeIndex + 1) % total);
+    const goPrevious = () => activateSlide((activeIndex - 1 + total) % total);
+
     thumbnails.forEach((thumbnail, index) => {
-      thumbnail.addEventListener('click', () => {
-        activateSlide(index);
-      });
+      thumbnail.addEventListener('click', () => activateSlide(index));
     });
 
-    if (previousButton) {
-      previousButton.addEventListener('click', () => {
-        const nextIndex = (activeIndex - 1 + slides.length) % slides.length;
-        activateSlide(nextIndex);
+    if (previousButton) previousButton.addEventListener('click', goPrevious);
+    if (nextButton) nextButton.addEventListener('click', goNext);
+
+    /* Pointer drag / touch swipe */
+
+    if (enableDrag && total > 1) {
+      const getTranslateX = () => {
+        const matrix = new DOMMatrixReadOnly(window.getComputedStyle(track).transform);
+        return matrix.m41;
+      };
+
+      hero.addEventListener('pointerdown', (event) => {
+        if (event.target.closest('button, a')) return;
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+        isPointerDown = true;
+        isDragging = false;
+        pointerId = event.pointerId;
+        startX = event.clientX;
+        currentX = startX;
+        startTranslate = getTranslateX();
+
+        track.classList.add('is-dragging');
+        hero.classList.add('is-dragging');
+        stopAutoplay();
+
+        try {
+          hero.setPointerCapture(pointerId);
+        } catch (error) {}
       });
-    }
 
-    if (nextButton) {
-      nextButton.addEventListener('click', () => {
-        const nextIndex = (activeIndex + 1) % slides.length;
-        activateSlide(nextIndex);
+      hero.addEventListener('pointermove', (event) => {
+        if (!isPointerDown || event.pointerId !== pointerId) return;
+
+        currentX = event.clientX;
+        const deltaX = currentX - startX;
+
+        if (Math.abs(deltaX) > 5) isDragging = true;
+
+        if (isDragging) {
+          const width = hero.getBoundingClientRect().width;
+          const minTranslate = -(total - 1) * width;
+          const nextTranslate = Math.min(0, Math.max(minTranslate, startTranslate + deltaX));
+
+          track.style.transform = `translate3d(${nextTranslate}px, 0, 0)`;
+        }
       });
-    }
 
-    thumbnails.forEach((thumbnail, index) => {
-      thumbnail.addEventListener('keydown', (event) => {
-        let nextIndex = activeIndex;
+      const finishDrag = (event) => {
+        if (!isPointerDown || event.pointerId !== pointerId) return;
 
-        if (event.key === 'ArrowRight') {
-          nextIndex = (activeIndex + 1) % slides.length;
-        } else if (event.key === 'ArrowLeft') {
-          nextIndex = (activeIndex - 1 + slides.length) % slides.length;
-        } else if (event.key === 'Home') {
-          nextIndex = 0;
-        } else if (event.key === 'End') {
-          nextIndex = slides.length - 1;
+        const deltaX = currentX - startX;
+        const threshold = Math.max(40, hero.clientWidth * 0.12);
+
+        isPointerDown = false;
+        track.classList.remove('is-dragging');
+        hero.classList.remove('is-dragging');
+
+        if (isDragging && Math.abs(deltaX) > threshold) {
+          if (deltaX < 0) goNext();
+          else goPrevious();
         } else {
-          return;
+          activateSlide(activeIndex);
         }
 
-        event.preventDefault();
-        activateSlide(nextIndex, true);
-      });
-    });
+        isDragging = false;
+        pointerId = null;
+        startAutoplay();
+      };
 
-    activateSlide(0);
+      hero.addEventListener('pointerup', finishDrag);
+      hero.addEventListener('pointercancel', finishDrag);
+      hero.addEventListener('lostpointercapture', () => {
+        if (!isPointerDown) return;
+        isPointerDown = false;
+        isDragging = false;
+        track.classList.remove('is-dragging');
+        hero.classList.remove('is-dragging');
+        activateSlide(activeIndex);
+        startAutoplay();
+      });
+
+      hero.addEventListener('click', (event) => {
+        if (isDragging) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, true);
+    }
+
+    if (pauseOnHover) {
+      hero.addEventListener('mouseenter', stopAutoplay);
+      hero.addEventListener('mouseleave', startAutoplay);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopAutoplay();
+      else startAutoplay();
+    });
 
     document.addEventListener('shopify:block:select', (event) => {
       const selectedBlock = event.target.closest('[data-cih-slide]');
-
       if (!selectedBlock || !root.contains(selectedBlock)) return;
 
       const index = slides.indexOf(selectedBlock);
-
-      if (index !== -1) activateSlide(index);
+      if (index !== -1) {
+        stopAutoplay();
+        activateSlide(index);
+      }
     });
+
+    activateSlide(0);
+    startAutoplay();
 
     document.addEventListener('shopify:section:unload', (event) => {
       if (event.target.contains(root)) {
+        stopAutoplay();
         root.dataset.initialized = 'false';
       }
     });
@@ -897,14 +1124,14 @@
 
 {% schema %}
 {
-  "name": "Custom Image Hero",
+  "name": "Custom Hero + Marquee",
   "tag": "section",
-  "class": "section-custom-image-hero",
-  "max_blocks": 3,
+  "class": "section-custom-hero-marquee",
+  "max_blocks": 6,
   "settings": [
     {
       "type": "header",
-      "content": "General"
+      "content": "Section width"
     },
     {
       "type": "select",
@@ -938,25 +1165,13 @@
       "default": 0
     },
     {
-      "type": "checkbox",
-      "id": "show_slider_controls",
-      "label": "Show slider controls",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_button_arrow",
-      "label": "Show button arrows",
-      "default": true
-    },
-    {
       "type": "header",
-      "content": "Desktop layout"
+      "content": "Hero slider"
     },
     {
       "type": "range",
       "id": "hero_height",
-      "label": "Hero height",
+      "label": "Desktop height",
       "min": 400,
       "max": 900,
       "step": 20,
@@ -987,6 +1202,50 @@
       "default": "center center"
     },
     {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Autoplay interval",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause autoplay on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_drag",
+      "label": "Enable mouse drag and swipe",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "label": "Slide transition duration",
+      "min": 200,
+      "max": 1000,
+      "step": 100,
+      "unit": "ms",
+      "default": 600
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Show thumbnails and arrows",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "overlay_opacity",
       "label": "Image overlay opacity",
@@ -1001,9 +1260,15 @@
       "content": "Content card"
     },
     {
+      "type": "checkbox",
+      "id": "show_card_background",
+      "label": "Show card background",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "content_top",
-      "label": "Card vertical position",
+      "label": "Vertical position",
       "min": 5,
       "max": 70,
       "step": 5,
@@ -1013,7 +1278,7 @@
     {
       "type": "range",
       "id": "content_left",
-      "label": "Card horizontal position",
+      "label": "Horizontal position",
       "min": 2,
       "max": 25,
       "step": 1,
@@ -1024,8 +1289,8 @@
       "type": "range",
       "id": "content_width",
       "label": "Card width",
-      "min": 25,
-      "max": 60,
+      "min": 20,
+      "max": 80,
       "step": 5,
       "unit": "%",
       "default": 30
@@ -1036,19 +1301,9 @@
       "label": "Card maximum width",
       "min": 300,
       "max": 700,
-      "step": 25,
+      "step": 10,
       "unit": "px",
-      "default": 450
-    },
-    {
-      "type": "range",
-      "id": "content_vertical_offset",
-      "label": "Card vertical offset",
-      "min": 0,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "default": 0
+      "default": 460
     },
     {
       "type": "range",
@@ -1063,7 +1318,7 @@
     {
       "type": "range",
       "id": "card_radius",
-      "label": "Card corner radius",
+      "label": "Card radius",
       "min": 0,
       "max": 30,
       "step": 2,
@@ -1073,7 +1328,7 @@
     {
       "type": "range",
       "id": "card_opacity",
-      "label": "Card background opacity",
+      "label": "Card opacity",
       "min": 20,
       "max": 100,
       "step": 5,
@@ -1083,7 +1338,7 @@
     {
       "type": "range",
       "id": "card_blur",
-      "label": "Card background blur",
+      "label": "Card blur",
       "min": 0,
       "max": 20,
       "step": 1,
@@ -1118,8 +1373,7 @@
         { "value": "inherit", "label": "Theme default" },
         { "value": "Arial, sans-serif", "label": "Arial" },
         { "value": "Helvetica, sans-serif", "label": "Helvetica" },
-        { "value": "Georgia, serif", "label": "Georgia" },
-        { "value": "Times New Roman, serif", "label": "Times New Roman" }
+        { "value": "Georgia, serif", "label": "Georgia" }
       ],
       "default": "inherit"
     },
@@ -1131,8 +1385,7 @@
         { "value": "inherit", "label": "Theme heading font" },
         { "value": "Arial, sans-serif", "label": "Arial" },
         { "value": "Helvetica, sans-serif", "label": "Helvetica" },
-        { "value": "Georgia, serif", "label": "Georgia" },
-        { "value": "Times New Roman, serif", "label": "Times New Roman" }
+        { "value": "Georgia, serif", "label": "Georgia" }
       ],
       "default": "inherit"
     },
@@ -1160,15 +1413,6 @@
       "default": "600"
     },
     {
-      "type": "range",
-      "id": "heading_letter_spacing",
-      "label": "Heading letter spacing",
-      "min": -3,
-      "max": 3,
-      "step": 1,
-      "default": 0
-    },
-    {
       "type": "select",
       "id": "heading_line_height",
       "label": "Heading line height",
@@ -1190,6 +1434,15 @@
         { "value": "capitalize", "label": "Capitalize" }
       ],
       "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Heading letter spacing",
+      "min": -3,
+      "max": 3,
+      "step": 1,
+      "default": 0
     },
     {
       "type": "range",
@@ -1225,9 +1478,9 @@
       "label": "Description maximum width",
       "min": 200,
       "max": 600,
-      "step": 25,
+      "step": 10,
       "unit": "px",
-      "default": 350
+      "default": 400
     },
     {
       "type": "range",
@@ -1347,6 +1600,12 @@
       "default": 0
     },
     {
+      "type": "checkbox",
+      "id": "show_button_arrow",
+      "label": "Show button arrows",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "button_border_width",
       "label": "Button border width",
@@ -1389,29 +1648,23 @@
     {
       "type": "color",
       "id": "secondary_hover_background",
-      "label": "Secondary button hover background",
+      "label": "Secondary hover background",
       "default": "#FFFFFF"
     },
     {
       "type": "color",
       "id": "secondary_hover_text",
-      "label": "Secondary button hover text",
+      "label": "Secondary hover text",
       "default": "#202020"
     },
     {
-      "type": "color",
-      "id": "secondary_hover_border",
-      "label": "Secondary button hover border",
-      "default": "#FFFFFF"
-    },
-    {
       "type": "header",
-      "content": "Slider controls"
+      "content": "Thumbnail controls"
     },
     {
       "type": "range",
       "id": "controls_width",
-      "label": "Controls panel width",
+      "label": "Panel width",
       "min": 160,
       "max": 360,
       "step": 10,
@@ -1421,7 +1674,7 @@
     {
       "type": "range",
       "id": "controls_right",
-      "label": "Controls right position",
+      "label": "Panel right position",
       "min": 8,
       "max": 80,
       "step": 4,
@@ -1431,7 +1684,7 @@
     {
       "type": "range",
       "id": "controls_bottom",
-      "label": "Controls bottom position",
+      "label": "Panel bottom position",
       "min": 8,
       "max": 80,
       "step": 4,
@@ -1441,7 +1694,7 @@
     {
       "type": "range",
       "id": "controls_padding",
-      "label": "Controls panel padding",
+      "label": "Panel padding",
       "min": 6,
       "max": 24,
       "step": 2,
@@ -1451,7 +1704,7 @@
     {
       "type": "range",
       "id": "controls_radius",
-      "label": "Controls panel radius",
+      "label": "Panel radius",
       "min": 0,
       "max": 30,
       "step": 2,
@@ -1461,13 +1714,13 @@
     {
       "type": "color",
       "id": "controls_background",
-      "label": "Controls panel background",
+      "label": "Panel background",
       "default": "#252525"
     },
     {
       "type": "range",
       "id": "controls_opacity",
-      "label": "Controls panel opacity",
+      "label": "Panel opacity",
       "min": 20,
       "max": 100,
       "step": 5,
@@ -1477,7 +1730,7 @@
     {
       "type": "range",
       "id": "controls_blur",
-      "label": "Controls panel blur",
+      "label": "Panel blur",
       "min": 0,
       "max": 20,
       "step": 1,
@@ -1487,7 +1740,7 @@
     {
       "type": "color",
       "id": "controls_border_color",
-      "label": "Controls border color",
+      "label": "Panel border color",
       "default": "#777777"
     },
     {
@@ -1502,8 +1755,8 @@
     },
     {
       "type": "select",
-      "id": "thumbnail_aspect_ratio",
-      "label": "Thumbnail aspect ratio",
+      "id": "thumbnail_ratio",
+      "label": "Thumbnail ratio",
       "options": [
         { "value": "1 / 1", "label": "Square" },
         { "value": "4 / 3", "label": "Landscape" },
@@ -1558,15 +1811,10 @@
       "default": 11
     },
     {
-      "type": "select",
-      "id": "counter_weight",
-      "label": "Counter font weight",
-      "options": [
-        { "value": "400", "label": "Regular" },
-        { "value": "500", "label": "Medium" },
-        { "value": "600", "label": "Semi bold" }
-      ],
-      "default": "500"
+      "type": "color",
+      "id": "counter_color",
+      "label": "Counter color",
+      "default": "#FFFFFF"
     },
     {
       "type": "range",
@@ -1581,12 +1829,321 @@
     {
       "type": "range",
       "id": "arrow_gap",
-      "label": "Arrow buttons gap",
+      "label": "Arrow gap",
       "min": 4,
       "max": 20,
       "step": 2,
       "unit": "px",
       "default": 8
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Scrolling text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show scrolling text",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "marquee_position",
+      "label": "Marquee position",
+      "options": [
+        { "value": "outside", "label": "Outside hero" },
+        { "value": "inside", "label": "Inside hero" }
+      ],
+      "default": "outside"
+    },
+    {
+      "type": "header",
+      "content": "Inside marquee style"
+    },
+    {
+      "type": "color",
+      "id": "marquee_inside_background",
+      "label": "Inside background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "marquee_inside_opacity",
+      "label": "Inside background opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "marquee_inside_blur",
+      "label": "Inside background blur",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "marquee_inside_border_color",
+      "label": "Inside border color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "marquee_inside_border_width",
+      "label": "Inside border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "marquee_inside_radius",
+      "label": "Inside border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "marquee_inside_inset",
+      "label": "Inside horizontal inset",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "marquee_inside_bottom",
+      "label": "Inside bottom position",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_marquee_inside_inset",
+      "label": "Mobile inside horizontal inset",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "mobile_marquee_inside_bottom",
+      "label": "Mobile inside bottom position",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "textarea",
+      "id": "marquee_text",
+      "label": "Scrolling text items",
+      "info": "Separate each phrase with |. Example: NATURAL MATERIALS | MADE TO LAST | EVERYDAY COMFORT",
+      "default": "NATURAL MATERIALS | MADE TO LAST | EVERYDAY COMFORT"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "Scrolling duration",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "unit": "s",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "marquee_direction",
+      "label": "Scrolling direction",
+      "options": [
+        { "value": "left", "label": "Right to left" },
+        { "value": "right", "label": "Left to right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "marquee_pause_hover",
+      "label": "Pause scrolling on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee_separator",
+      "label": "Show separator",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marquee_separator",
+      "label": "Separator character",
+      "default": "✳"
+    },
+    {
+      "type": "range",
+      "id": "marquee_item_gap",
+      "label": "Text item spacing",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "marquee_font_size",
+      "label": "Desktop font size",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "tablet_marquee_font_size",
+      "label": "Tablet font size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "mobile_marquee_font_size",
+      "label": "Mobile font size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "marquee_font",
+      "label": "Scrolling text font",
+      "options": [
+        { "value": "inherit", "label": "Theme default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Helvetica, sans-serif", "label": "Helvetica" },
+        { "value": "Georgia, serif", "label": "Georgia" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "marquee_font_weight",
+      "label": "Scrolling text weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "select",
+      "id": "marquee_transform",
+      "label": "Text transform",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "marquee_letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "marquee_separator_size",
+      "label": "Separator size",
+      "min": 10,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "marquee_separator_color",
+      "label": "Separator color",
+      "default": "#A8D4C6"
+    },
+    {
+      "type": "range",
+      "id": "marquee_padding_top",
+      "label": "Desktop top padding",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "marquee_padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_marquee_padding",
+      "label": "Mobile vertical padding",
+      "min": 6,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "marquee_background",
+      "label": "Scrolling background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "marquee_text_color",
+      "label": "Scrolling text color",
+      "default": "#222222"
     },
     {
       "type": "header",
@@ -1601,7 +2158,7 @@
     {
       "type": "color",
       "id": "text_color",
-      "label": "Heading and primary text",
+      "label": "Heading color",
       "default": "#FFFFFF"
     },
     {
@@ -1629,18 +2186,6 @@
       "default": "#25282B"
     },
     {
-      "type": "color",
-      "id": "counter_color",
-      "label": "Slide counter color",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "color",
-      "id": "arrow_color",
-      "label": "Arrow color",
-      "default": "#FFFFFF"
-    },
-    {
       "type": "header",
       "content": "Spacing"
     },
@@ -1649,7 +2194,7 @@
       "id": "padding_top",
       "label": "Section top padding",
       "min": 0,
-      "max": 120,
+      "max": 100,
       "step": 4,
       "unit": "px",
       "default": 24
@@ -1659,34 +2204,10 @@
       "id": "padding_bottom",
       "label": "Section bottom padding",
       "min": 0,
-      "max": 120,
+      "max": 100,
       "step": 4,
       "unit": "px",
       "default": 24
-    },
-    {
-      "type": "range",
-      "id": "eyebrow_spacing",
-      "label": "Eyebrow bottom spacing",
-      "min": 4,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "default": 8
-    },
-    {
-      "type": "range",
-      "id": "description_spacing",
-      "label": "Description top spacing",
-      "min": 8,
-      "max": 30,
-      "step": 2,
-      "unit": "px",
-      "default": 12
-    },
-    {
-      "type": "header",
-      "content": "Tablet"
     },
     {
       "type": "range",
@@ -1751,7 +2272,7 @@
     {
       "type": "range",
       "id": "tablet_controls_right",
-      "label": "Tablet controls right position",
+      "label": "Tablet controls right",
       "min": 8,
       "max": 40,
       "step": 4,
@@ -1761,7 +2282,7 @@
     {
       "type": "range",
       "id": "tablet_controls_bottom",
-      "label": "Tablet controls bottom position",
+      "label": "Tablet controls bottom",
       "min": 8,
       "max": 40,
       "step": 4,
@@ -1777,10 +2298,6 @@
       "step": 10,
       "unit": "px",
       "default": 190
-    },
-    {
-      "type": "header",
-      "content": "Mobile"
     },
     {
       "type": "range",
@@ -1825,7 +2342,7 @@
     {
       "type": "range",
       "id": "mobile_content_left",
-      "label": "Mobile card left position",
+      "label": "Mobile card left",
       "min": 8,
       "max": 32,
       "step": 2,
@@ -1835,7 +2352,7 @@
     {
       "type": "range",
       "id": "mobile_content_right",
-      "label": "Mobile card right position",
+      "label": "Mobile card right",
       "min": 8,
       "max": 32,
       "step": 2,
@@ -1845,7 +2362,7 @@
     {
       "type": "range",
       "id": "mobile_content_bottom",
-      "label": "Mobile card bottom position",
+      "label": "Mobile card bottom",
       "min": 100,
       "max": 260,
       "step": 10,
@@ -1871,16 +2388,6 @@
       "step": 2,
       "unit": "px",
       "default": 30
-    },
-    {
-      "type": "range",
-      "id": "small_mobile_heading_size",
-      "label": "Small mobile heading size",
-      "min": 20,
-      "max": 32,
-      "step": 2,
-      "unit": "px",
-      "default": 26
     },
     {
       "type": "range",
@@ -1925,7 +2432,7 @@
     {
       "type": "range",
       "id": "mobile_controls_top",
-      "label": "Mobile controls top position",
+      "label": "Mobile controls top",
       "min": 8,
       "max": 40,
       "step": 2,
@@ -1935,7 +2442,7 @@
     {
       "type": "range",
       "id": "mobile_controls_right",
-      "label": "Mobile controls right position",
+      "label": "Mobile controls right",
       "min": 8,
       "max": 32,
       "step": 2,
@@ -1971,7 +2478,31 @@
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Background image"
+          "label": "Desktop / PC image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "If empty, the desktop image is used on mobile."
+        },
+        {
+          "type": "select",
+          "id": "mobile_image_position",
+          "label": "Mobile image position",
+          "info": "Controls which part of the image remains visible on mobile. Applies to the mobile image too.",
+          "options": [
+            { "value": "center center", "label": "Center" },
+            { "value": "center top", "label": "Top" },
+            { "value": "center bottom", "label": "Bottom" },
+            { "value": "left center", "label": "Left" },
+            { "value": "right center", "label": "Right" },
+            { "value": "left top", "label": "Top left" },
+            { "value": "right top", "label": "Top right" },
+            { "value": "left bottom", "label": "Bottom left" },
+            { "value": "right bottom", "label": "Bottom right" }
+          ],
+          "default": "center center"
         },
         {
           "type": "text",
@@ -1988,7 +2519,7 @@
         {
           "type": "text",
           "id": "heading_accent",
-          "label": "Heading accent text",
+          "label": "Heading accent",
           "default": "softer"
         },
         {
@@ -1999,30 +2530,30 @@
         },
         {
           "type": "text",
-          "id": "button_primary_label",
+          "id": "primary_label",
           "label": "Primary button label",
           "default": "Shop bedding"
         },
         {
           "type": "url",
-          "id": "button_primary_link",
+          "id": "primary_link",
           "label": "Primary button link"
         },
         {
           "type": "text",
-          "id": "button_secondary_label",
+          "id": "secondary_label",
           "label": "Secondary button label",
           "default": "Fabric guide"
         },
         {
           "type": "url",
-          "id": "button_secondary_link",
+          "id": "secondary_link",
           "label": "Secondary button link"
         },
         {
           "type": "text",
           "id": "tab_label",
-          "label": "Slide label",
+          "label": "Thumbnail label",
           "default": "Bedding"
         }
       ]
@@ -2030,7 +2561,7 @@
   ],
   "presets": [
     {
-      "name": "Custom Image Hero",
+      "name": "Custom Hero + Marquee",
       "blocks": [
         {
           "type": "slide",
@@ -2039,8 +2570,8 @@
             "heading": "Sleep in something",
             "heading_accent": "softer",
             "description": "Stonewashed European flax, woven loose for breathability and made to get better with every single wash.",
-            "button_primary_label": "Shop bedding",
-            "button_secondary_label": "Fabric guide",
+            "primary_label": "Shop bedding",
+            "secondary_label": "Fabric guide",
             "tab_label": "Bedding"
           }
         },
@@ -2051,8 +2582,8 @@
             "heading": "Make room for",
             "heading_accent": "comfort",
             "description": "Thoughtfully designed essentials to bring a softer feeling into every corner of your home.",
-            "button_primary_label": "Explore collection",
-            "button_secondary_label": "Our story",
+            "primary_label": "Explore collection",
+            "secondary_label": "Our story",
             "tab_label": "Living"
           }
         },
@@ -2063,8 +2594,8 @@
             "heading": "A softer kind of",
             "heading_accent": "everyday",
             "description": "Discover considered textures, timeless colors and pieces made to live with you.",
-            "button_primary_label": "Shop collection",
-            "button_secondary_label": "Discover more",
+            "primary_label": "Shop collection",
+            "secondary_label": "Discover more",
             "tab_label": "Collection"
           }
         }

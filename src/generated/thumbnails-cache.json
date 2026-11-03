@@ -132,15 +132,27 @@
     "compositeHash": "ed1a66def9fe8af1"
   },
   "hero-tabs-v2": {
-    "url": "/thumbnails/hero-tabs-v2.webp?v=1eabc2d67678ecd0",
-    "generatedAt": "2026-11-03T07:01:56.637Z",
-    "sourceHash": "3a585646449cceaa",
+    "url": "/thumbnails/hero-tabs-v2.webp?v=d8b4c52c46232ae5",
+    "generatedAt": "2026-11-03T08:12:59.086Z",
+    "sourceHash": "37c77ee638910e4e",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "1eabc2d67678ecd0"
+    "compositeHash": "d8b4c52c46232ae5"
+  },
+  "banner-v1": {
+    "url": "/thumbnails/banner-v1.webp?v=d026ae2977e016c7",
+    "generatedAt": "2026-11-03T09:18:40.922Z",
+    "sourceHash": "937b51e575aadb86",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "d026ae2977e016c7"
   }
 }
