@@ -36,40 +36,40 @@
     "compositeHash": "30ab38c8f31ecca1"
   },
   "faq-contact-v1": {
-    "url": "/thumbnails/faq-contact-v1.webp?v=f3e440c1166e0851",
-    "generatedAt": "2026-11-03T04:34:00.220Z",
-    "sourceHash": "f4b3874b261748b9",
+    "url": "/thumbnails/faq-contact-v1.webp?v=448c299056d65d6d",
+    "generatedAt": "2026-11-03T07:01:51.954Z",
+    "sourceHash": "b1d54da53b11777d",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "f3e440c1166e0851"
+    "compositeHash": "448c299056d65d6d"
   },
   "feature-products-v1": {
-    "url": "/thumbnails/feature-products-v1.webp?v=ecaa5cf39ebed07b",
-    "generatedAt": "2026-11-03T04:34:02.357Z",
-    "sourceHash": "c79cc93bf8fff661",
+    "url": "/thumbnails/feature-products-v1.webp?v=9733d4d565dc6c18",
+    "generatedAt": "2026-11-03T07:01:54.472Z",
+    "sourceHash": "cf6b4b898cb7554c",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "ecaa5cf39ebed07b"
+    "compositeHash": "9733d4d565dc6c18"
   },
   "hero-v1": {
-    "url": "/thumbnails/hero-v1.webp?v=c62f90a269c9c0fc",
-    "generatedAt": "2026-11-03T04:34:03.290Z",
-    "sourceHash": "f2d8db4a45d886c3",
+    "url": "/thumbnails/hero-v1.webp?v=a11f9daa04c572ad",
+    "generatedAt": "2026-11-03T07:01:55.490Z",
+    "sourceHash": "547a9964522255da",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "c62f90a269c9c0fc"
+    "compositeHash": "a11f9daa04c572ad"
   },
   "newsletter-join-v1": {
     "url": "/thumbnails/newsletter-join-v1.webp?v=fb29bcc5cbe99993",
@@ -84,51 +84,63 @@
     "compositeHash": "fb29bcc5cbe99993"
   },
   "room-gallery-v1": {
-    "url": "/thumbnails/room-gallery-v1.webp?v=e752e98e5f1f6ec0",
-    "generatedAt": "2026-11-03T04:44:24.418Z",
-    "sourceHash": "b7b8efc1bfd0e84a",
+    "url": "/thumbnails/room-gallery-v1.webp?v=56cad2ef9bd7c3ac",
+    "generatedAt": "2026-11-03T07:01:58.095Z",
+    "sourceHash": "6ee3455e623de58d",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "e752e98e5f1f6ec0"
+    "compositeHash": "56cad2ef9bd7c3ac"
   },
   "newsletter-v2": {
-    "url": "/thumbnails/newsletter-v2.webp?v=637e1bb30d3e8f74",
-    "generatedAt": "2026-11-03T05:38:52.050Z",
-    "sourceHash": "ac8489402a070215",
+    "url": "/thumbnails/newsletter-v2.webp?v=fa870f5657e4a52a",
+    "generatedAt": "2026-11-03T07:01:51.382Z",
+    "sourceHash": "19ee2859f05798d8",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "637e1bb30d3e8f74"
+    "compositeHash": "fa870f5657e4a52a"
   },
   "newsletter-v1": {
-    "url": "/thumbnails/newsletter-v1.webp?v=74dd65bf33381141",
-    "generatedAt": "2026-11-03T04:58:55.408Z",
-    "sourceHash": "dd1cdb01bed84fac",
+    "url": "/thumbnails/newsletter-v1.webp?v=bb11361341bdbaad",
+    "generatedAt": "2026-11-03T07:01:57.530Z",
+    "sourceHash": "72bb2d530e501c16",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "74dd65bf33381141"
+    "compositeHash": "bb11361341bdbaad"
   },
   "hero-tabs-v1": {
-    "url": "/thumbnails/hero-tabs-v1.webp?v=ba7328738af07321",
-    "generatedAt": "2026-11-03T05:38:52.621Z",
-    "sourceHash": "8c34a7d62d5d568e",
+    "url": "/thumbnails/hero-tabs-v1.webp?v=ed1a66def9fe8af1",
+    "generatedAt": "2026-11-03T07:01:56.086Z",
+    "sourceHash": "660cc4e18e9114a4",
     "engineVersion": "v1.0.0",
     "viewport": {
       "width": 1200,
       "height": 700
     },
     "status": "ready",
-    "compositeHash": "ba7328738af07321"
+    "compositeHash": "ed1a66def9fe8af1"
+  },
+  "hero-tabs-v2": {
+    "url": "/thumbnails/hero-tabs-v2.webp?v=1eabc2d67678ecd0",
+    "generatedAt": "2026-11-03T07:01:56.637Z",
+    "sourceHash": "3a585646449cceaa",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "1eabc2d67678ecd0"
   }
 }
