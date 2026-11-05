@@ -154,5 +154,77 @@
     },
     "status": "ready",
     "compositeHash": "d026ae2977e016c7"
+  },
+  "divider-v1": {
+    "url": "/thumbnails/divider-v1.webp?v=b6b525660c00433f",
+    "generatedAt": "2026-11-04T09:48:54.332Z",
+    "sourceHash": "ad3bbc2dd7374df6",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "b6b525660c00433f"
+  },
+  "footer-v1": {
+    "url": "/thumbnails/footer-v1.webp?v=714099a84811a85d",
+    "generatedAt": "2026-11-04T09:48:55.607Z",
+    "sourceHash": "135e90f87fb9843a",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "714099a84811a85d"
+  },
+  "product-buybox-v1": {
+    "url": "/thumbnails/product-buybox-v1.webp?v=db220b8bf98562a9",
+    "generatedAt": "2026-11-04T09:48:56.477Z",
+    "sourceHash": "14d4f280e4cc9d2d",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "db220b8bf98562a9"
+  },
+  "trust-strip-v1": {
+    "url": "/thumbnails/trust-strip-v1.webp?v=049d4ef596f6fbcd",
+    "generatedAt": "2026-11-04T09:48:57.073Z",
+    "sourceHash": "7afeada3cb42bc5c",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "049d4ef596f6fbcd"
+  },
+  "review-v1": {
+    "url": "/thumbnails/review-v1.webp?v=819c1229a2ddc734",
+    "generatedAt": "2026-11-04T09:48:57.682Z",
+    "sourceHash": "dea44601d041ce9c",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "819c1229a2ddc734"
+  },
+  "divice-v1": {
+    "url": "/thumbnails/divice-v1.webp?v=d4de20c9eb53b439",
+    "generatedAt": "2026-11-04T10:02:58.201Z",
+    "sourceHash": "a251bdcae1e89676",
+    "engineVersion": "v1.0.0",
+    "viewport": {
+      "width": 1200,
+      "height": 700
+    },
+    "status": "ready",
+    "compositeHash": "d4de20c9eb53b439"
   }
 }

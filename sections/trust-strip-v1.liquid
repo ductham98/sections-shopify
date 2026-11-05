@@ -1,0 +1,868 @@
+{% comment %}
+  Custom Trust Strip
+  Independent Shopify Online Store 2.0 section
+{% endcomment %}
+
+{%- liquid
+  assign section_id = 'custom-trust-strip-' | append: section.id
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="cts-section"
+  data-cts-section
+  style="
+    --cts-bg: {{ section.settings.background_color }};
+    --cts-text: {{ section.settings.text_color }};
+    --cts-muted: {{ section.settings.description_color }};
+    --cts-divider: {{ section.settings.divider_color }};
+    --cts-icon: {{ section.settings.icon_color }};
+    --cts-accent: {{ section.settings.accent_color }};
+    --cts-width: {{ section.settings.container_width }}px;
+    --cts-icon-size: {{ section.settings.icon_size }}px;
+    --cts-title-size: {{ section.settings.title_size }}px;
+    --cts-desc-size: {{ section.settings.description_size }}px;
+    --cts-gap: {{ section.settings.column_gap }}px;
+    --cts-padding-top: {{ section.settings.padding_top }}px;
+    --cts-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --cts-mobile-icon-size: {{ section.settings.mobile_icon_size }}px;
+    --cts-mobile-title-size: {{ section.settings.mobile_title_size }}px;
+    --cts-mobile-desc-size: {{ section.settings.mobile_description_size }}px;
+    --cts-mobile-gap: {{ section.settings.mobile_gap }}px;
+    --cts-font: {{ section.settings.font_family }};
+  "
+>
+  <div class="cts-container">
+    <div
+      class="
+        cts-track
+        {% if section.settings.mobile_carousel %}cts-track--mobile-carousel{% endif %}
+      "
+      data-cts-track
+    >
+      {%- for block in section.blocks -%}
+        <div
+          class="cts-item"
+          {{ block.shopify_attributes }}
+        >
+          {% if block.settings.show_icon %}
+            <span class="cts-icon" aria-hidden="true">
+              {% case block.settings.icon %}
+                {% when 'headset' %}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a1 1 0 0 1-1-1v-6a9 9 0 0 1 18 0v6a1 1 0 0 1-1 1h-2a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>
+                    <path d="M21 16v2a4 4 0 0 1-4 4h-5"/>
+                  </svg>
+                {% when 'package' %}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <path d="m3.27 6.96 8.73 5.05 8.73-5.05M12 22V12"/>
+                    <path d="m7.5 4.21 9 5.19"/>
+                  </svg>
+                {% when 'wallet' %}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                    <path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>
+                  </svg>
+                {% when 'shield' %}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11z"/>
+                    <path d="m9 12 2 2 4-4"/>
+                  </svg>
+                {% when 'truck' %}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M10 17h4V5H2v12h3"/>
+                    <path d="M14 9h4l4 4v4h-3"/>
+                    <circle cx="7.5" cy="17.5" r="2.5"/>
+                    <circle cx="16.5" cy="17.5" r="2.5"/>
+                  </svg>
+                {% when 'heart' %}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/>
+                  </svg>
+                {% when 'custom' %}
+                  {% if block.settings.custom_svg != blank %}
+                    {{ block.settings.custom_svg }}
+                  {% endif %}
+              {% endcase %}
+            </span>
+          {% endif %}
+
+          <div class="cts-body">
+            {% if block.settings.title != blank %}
+              <h3 class="cts-title">
+                {{ block.settings.title }}
+              </h3>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <div class="cts-description">
+                {{ block.settings.description }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {% if section.settings.mobile_carousel and section.blocks.size > 1 %}
+      <div
+        class="cts-dots"
+        data-cts-dots
+        role="group"
+        aria-label="Trust features navigation"
+      >
+        {% for block in section.blocks %}
+          <button
+            type="button"
+            class="cts-dot{% if forloop.first %} is-active{% endif %}"
+            data-cts-dot="{{ forloop.index0 }}"
+            aria-label="Show feature {{ forloop.index }}"
+            {% if forloop.first %}
+              aria-current="true"
+            {% endif %}
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #{{ section_id }} {
+    width: 100%;
+    background: var(--cts-bg);
+    color: var(--cts-text);
+    font-family: var(--cts-font);
+    padding-top: var(--cts-padding-top);
+    padding-bottom: var(--cts-padding-bottom);
+    border-top: {% if section.settings.show_top_border %}1px solid var(--cts-divider){% else %}none{% endif %};
+    border-bottom: {% if section.settings.show_bottom_border %}1px solid var(--cts-divider){% else %}none{% endif %};
+  }
+
+  #{{ section_id }} *,
+  #{{ section_id }} *::before,
+  #{{ section_id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #{{ section_id }} .cts-container {
+    width: 100%;
+    max-width: var(--cts-width);
+    margin: 0 auto;
+    padding-left: {{ section.settings.side_padding }}px;
+    padding-right: {{ section.settings.side_padding }}px;
+  }
+
+  #{{ section_id }} .cts-track {
+    display: grid;
+    grid-template-columns: repeat({{ section.blocks.size | at_least: 1 }}, minmax(0, 1fr));
+    gap: var(--cts-gap);
+  }
+
+  #{{ section_id }} .cts-item {
+    display: flex;
+    flex-direction: column;
+    align-items: {{ section.settings.content_alignment }};
+    justify-content: center;
+    text-align: {{ section.settings.text_alignment }};
+    min-width: 0;
+    padding: 12px 20px;
+    {% if section.settings.show_dividers %}
+      border-right: 1px solid var(--cts-divider);
+    {% endif %}
+  }
+
+  #{{ section_id }} .cts-item:last-child {
+    border-right: none;
+  }
+
+  #{{ section_id }} .cts-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--cts-icon-size);
+    height: var(--cts-icon-size);
+    margin-bottom: {{ section.settings.icon_spacing }}px;
+    color: var(--cts-icon);
+    flex-shrink: 0;
+  }
+
+  #{{ section_id }} .cts-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    fill: none;
+  }
+
+  #{{ section_id }} .cts-body {
+    width: 100%;
+  }
+
+  #{{ section_id }} .cts-title {
+    margin: 0 0 {{ section.settings.title_spacing }}px;
+    color: var(--cts-text);
+    font-size: var(--cts-title-size);
+    font-weight: {{ section.settings.title_weight }};
+    line-height: 1.35;
+    letter-spacing: {{ section.settings.title_letter_spacing }}px;
+    text-transform: {{ section.settings.title_transform }};
+  }
+
+  #{{ section_id }} .cts-description {
+    color: var(--cts-muted);
+    font-size: var(--cts-desc-size);
+    font-weight: {{ section.settings.description_weight }};
+    line-height: 1.55;
+    letter-spacing: {{ section.settings.description_letter_spacing }}px;
+  }
+
+  #{{ section_id }} .cts-description p {
+    margin: 0;
+  }
+
+  #{{ section_id }} .cts-description a {
+    color: var(--cts-accent);
+    text-decoration: underline;
+  }
+
+  #{{ section_id }} .cts-dots {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    #{{ section_id }} .cts-container {
+      padding-left: {{ section.settings.mobile_side_padding }}px;
+      padding-right: {{ section.settings.mobile_side_padding }}px;
+    }
+
+    #{{ section_id }} .cts-track {
+      gap: var(--cts-mobile-gap);
+    }
+
+    #{{ section_id }} .cts-item {
+      padding: 12px 10px;
+    }
+
+    #{{ section_id }} .cts-icon {
+      width: var(--cts-mobile-icon-size);
+      height: var(--cts-mobile-icon-size);
+    }
+
+    #{{ section_id }} .cts-title {
+      font-size: var(--cts-mobile-title-size);
+    }
+
+    #{{ section_id }} .cts-description {
+      font-size: var(--cts-mobile-desc-size);
+    }
+
+    #{{ section_id }} .cts-track--mobile-carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      gap: 0;
+      margin: 0 -{{ section.settings.mobile_side_padding }}px;
+      padding: 0 {{ section.settings.mobile_side_padding }}px;
+    }
+
+    #{{ section_id }} .cts-track--mobile-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    #{{ section_id }} .cts-track--mobile-carousel .cts-item {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: start;
+      border-right: none;
+      padding: 12px 16px;
+    }
+
+    #{{ section_id }} .cts-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: {{ section.settings.dots_spacing }}px;
+    }
+
+    #{{ section_id }} .cts-dot {
+      appearance: none;
+      border: 0;
+      padding: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cts-divider);
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease;
+    }
+
+    #{{ section_id }} .cts-dot.is-active {
+      background: var(--cts-accent);
+      transform: scale(1.2);
+    }
+  }
+
+  {% if section.settings.hide_on_mobile %}
+    @media screen and (max-width: 749px) {
+      #{{ section_id }} {
+        display: none;
+      }
+    }
+  {% endif %}
+</style>
+
+<script>
+  (() => {
+    const section = document.getElementById({{ section_id | json }});
+    if (!section || section.dataset.ctsInitialized === 'true') return;
+
+    section.dataset.ctsInitialized = 'true';
+
+    const track = section.querySelector('[data-cts-track]');
+    const dots = [...section.querySelectorAll('[data-cts-dot]')];
+
+    if (!track || !dots.length) return;
+
+    const items = [...track.querySelectorAll('.cts-item')];
+
+    const setActiveDot = (index) => {
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === index;
+        dot.classList.toggle('is-active', active);
+
+        if (active) {
+          dot.setAttribute('aria-current', 'true');
+        } else {
+          dot.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const index = Number(dot.dataset.ctsDot);
+        const item = items[index];
+
+        if (!item) return;
+
+        track.scrollTo({
+          left: item.offsetLeft - items[0].offsetLeft,
+          behavior: 'smooth'
+        });
+
+        setActiveDot(index);
+      });
+    });
+
+    let scrollTimeout;
+
+    track.addEventListener('scroll', () => {
+      if (window.innerWidth > 749) return;
+
+      window.clearTimeout(scrollTimeout);
+
+      scrollTimeout = window.setTimeout(() => {
+        const trackRect = track.getBoundingClientRect();
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        items.forEach((item, index) => {
+          const distance = Math.abs(
+            item.getBoundingClientRect().left - trackRect.left
+          );
+
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        setActiveDot(closestIndex);
+      }, 60);
+    }, { passive: true });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Trust Strip",
+  "tag": "section",
+  "class": "section-custom-trust-strip",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "container_width_mode",
+      "label": "Width",
+      "options": [
+        { "value": "page", "label": "Page width" },
+        { "value": "full", "label": "Full width" },
+        { "value": "custom", "label": "Custom width" }
+      ],
+      "default": "page"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container max width",
+      "min": 800,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "side_padding",
+      "label": "Desktop side padding",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_side_padding",
+      "label": "Mobile side padding",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "Show column dividers",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_border",
+      "label": "Show top border",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_border",
+      "label": "Show bottom border",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_carousel",
+      "label": "Enable mobile carousel",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide section on mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font",
+      "options": [
+        { "value": "inherit", "label": "Theme default" },
+        { "value": "Arial, sans-serif", "label": "Arial" },
+        { "value": "Helvetica, sans-serif", "label": "Helvetica" },
+        { "value": "Georgia, serif", "label": "Georgia" },
+        { "value": "Times New Roman, serif", "label": "Times New Roman" },
+        { "value": "Verdana, sans-serif", "label": "Verdana" }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "label": "Mobile title size",
+      "min": 10,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "select",
+      "id": "title_transform",
+      "label": "Title text transform",
+      "options": [
+        { "value": "none", "label": "Normal" },
+        { "value": "uppercase", "label": "Uppercase" },
+        { "value": "capitalize", "label": "Capitalize" }
+      ],
+      "default": "uppercase"
+    },
+    {
+      "type": "range",
+      "id": "title_letter_spacing",
+      "label": "Title letter spacing",
+      "min": 0,
+      "max": 4,
+      "step": 0.1,
+      "unit": "px",
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Title bottom spacing",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_size",
+      "label": "Mobile description size",
+      "min": 10,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description weight",
+      "options": [
+        { "value": "400", "label": "Regular" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "range",
+      "id": "description_letter_spacing",
+      "label": "Description letter spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "default": 0.3
+    },
+    {
+      "type": "header",
+      "content": "Icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 12,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_icon_size",
+      "label": "Mobile icon size",
+      "min": 12,
+      "max": 56,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "label": "Icon bottom spacing",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F5F5F5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Title color",
+      "default": "#1A1A2E"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#5B6472"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#1A1A2E"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider and border color",
+      "default": "#E5E7EB"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#6366F1"
+    },
+    {
+      "type": "header",
+      "content": "Mobile carousel"
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "label": "Mobile item gap",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "dots_spacing",
+      "label": "Pagination spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show icon",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "headset", "label": "Customer service" },
+            { "value": "package", "label": "Package" },
+            { "value": "wallet", "label": "Secure payment" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "custom", "label": "Custom SVG" }
+          ],
+          "default": "headset"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_svg",
+          "label": "Custom SVG code",
+          "info": "Paste SVG markup. Used when Icon is set to Custom SVG."
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "Customer service"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Our team is here to help you, 6 days a week.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Custom Trust Strip",
+      "blocks": [
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "headset",
+            "title": "Customer service",
+            "description": "<p>Our team is here to help you, 6 days a week.</p>"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "package",
+            "title": "Discreet Delivery",
+            "description": "<p>We ensure discreet packaging to protect your privacy.</p>"
+          }
+        },
+        {
+          "type": "trust_item",
+          "settings": {
+            "icon": "wallet",
+            "title": "Secure Payment",
+            "description": "<p>Your payment information is processed securely.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
